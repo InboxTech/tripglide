@@ -7,8 +7,4 @@ export default defineConfig({
   plugins: [react(),
     tailwindcss()
   ],
-  server: {
-    host: '192.168.29.67',  // This makes the server accessible from other devices
-    port: 3000,  // You can change this if you want to use another port
-  }
 })
