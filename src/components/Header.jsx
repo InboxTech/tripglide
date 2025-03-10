@@ -72,6 +72,7 @@ export default function Header() {
                   </a>
                   <a
                     href="#"
+                    onClick={() => navigate("/hotels")}
                     className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 transition-colors duration-300"
                   >
                     <FaHotel className="text-blue-500" /> Hotels

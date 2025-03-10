@@ -6,6 +6,7 @@ import SignUp from "./components/Signup";
 import Header from "./components/Header";
 import FlightCardList from "./components/FlightCardList";
 import CarHire from "./components/Carhire";
+import Hotels from "./components/Hotels";
 
 function App() {
   return (
@@ -17,7 +18,7 @@ function App() {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/search-results" element={<FlightCardList />} />
           <Route path="/flights" element={<LandingPage />} />
-          {/* <Route path="/hotels" element={<Hotels />} />  */}
+          <Route path="/hotels" element={<Hotels />} /> 
           <Route path="/carhire" element={<CarHire />} /> 
         </Routes>
       </div>
