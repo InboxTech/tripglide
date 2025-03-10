@@ -422,7 +422,7 @@ const LandingPage = () => {
              <div className="flex items-center space-x-4">
              {/* Hide Add Flight button when max flights are reached */}
              {multiCityFlights.length < 6 && (
-                  <button onClick={handleAddFlight} className="bg-green-500 hover:bg-green-600 cursor-pointer text-white px-2 py-3 rounded-lg mt-6 mr-26">
+                  <button onClick={handleAddFlight} className="bg-green-500 hover:bg-green-600 cursor-pointer text-white px-2 py-3 rounded-lg mt-6 mr-45">
                     + Add Flight
                   </button>
              )}
@@ -446,15 +446,15 @@ const LandingPage = () => {
          <div className="flex items-center space-x-6 mt-5 text-white">
             <label className="flex items-center space-x-2 cursor-pointer">
               <input type="checkbox" className="form-checkbox w-5 h-5 text-blue-600" />
-              <span>Add nearby airports</span>
+              <span><b>Add nearby airports</b></span>
             </label>
             <label className="flex items-center space-x-2 cursor-pointer">
               <input type="checkbox" className="form-checkbox w-5 h-5 text-blue-600" />
-              <span>Direct flights</span>
+              <span><b>Direct flights</b></span>
             </label>
             <label className="flex items-center space-x-2 cursor-pointer">
               <input type="checkbox" className="form-checkbox w-5 h-5 text-blue-600" />
-              <span>Flexible tickets</span>
+              <span><b>Flexible tickets</b></span>
             </label>
           </div>
         </div>
@@ -495,7 +495,7 @@ const LandingPage = () => {
             <p className="mt-2 text-lg">
               Score cheaper seats with Price Alerts
             </p>
-            <button className="p-1 w-30 mt-5 bg-white text-black rounded-2xl font-semibold shadow-md hover:bg-gray-500 cursor-pointer"
+            <button className="p-1 w-30 mt-5 bg-white text-black rounded-2xl font-semibold shadow-md hover:bg-gray-500 hover:text-white cursor-pointer"
             onClick={() => alert("How it works clicked!")}>
               How it works
             </button>
