@@ -5,7 +5,7 @@ import Login from "./components/Login";
 import SignUp from "./components/Signup";
 import Header from "./components/Header";
 import FlightCardList from "./components/FlightCardList";
-import CarHire from "./components/CarHire";
+import CarHire from "./components/Carhire";
 
 function App() {
   return (
