@@ -1,5 +1,6 @@
 import React from "react";
 import Header from "./Header";
+import TravelDeals from "./TravelDeals";
 import Footer from "./Footer";
 
 // export default function CarHire() {
@@ -32,7 +33,7 @@ export default function CarHire() {
 
 
       {/* Background Image - Hidden on Small Screens */}
-      <div className="absolute inset-0 hidden lg:block -z-10">
+      <div className="absolute inset-0 hidden lg:block -z-10 fixed">
         <img
           src="/public/images/carbg.jpg"
           alt="Car rental background"
@@ -116,6 +117,9 @@ export default function CarHire() {
           </form>
         </div>
       </div>
+
+      {/* Swiper Travel Deals */}
+      <TravelDeals />
 
        {/* Footer */}
        <Footer />
