@@ -6,6 +6,7 @@ import Footer from "./components/Footer";
 import SearchSection from "./components/SearchSection";
 import Login from "./components/Login";
 import SignUp from "./components/Signup";
+import FlightCardList from "./components/FlightCardList";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           {/* <Route path="/" element={<LandingPage />} /> */}
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
+          <Route path="/search-results" element={<FlightCardList />} />
           <Route path="/flights" element={<SearchSection />} />
           <Route path="/" element={<SearchSection />} /> 
         </Routes>

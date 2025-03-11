@@ -1,12 +1,16 @@
 import { useState, useEffect } from "react";
 import Header from "./Header";
 import Footer from "./Footer";
-import TravelersCabinClass from "./TravelersCabinClass"; // Import Travelers and Cabin Component
+import TravelersCabinClass from "./TravelersCabinClass"; 
+import TravelDeals from "./TravelDeals";
+import FAQSection from "./FAQSecton";
+import FlightCardList from "./FlightCardList";
+import { useNavigate } from "react-router-dom";
 
 export default function SearchSection() {
     const [tripType, setTripType] = useState("return");
-    const [from, setFrom] = useState(""); // Removed default value, added placeholder
-    const [to, setTo] = useState(""); // Removed default value, added placeholder
+    const [from, setFrom] = useState(""); 
+    const [to, setTo] = useState(""); 
     const [departDate, setDepartDate] = useState("");
     const [returnDate, setReturnDate] = useState("");
     const [multiCityFlights, setMultiCityFlights] = useState([
@@ -17,6 +21,29 @@ export default function SearchSection() {
     const isMultiCityValid = multiCityFlights.every(flight => flight.from && flight.to && flight.depart);
     const isOneWayValid = from && to && departDate;
     const isReturnValid = isOneWayValid && returnDate;
+    const [currentImage, setCurrentImage] = useState(0);
+    const navigate = useNavigate();
+
+    const images = [
+        "/images/samuel-ferrara-1527pjeb6jg-unsplash.jpg",
+        "/images/daniel-leone-g30P1zcOzXo-unsplash.jpg",
+        "/images/benjamin-voros-phIFdC6lA4E-unsplash.jpg",
+        "/images/kalen-emsley-Bkci_8qcdvQ-unsplash.jpg"
+      ];
+
+      useEffect(() => {
+        const interval = setInterval(() => {
+          setCurrentImage((prevImage) => (prevImage + 1) % images.length);
+        }, 5000);
+        return () => clearInterval(interval);
+      }, []);
+
+      const handleSearch = (e) => {
+        e.preventDefault();    
+        console.log("Navigating to search results...");
+        navigate("/search-results"); 
+        //navigate("/flights");  
+      };
 
     // Disable logic based on trip type
     const isSearchDisabled =
@@ -55,7 +82,7 @@ export default function SearchSection() {
             {/* Background Image */}
              <div className="absolute inset-0 block -z-10">
                 <img
-                    src="/public/images/benjamin-voros-phIFdC6lA4E-unsplash.jpg"
+                    src="/images/Large-Flights-hero-2.jpeg"
                     alt="Flight booking background"
                     className="w-full h-full object-cover object-center fixed"
                 />
@@ -161,10 +188,11 @@ export default function SearchSection() {
                                 <TravelersCabinClass />
                             </div>
                             <button 
+                                onClick={handleSearch}
                                 type="submit" 
                                 disabled={isSearchDisabled}
                                 className={`mt-5 px-6 py-3 font-semibold rounded-lg transition 
-                                    ${isSearchDisabled ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700 text-white"}`}
+                                    ${isSearchDisabled ? "bg-blue-300 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700 text-white"}`}
                             >
                                 Search
                             </button>
@@ -240,10 +268,11 @@ export default function SearchSection() {
                         {/* Search Button */}
                         <div className="flex-1">
                         <button
+                            onClick={handleSearch}
                             type="submit"
                             disabled={isSearchDisabled}
                             className={`w-full mt-6 px-6 py-3 font-semibold rounded-lg transition 
-                                ${isSearchDisabled ? "bg-gray-500 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700 text-white cursor-pointer"}`}
+                                ${isSearchDisabled ? "bg-blue-300 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700 text-white cursor-pointer"}`}
                         >
                             Search
                         </button>
@@ -270,35 +299,46 @@ export default function SearchSection() {
 
 
             {/* Banner */}
-<section className="relative w-full py-12 bg-gray-100">
-    <div className="max-w-7xl mx-auto px-6">
-        {/* Banner */}
-        <div className="relative bg-white rounded-2xl overflow-hidden shadow-lg">
-            <img 
-                src="/images/daniel-leone-g30P1zcOzXo-unsplash.jpg" 
-                alt="Scenic view" 
-                className="w-full h-72 md:h-96 object-cover transition-opacity duration-500 ease-in-out" 
-            />
-            {/* Text Content */}
-            <div className="absolute inset-0 flex flex-col justify-center px-6 text-white bg-black/50">
-                <p className="text-lg uppercase">Grab a deal</p>
-                <h2 className="text-3xl md:text-4xl font-bold mt-2">
-                    When the price is low, you'll know
-                </h2>
-                <p className="mt-2 text-lg">
-                    Score cheaper seats with Price Alerts
-                </p>
-                <button 
-                    className="mt-5 px-6 py-1 w-36 bg-white text-black rounded-2xl font-semibold shadow-md hover:bg-gray-500 hover:text-white cursor-pointer"
-                    onClick={() => alert('How it works clicked!')}
-                >
-                    How it works
-                </button>
-            </div>
-        </div>
-    </div>
-</section>
+            <section className="relative w-full py-20 bg-gray-100 mt-8">
+                <div className="max-w-7xl mx-auto px-6">
+                    {/* Banner */}
+                    <div className="relative bg-white rounded-2xl overflow-hidden shadow-lg">
+                        <img 
+                            src={images[currentImage]}  
+                            alt="Scenic view" 
+                            className="w-full h-100 md:h-130 object-cover object-center transition-opacity duration-500 ease-in-out" 
+                        />
+                        {/* Text Content */}
+                        <div className="absolute inset-0 flex flex-col justify-center px-6 text-white bg-black/50">
+                            <p className="text-lg uppercase">Grab a deal</p>
+                            <h2 className="text-3xl md:text-4xl font-bold mt-2">
+                                When the price is low, you'll know
+                            </h2>
+                            <p className="mt-2 text-lg">
+                                Score cheaper seats with Price Alerts
+                            </p>
+                            <button 
+                                className="mt-5 px-6 py-1 w-36 bg-white text-black rounded-2xl font-semibold shadow-md hover:bg-gray-500 hover:text-white cursor-pointer"
+                                onClick={() => alert('How it works clicked!')}
+                            >
+                                How it works
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
+            <hr className="border-black"></hr>
+
+            <section className="bg-white">
+            {/* Swiper Section */}
+            <TravelDeals />
+            </section>
+
+            <section className="bg-white">
+            {/* FAQ Section */}
+            <FAQSection />
+            </section>
 
             {/* Footer */}
             <Footer />
