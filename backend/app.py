@@ -10,9 +10,9 @@ CORS(app)  # Enable CORS for all domains
 def get_db_connection():
     connection = mysql.connector.connect(
         host='localhost',
-        user='root',  # Update this with your actual MySQL username
-        password='',  # Update this with your actual MySQL password
-        database='tripglide'  # Use your actual database name
+        user='root',
+        password='', 
+        database='tripglide'
     )
     return connection
  

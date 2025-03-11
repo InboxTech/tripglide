@@ -114,9 +114,9 @@ const FlightSearch = () => {
               className="w-full p-3 border rounded"
               placeholder="Type your departure city"
             />
-            <datalist id="departure-airports">
+            <datalist className="bg-white" id="departure-airports">
               {loading ? (
-                <option>Loading...</option>
+                <option className="bg-white">Loading...</option>
               ) : error ? (
                 <option>{error}</option>
               ) : (
