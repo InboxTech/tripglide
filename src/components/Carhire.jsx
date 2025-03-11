@@ -3,6 +3,9 @@ import { useState, useEffect } from "react";
 import Header from "./Header";
 import TravelDeals from "./TravelDeals";
 import Footer from "./Footer";
+import FeaturesSection from "./FeaturesSection";
+import { FaCar, FaCalendarAlt, FaTag } from "react-icons/fa";
+import CarHireFAQ from "./CarHireFAQ";
 
 export default function CarHire() {
   const [pickupDate, setPickupDate] = useState("");
@@ -163,8 +166,27 @@ export default function CarHire() {
         </div>
       </div>
 
+
+
+      {/* Features Section */}
+      <div className="bg-white">
+      <div className="px-8 pt-5">
+  <nav className="text-sm">
+    <a href="/" className="text-blue-600 hover:underline">Home</a>
+    <span className="mx-2 text-gray-400">›</span>
+    <span className="text-gray-600">Car hire</span>
+  </nav>
+</div>
+      <FeaturesSection features={carFeatures} />
+      </div>
+
       {/* Swiper Travel Deals */}
       <TravelDeals />
+
+      {/* Car Hire FAQ */}
+      <div className="bg-white">
+      <CarHireFAQ />
+      </div>
 
        {/* Footer */}
        <Footer />

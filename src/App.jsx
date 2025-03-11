@@ -8,6 +8,7 @@ import Login from "./components/Login";
 import SignUp from "./components/Signup";
 import FlightCardList from "./components/FlightCardList";
 import CarHire from "./components/Carhire";
+import FeaturesSection from "./components/FeaturesSection";
 
 function App() {
   return (
@@ -20,7 +21,9 @@ function App() {
           <Route path="/carhire" element={<CarHire />} />
           <Route path="/search-results" element={<FlightCardList />} />
           <Route path="/flights" element={<SearchSection />} />
-          <Route path="/" element={<SearchSection />} /> 
+          <Route path="/" element={<SearchSection />} />
+          <Route path="/carhire" element={<CarHire />} />
+          <Route path="/features" element={<FeaturesSection />} />
         </Routes>
       </div>
     </Router>
