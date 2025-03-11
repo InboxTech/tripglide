@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Header from "./Header";
 import Footer from "./Footer";
 import TravelersCabinClass from "./TravelersCabinClass"; // Import Travelers and Cabin Component
@@ -57,7 +57,7 @@ export default function SearchSection() {
                 <img
                     src="/public/images/benjamin-voros-phIFdC6lA4E-unsplash.jpg"
                     alt="Flight booking background"
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover object-center fixed"
                 />
             </div>
 
@@ -66,6 +66,7 @@ export default function SearchSection() {
                 <h1 className="text-4xl lg:text-6xl font-bold text-white mb-8">
                     The best flight offers from anywhere, to everywhere
                 </h1>
+                
 
                 {/* Search Form */}
                 <div className="bg-[#001533] p-6 rounded-2xl shadow-lg">
@@ -173,26 +174,34 @@ export default function SearchSection() {
                     
 
                     // Return, One Way
-                    <form className="flex flex-wrap gap-3 items-center">
+                    <form className="flex flex-wrap gap-2 sm:gap-4 items-center w-full">
                         {/* From */}
-                        <div className="flex-1">
+                        <div className="flex-1 min-w-[100px]">
                             <label className="block text-white font-semibold mb-1">From</label>
-                            <input type="text" required placeholder="Enter your city" value={from} onChange={(e) => setFrom(e.target.value)} className="w-full p-3 rounded-lg bg-white text-black" />
+                            <input type="text" required placeholder="Enter your city" 
+                            value={from} 
+                            onChange={(e) => setFrom(e.target.value)} 
+                            className="w-full p-3 rounded-lg bg-white text-black" />
                         </div>
 
                         {/* Swap Button */}
-                        <div className="flex mt-7 justify-center items-center">
-                            <button type="button" onClick={swapLocations} className="bg-white hover:bg-gray-400 p-2 rounded-full">⇄</button>
+                        <div className="flex relative mt-7 justify-center items-center">
+                            <button type="button" 
+                            onClick={swapLocations} 
+                            className="bg-white text-black border border-gray-300 w-10 h-10 rounded-full flex justify-center items-center shadow-md hover:bg-gray-400 transition">⇄</button>
                         </div>
 
                         {/* To */}
-                        <div className="flex-1">
+                        <div className="flex-1 min-w-[100px]">
                             <label className="block required: text-white font-semibold mb-1">To</label>
-                            <input type="text" placeholder="Enter your city" value={to} onChange={(e) => setTo(e.target.value)} className="w-full p-3 rounded-lg bg-white text-black" />
+                            <input type="text" placeholder="Enter your city" 
+                            value={to} 
+                            onChange={(e) => setTo(e.target.value)} 
+                            className="w-full p-3 rounded-lg bg-white text-black" />
                         </div>
 
                         {/* Depart */}
-                        <div className="flex-1">
+                        <div className="flex-1 min-w-[100px]">
                                 <label className="block text-white font-semibold mb-1">Depart</label>
                                 <input
                                     type="date"
@@ -209,7 +218,7 @@ export default function SearchSection() {
 
                         {/* Return - Removed if One Way */}
                         {tripType !== "oneway" && (
-                            <div className="flex-1">
+                            <div className="flex-1 min-w-[100px]">
                             <label className="block text-white font-semibold mb-1">Return</label>
                             <input
                                 type="date"
@@ -255,9 +264,41 @@ export default function SearchSection() {
                             <input type="checkbox" className="mr-2" /> Flexible Tickets
                         </label>
                     </div>
-                )}
+                )}           
                 </div>
             </div>
+
+
+            {/* Banner */}
+<section className="relative w-full py-12 bg-gray-100">
+    <div className="max-w-7xl mx-auto px-6">
+        {/* Banner */}
+        <div className="relative bg-white rounded-2xl overflow-hidden shadow-lg">
+            <img 
+                src="/images/daniel-leone-g30P1zcOzXo-unsplash.jpg" 
+                alt="Scenic view" 
+                className="w-full h-72 md:h-96 object-cover transition-opacity duration-500 ease-in-out" 
+            />
+            {/* Text Content */}
+            <div className="absolute inset-0 flex flex-col justify-center px-6 text-white bg-black/50">
+                <p className="text-lg uppercase">Grab a deal</p>
+                <h2 className="text-3xl md:text-4xl font-bold mt-2">
+                    When the price is low, you'll know
+                </h2>
+                <p className="mt-2 text-lg">
+                    Score cheaper seats with Price Alerts
+                </p>
+                <button 
+                    className="mt-5 px-6 py-1 w-36 bg-white text-black rounded-2xl font-semibold shadow-md hover:bg-gray-500 hover:text-white cursor-pointer"
+                    onClick={() => alert('How it works clicked!')}
+                >
+                    How it works
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
 
             {/* Footer */}
             <Footer />
