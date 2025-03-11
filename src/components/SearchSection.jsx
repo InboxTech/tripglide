@@ -179,13 +179,13 @@ export default function SearchSection() {
                                 <button 
                                     type="button"
                                     onClick={() => removeMultiCityFlight(flight.id)}
-                                    disabled={multiCityFlights.length <= 2} // Only enable when more than 2 flights exist
+                                    disabled={index < 2} // Disabling first two buttons
                                     className={`text-white px-4 py-2 rounded-lg transition 
-                                        ${multiCityFlights.length <= 2 ? "bg-gray-400 cursor-not-allowed" : "bg-red-500 hover:bg-red-700 cursor-pointer"}`}
+                                        ${index < 2 ? "bg-gray-400 cursor-not-allowed" : "bg-red-500 hover:bg-red-700 cursor-pointer"}`}
                                 >
                                     ✖
                                 </button>
-                                </div>
+                            </div>
                         ))}
                 
                         {/* Add Flight Button */}
@@ -288,7 +288,7 @@ export default function SearchSection() {
                             onClick={handleSearch}
                             type="submit"
                             disabled={isSearchDisabled}
-                            className={`w-full mt-7 px-6 py-3 font-semibold rounded-lg transition 
+                            className={`w-full mt-6 px-6 py-3 font-semibold rounded-lg transition 
                                 ${isSearchDisabled ? "bg-blue-300 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700 text-white cursor-pointer"}`}
                         >
                             Search

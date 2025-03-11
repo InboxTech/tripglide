@@ -1,30 +1,17 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { FaGlobe, FaUser, FaBars, FaHeart, FaPlane, FaHotel, FaCar, FaFlag, FaSearchLocation, FaQuestionCircle } from "react-icons/fa";
 import logo from "../assets/image/logo2.png";
-import { useNavigate, useLocation } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom"; 
 
 export default function Header() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("flights");
   const navigate = useNavigate();
-  const location = useLocation();
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
-
-  // Update activeTab based on current path
-  useEffect(() => {
-    const path = location.pathname;
-    if (path.includes("/hotels")) {
-      setActiveTab("hotels");
-    } else if (path.includes("/carhire")) {
-      setActiveTab("carhire");
-    } else {
-      setActiveTab("flights");
-    }
-  }, [location.pathname]);
 
   return (
     <div>
@@ -101,6 +88,7 @@ export default function Header() {
           <Link
             key={id}
             to={`/${id}`}
+            onClick={() => setActiveTab(id)}
             className={`flex items-center cursor-pointer gap-2 px-3 md:px-4 py-1.5 md:py-2 rounded-full border border-white transition-transform duration-300 hover:scale-105 hover:bg-blue-600 ${
               activeTab === id ? "bg-blue-600" : "bg-gray-800"
             }`}
