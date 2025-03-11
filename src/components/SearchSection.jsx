@@ -6,6 +6,8 @@ import TravelDeals from "./TravelDeals";
 import FAQSection from "./FAQSecton";
 import FlightCardList from "./FlightCardList";
 import { useNavigate } from "react-router-dom";
+import { FaPlane, FaCalendarAlt, FaTag } from "react-icons/fa";
+import FeaturesSection from "./FeaturesSection";
 
 export default function SearchSection() {
     const [tripType, setTripType] = useState("return");
@@ -73,6 +75,21 @@ export default function SearchSection() {
 
     // Get today's date in YYYY-MM-DD format for min restriction
     const today = new Date().toISOString().split("T")[0];
+
+     const flightFeatures = [
+        {
+          icon: <FaPlane />,
+          text: "Explore the best flight deals from anywhere, to everywhere, then book with no fees",
+        },
+        {
+          icon: <FaCalendarAlt />,
+          text: "Compare flight deals from over 1000 providers, and choose the cheapest, fastest or lowest-emission tickets",
+        },
+        {
+          icon: <FaTag />,
+          text: "Find the cheapest month - or even day - to fly, and set up Price Alerts to book when the price is right",
+        },
+      ];
 
     return (
         <section className="relative w-full">
@@ -297,9 +314,21 @@ export default function SearchSection() {
                 </div>
             </div>
 
+             {/* Features Section */}
+      <div className="bg-white">
+      <div className="px-8 pt-5">
+  <nav className="text-sm">
+    <a href="/" className="text-blue-600 hover:underline">Home</a>
+    <span className="mx-2 text-gray-400">›</span>
+    <span className="text-gray-600">Flights</span>
+  </nav>
+</div>
+      <FeaturesSection features={flightFeatures} />
+      </div>
+
 
             {/* Banner */}
-            <section className="relative w-full py-20 bg-gray-100 mt-8">
+            <section className="relative w-full py-20 bg-gray-100">
                 <div className="max-w-7xl mx-auto px-6">
                     {/* Banner */}
                     <div className="relative bg-white rounded-2xl overflow-hidden shadow-lg">
