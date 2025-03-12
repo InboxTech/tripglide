@@ -41,6 +41,21 @@ export default function CarHire() {
   const isFormComplete =
     pickupLocation && pickupDate && pickupTime && dropoffDate && dropoffTime;
 
+    const carFeatures = [
+      {
+        icon: <FaCar />,
+        text: "Search for cheap car rental in seconds – anywhere in the world",
+      },
+      {
+        icon: <FaCalendarAlt />,
+        text: "Compare deals from trusted car hire providers in one place",
+      },
+      {
+        icon: <FaTag />,
+        text: "Rent a car with a flexible booking policy or free cancellation",
+      },
+    ];
+
 
   return (
     <section className="relative w-full">
@@ -169,16 +184,16 @@ export default function CarHire() {
 
 
       {/* Features Section */}
-      <div className="bg-white">
-      <div className="px-8 pt-5">
-  <nav className="text-sm">
-    <a href="/" className="text-blue-600 hover:underline">Home</a>
-    <span className="mx-2 text-gray-400">›</span>
-    <span className="text-gray-600">Car hire</span>
-  </nav>
-</div>
-      <FeaturesSection features={carFeatures} />
+            <div className="bg-white">
+            <div className="px-8 pt-5">
+        <nav className="text-sm">
+          <a href="/" className="text-blue-600 hover:underline">Home</a>
+          <span className="mx-2 text-gray-400">›</span>
+          <span className="text-gray-600">Car hire</span>
+        </nav>
       </div>
+            <FeaturesSection features={carFeatures} />
+            </div>
 
       {/* Swiper Travel Deals */}
       <TravelDeals />

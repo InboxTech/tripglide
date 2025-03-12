@@ -185,7 +185,7 @@ export default function SearchSection() {
                                 >
                                     ✖
                                 </button>
-                                </div>
+                            </div>
                         ))}
                 
                         {/* Add Flight Button */}
@@ -212,7 +212,7 @@ export default function SearchSection() {
                                     ${isSearchDisabled ? "bg-blue-300 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700 text-white"}`}
                             >
                                 Search
-                            </button>
+                            </button>   
                         </div>
                     </form>
                     ) : (
