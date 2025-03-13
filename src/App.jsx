@@ -9,8 +9,8 @@ import FlightCardList from "./components/FlightCardList";
 import CarHire from "./components/Carhire";
 import FeaturesSection from "./components/FeaturesSection";
 
-
 function App() {
+
   return (
     <Router>
       <div className="App">

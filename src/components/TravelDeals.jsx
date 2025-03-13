@@ -26,7 +26,7 @@ const destinations = [
 const TravelDeals = () => {
   return (
     <section className="py-20 bg-gray-100">
-      <h2 className="text-center text-3xl font-bold mb-6 text-black">Popular Destinations</h2>
+      <h2 className="text-center text-3xl font-bold font-serif mb-6 text-black">Popular Destinations</h2>
 
       <div className="max-w-6xl mx-auto">
         <Swiper
