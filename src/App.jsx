@@ -21,7 +21,6 @@ function App() {
           <Route path="/search-results" element={<FlightCardList />} />
           <Route path="/flights" element={<SearchSection />} />
           <Route path="/" element={<SearchSection />} />
-          <Route path="/carhire" element={<CarHire />} />
           <Route path="/features" element={<FeaturesSection />} />
         </Routes>
       </div>

@@ -40,7 +40,7 @@ export default function Header() {
           </div>
   
           {/* Navbar Icons & Dropdown */}
-          <div className="flex items-center gap-2 md:gap-6">
+          <div className="flex items-center gap-2 md:gap-4">
             {/* Language Selector */}
             <div className="p-2 rounded-lg hover:bg-gray-600 transition cursor-pointer">
               <FaGlobe />

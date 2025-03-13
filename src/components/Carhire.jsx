@@ -181,8 +181,6 @@ export default function CarHire() {
         </div>
       </div>
 
-
-
       {/* Features Section */}
       <div className="bg-white">
         <div className="container mx-auto max-w-7xl px-8 pt-5">

@@ -6,10 +6,16 @@ export default function Footer() {
       <div className="max-w-7xl container mx-auto">
         {/* Top Section */}
         <div className="flex flex-col md:flex-row justify-between items-center md:items-start gap-6">
-          {/* Language and Currency Button */}
-          <button className="bg-[#1A2C47] text-white px-6 py-3 rounded-lg w-full md:w-auto">
-            India · English (UK) · ₹ INR
-          </button>
+          {/* About Us */}
+          <div className="bg-[#06152B] text-white px-6 py-3 rounded-lg w-full md:w-auto">
+          <h2 className="text-lg font-semibold font-serif text-center md:text-left">About Us</h2>
+          <p className="mt-2 font-normal text-sm text-center md:text-left max-w-xl md:max-w-lg leading-relaxed">
+            Tripglide is a travel website project designed to help<br className="hidden sm:inline" /> 
+            users find the best flights, hotels, and car hire deals.<br className="hidden sm:inline" /> 
+            Our goal is to make travel seamless and affordable.
+          </p>
+        </div>
+
 
           {/* Links Section */}
           <div className="grid grid-cols-2 md:grid-cols-3 gap-6 w-full md:w-auto text-center md:text-left">

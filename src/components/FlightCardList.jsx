@@ -34,7 +34,7 @@ const FlightCardList = () => {
     <div className="bg-blue-50"> 
       <Header />  {/* Header added */}
 
-      <div className="p-8">
+      <div className="p-8 container mx-auto max-w-7xl">
         {/* Heading */}
         <h2 className="text-2xl font-bold mb-4">Select departure location</h2>
 
