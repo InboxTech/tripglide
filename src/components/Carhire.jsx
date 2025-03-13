@@ -184,20 +184,23 @@ export default function CarHire() {
 
 
       {/* Features Section */}
-              <div className="bg-white">
-              <div className="px-8 pt-5">
+      <div className="bg-white">
+        <div className="container mx-auto max-w-7xl px-8 pt-5">
           <nav className="text-sm">
             <a href="/" className="text-blue-600 hover:underline">Home</a>
             <span className="mx-2 text-gray-400">›</span>
             <span className="text-gray-600">Car hire</span>
           </nav>
         </div>
-              <FeaturesSection features={carFeatures} />
-              </div>
+        <div className="container mx-auto max-w-7xl">
+          <FeaturesSection features={carFeatures} />
+        </div>
+      </div>
+
 
       {/* Car Hire Deals Section */}
       <section className="bg-gray-100 py-12 px-6 md:px-12">
-        <div className="max-w-6xl mx-auto text-center">
+        <div className="max-w-7xl container mx-auto text-center">
           <h2 className="text-2xl md:text-3xl font-bold mb-4 font-serif">
             Looking for the best car hire deals worldwide?
           </h2>
@@ -251,8 +254,10 @@ export default function CarHire() {
       <hr className="bg-black"></hr>
 
 
-      {/* Swiper Travel Deals */}
-      <TravelDeals />
+       {/* Swiper Section */}
+       <section className="bg-white">
+       <TravelDeals />
+       </section>
 
       {/* Car Hire FAQ */}
       <div className="bg-white">

@@ -3,7 +3,7 @@ import { FaInstagram, FaTwitter, FaMedium } from "react-icons/fa";
 export default function Footer() {
   return (
     <footer className="bg-[#06152B] text-white px-6 py-8">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-7xl container mx-auto">
         {/* Top Section */}
         <div className="flex flex-col md:flex-row justify-between items-center md:items-start gap-6">
           {/* Language and Currency Button */}

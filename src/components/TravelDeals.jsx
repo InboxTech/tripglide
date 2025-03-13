@@ -25,10 +25,10 @@ const destinations = [
 
 const TravelDeals = () => {
   return (
-    <section className="py-20 bg-gray-100">
+    <section className="py-20 bg-white container mx-auto max-w-7xl">
       <h2 className="text-center text-3xl font-bold font-serif mb-6 text-black">Popular Destinations</h2>
 
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-7xl conainer mx-auto">
         <Swiper
           modules={[Navigation, Pagination, Autoplay]}
           spaceBetween={30}

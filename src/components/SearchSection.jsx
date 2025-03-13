@@ -316,13 +316,13 @@ export default function SearchSection() {
             </div>
 
              {/* Features Section */}
-                <div className="bg-white">
-                <div className="px-8 pt-5">
-            <nav className="text-sm">
+             <div className="bg-white">
+            <div className="container mx-auto px-8 pt-5 max-w-7xl">
+                <nav className="text-sm">
                 <a href="/" className="text-blue-600 hover:underline">Home</a>
                 <span className="mx-2 text-gray-400">›</span>
                 <span className="text-gray-600">Flights</span>
-            </nav>
+                </nav>
             </div>
             <FeaturesSection features={flightFeatures} />
             </div>
@@ -367,7 +367,7 @@ export default function SearchSection() {
 
             {/* Flight Deals Section */}
             <section className="bg-gray-100 py-12 px-6 md:px-12">
-            <div className="max-w-6xl mx-auto text-center">
+            <div className="max-w-7xl container mx-auto text-center">
                 <h2 className="text-2xl md:text-3xl font-bold mb-4 font-serif">
                 Looking for the best flight deals to anywhere in the world?
                 </h2>
