@@ -7,7 +7,7 @@ export default function Footer() {
         {/* Top Section */}
         <div className="flex flex-col md:flex-row justify-between items-center md:items-start gap-6">
           {/* About Us */}
-          <div className="bg-[#06152B] text-white px-6 py-3 rounded-lg w-full md:w-auto">
+          <div className="bg-[#06214a] text-white px-6 py-3 rounded-lg w-full md:w-auto">
           <h2 className="text-lg font-semibold font-serif text-center md:text-left">About Us</h2>
           <p className="mt-2 font-normal text-sm text-center md:text-left max-w-xl md:max-w-lg leading-relaxed">
             Tripglide is a travel website project designed to help<br className="hidden sm:inline" /> 
