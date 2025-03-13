@@ -8,6 +8,7 @@ import FlightCardList from "./FlightCardList";
 import { useNavigate } from "react-router-dom";
 import { FaPlane, FaCalendarAlt, FaTag } from "react-icons/fa";
 import FeaturesSection from "./FeaturesSection";
+import FlightDealsCards from "../FlightDealsCards";
 
 export default function SearchSection() {
     const [tripType, setTripType] = useState("return");
@@ -315,16 +316,16 @@ export default function SearchSection() {
             </div>
 
              {/* Features Section */}
-      <div className="bg-white">
-      <div className="px-8 pt-5">
-  <nav className="text-sm">
-    <a href="/" className="text-blue-600 hover:underline">Home</a>
-    <span className="mx-2 text-gray-400">›</span>
-    <span className="text-gray-600">Flights</span>
-  </nav>
-</div>
-      <FeaturesSection features={flightFeatures} />
-      </div>
+             <div className="bg-white">
+            <div className="container mx-auto px-8 pt-5 max-w-7xl">
+                <nav className="text-sm">
+                <a href="/" className="text-blue-600 hover:underline">Home</a>
+                <span className="mx-2 text-gray-400">›</span>
+                <span className="text-gray-600">Flights</span>
+                </nav>
+            </div>
+            <FeaturesSection features={flightFeatures} />
+            </div>
 
 
             {/* Banner */}
@@ -339,33 +340,91 @@ export default function SearchSection() {
                         />
                         {/* Text Content */}
                         <div className="absolute inset-0 flex flex-col justify-center px-6 text-white bg-black/50">
-                            <p className="text-lg uppercase">Grab a deal</p>
+                            <p className="text-lg uppercase font-serif">Grab a deal</p>
                             <h2 className="text-3xl md:text-4xl font-bold mt-2">
                                 When the price is low, you'll know
                             </h2>
-                            <p className="mt-2 text-lg">
+                            <p className="mt-2 text-lg font-serif">
                                 Score cheaper seats with Price Alerts
                             </p>
-                            <button 
-                                className="mt-5 px-6 py-1 w-36 bg-white text-black rounded-2xl font-semibold shadow-md hover:bg-gray-500 hover:text-white cursor-pointer"
-                                onClick={() => alert('How it works clicked!')}
+                            <a 
+                                href="#faq"
+                                className="mt-5 px-6 py-1 w-36 bg-white text-black rounded-2xl font-semibold shadow-md hover:bg-gray-500 hover:text-white cursor-pointer text-center inline-block"
                             >
                                 How it works
-                            </button>
+                            </a>
+
                         </div>
                     </div>
                 </div>
             </section>
-
             <hr className="border-black"></hr>
 
+            {/* Flight Deals Cards */}
             <section className="bg-white">
+            <FlightDealsCards />
+            </section>
+
+            {/* Flight Deals Section */}
+            <section className="bg-gray-100 py-12 px-6 md:px-12">
+            <div className="max-w-7xl container mx-auto text-center">
+                <h2 className="text-2xl md:text-3xl font-bold mb-4 font-serif">
+                Looking for the best flight deals to anywhere in the world?
+                </h2>
+                <p className="text-gray-600 mb-10 font-serif">
+                It’s easy around here. 100 million travellers use us as their go-to tool, comparing flight deals and offers
+                from more than 1,200 airlines and travel providers. With so many options to choose from in one place, you can
+                say hello to savings, and goodbye to stress – here’s how.
+                </p>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div className="bg-white p-6 rounded-lg shadow-md text-center hover:shadow-lg">
+                    <img
+                    src="https://cdn-icons-png.flaticon.com/512/2645/2645568.png"
+                    alt="Globe"
+                    className="w-16 h-16 mx-auto mb-4"
+                    />
+                    <h3 className="text-lg font-bold font-serif">Search ‘Everywhere’, explore anywhere</h3>
+                    <p className="text-gray-600 mt-2 font-serif">
+                    Enter your departure airport and travel dates, then hit ‘Everywhere’. You’ll see flights to every
+                    destination in the world, cheapest first.
+                    </p>
+                </div>
+                <div className="bg-white p-6 rounded-lg shadow-md text-center hover:shadow-lg">
+                    <img
+                    src="https://cdn-icons-png.flaticon.com/512/2353/2353181.png"
+                    alt="Transparent Pricing"
+                    className="w-16 h-16 mx-auto mb-4"
+                    />
+                    <h3 className="text-lg font-bold font-serif">Pay less, go further with transparent pricing</h3>
+                    <p className="text-gray-600 mt-2 font-serif">
+                    The cheapest flight deals. No hidden fees. No funny business. With us, the price you see when you search is
+                    what you’ll pay.
+                    </p>
+                </div>
+                <div className="bg-white p-6 rounded-lg shadow-md text-center hover:shadow-lg">
+                    <img
+                    src="https://cdn-icons-png.flaticon.com/512/2529/2529521.png"
+                    alt="Price Alerts"
+                    className="w-16 h-16 mx-auto mb-4"
+                    />
+                    <h3 className="text-lg font-bold font-serif">Book when it's best with Price Alerts</h3>
+                    <p className="text-gray-600 mt-2 font-serif">
+                    Found your flight, but not quite ready to book? Set up Price Alerts and we’ll let you know when your flight
+                    price goes up or down.
+                    </p>
+                </div>
+                </div>
+            </div>
+            </section>
+            <hr className="bg-black"></hr>
+
             {/* Swiper Section */}
+            <section className="bg-white">
             <TravelDeals />
             </section>
 
-            <section className="bg-white">
             {/* FAQ Section */}
+            <section id="faq" className="bg-white">
             <FAQSection />
             </section>
 
