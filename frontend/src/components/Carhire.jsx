@@ -6,6 +6,7 @@ import Footer from "./Footer";
 import FeaturesSection from "./FeaturesSection";
 import { FaCar, FaCalendarAlt, FaTag } from "react-icons/fa";
 import CarHireFAQ from "./CarHireFAQ";
+import PopularCarDeals from "./PopularCarDeals";
 
 export default function CarHire() {
   const [pickupDate, setPickupDate] = useState("");
@@ -192,6 +193,13 @@ export default function CarHire() {
         </div>
         <div className="container mx-auto max-w-7xl">
           <FeaturesSection features={carFeatures} />
+        </div>
+      </div>
+
+      {/* Popular Car Deals */}
+      <div className="bg-gray-100">
+        <div className="container mx-auto max-w-7xl px-8 py-12">
+          <PopularCarDeals />
         </div>
       </div>
       
