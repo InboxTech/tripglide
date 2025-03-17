@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import Header from "./Header";  // Adjust path if needed
-import Footer from "./Footer";  // Adjust path if needed
+import Header from "./Header";  
+import Footer from "./Footer";  
 
 const flights = [
   { city: "New Delhi", price: 80433, },
@@ -34,7 +34,7 @@ const FlightCardList = () => {
     <div className="bg-blue-50"> 
       <Header />  {/* Header added */}
 
-      <div className="p-8">
+      <div className="p-8 container mx-auto max-w-7xl">
         {/* Heading */}
         <h2 className="text-2xl font-bold mb-4">Select departure location</h2>
 

@@ -1,7 +1,5 @@
 import React from "react";
 import Header from "./Header";
-import Footer from "./Footer";
-import FAQSection from "./FAQSection";
 
 
 export default function Hotels() {

@@ -27,7 +27,7 @@ const TravelersCabinClass = ({ className }) => {
       {/* Dropdown Button */}
     <button type="button"
         onClick={toggleDropdown}
-        className={`px-4 py-0.5 cursor-pointer border rounded-lg flex flex-col w-64 text-left mt-6.5 transition-all
+        className={`px-4 py-0.5 cursor-pointer border rounded-lg flex flex-col w-56 text-left mt-7 transition-all
           ${className === "multi-city-travelers" ? "bg-white shadow-lg" : "bg-white"}
         `}
     >
