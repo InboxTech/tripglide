@@ -25,6 +25,7 @@ const CarHireFAQ = () => {
     console.log("State changed, openIndex is now:", openIndex);
   }, [openIndex]);
 
+  
   return (
     <div className="max-w-6xl mx-auto p-6 pointer-events-auto">
       <h2 className="text-2xl font-bold mb-6">Car Hire with Tripglide</h2>
