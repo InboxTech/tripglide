@@ -3,13 +3,18 @@ import Header from "./Header";
 import Footer from "./Footer";
 import TravelersCabinClass from "./TravelersCabinClass"; 
 import TravelDeals from "./TravelDeals";
+
 import FAQSection from "./FAQSecton";
 import FlightCardList from "./FlightCardList";
 import { useNavigate } from "react-router-dom";
 import { FaPlane, FaCalendarAlt, FaTag } from "react-icons/fa";
 import FeaturesSection from "./FeaturesSection";
+import axios from "axios";
 
 export default function SearchSection() {
+    const [flights, setFlights] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const [tripType, setTripType] = useState("return");
     const [from, setFrom] = useState(""); 
     const [to, setTo] = useState(""); 
@@ -38,7 +43,10 @@ export default function SearchSection() {
           setCurrentImage((prevImage) => (prevImage + 1) % images.length);
         }, 5000);
         return () => clearInterval(interval);
-      }, []);
+      }
+
+      
+, []);
 
       const handleSearch = (e) => {
         e.preventDefault();    
@@ -55,11 +63,10 @@ export default function SearchSection() {
 
     // Function to swap from and to values
     const swapLocations = () => {
-        setFrom((prevFrom) => {
-            setTo(prevFrom);
-            return to;
-        });
+        setFrom(to);
+        setTo(from);
     };
+    
 
      // Function to add flight in Multi-city
      const addMultiCityFlight = () => {
@@ -90,6 +97,25 @@ export default function SearchSection() {
           text: "Find the cheapest month - or even day - to fly, and set up Price Alerts to book when the price is right",
         },
       ];
+
+      useEffect(() => {
+        axios
+            .get("http://127.0.0.1:5001/")
+            .then((response) => {
+                setFlights(response.data);
+                setLoading(false);
+            })
+            .catch((error) => {
+                console.error("Error fetching data:", error);
+                setFlights([]); // Corrected
+                setLoading(false);
+            });
+    }, []);
+    
+    // Extract unique departure and arrival cities
+   const departureCity = [...new Set(flights.map((flight) => flight.departure))];
+    const arrivalCity = [...new Set(flights.map((flight) => flight.arrival))];
+      
 
     return (
         <section className="relative w-full">
@@ -223,10 +249,33 @@ export default function SearchSection() {
                         {/* From */}
                         <div className="flex-1 min-w-[100px]">
                             <label className="block text-white font-semibold mb-1">From</label>
-                            <input type="text" required placeholder="Enter your city" 
-                            value={from} 
-                            onChange={(e) => setFrom(e.target.value)} 
-                            className="w-full p-3 rounded-lg bg-white text-black" />
+                            <input
+    list="departure-city"
+    id="from"
+    value={from}
+    onChange={(e) => setFrom(e.target.value)}
+    className="w-full p-3 border bg-white rounded"
+    placeholder="Type your departure city"
+/>
+
+            <datalist className="bg-white" id="departure-city">
+  {loading ? (
+    <option className="bg-white">Loading...</option>
+  ) : error ? (
+    <option>{error}</option>
+  ) : (
+    departureCity
+      .filter((airport) => airport) // Remove invalid values
+      .map((airport, index) => (
+        <option key={`${airport}-${index}`} value={airport}>
+            
+          {airport}
+        </option>
+      ))
+  )}
+</datalist>
+
+
                         </div>
 
                         {/* Swap Button */}
