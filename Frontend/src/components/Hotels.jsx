@@ -3,7 +3,8 @@ import Header from "./Header";
 import TravelDeals from "./TravelDeals";
 import Footer from "./Footer";
 import FeaturesSection from "./FeaturesSection";
-import { FaHotel, FaCalendarAlt, FaTag } from "react-icons/fa";
+import HotelFAQ from "./HotelFAQ";
+import { FaHotel, FaCalendarAlt, FaTag, FaChevronDown } from "react-icons/fa";
 
 export default function Hotels() {
   const [checkInDate, setCheckInDate] = useState("");
@@ -49,9 +50,10 @@ export default function Hotels() {
         <img
           src="/images/Heroimg.jpg"
           alt="Hotel background"
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover object-center fixed"
         />
       </div>
+      
 
       {/* Hero Content */}
       <div className="relative max-w-7xl mx-auto px-6 py-16 lg:py-24 mt-16">
@@ -161,10 +163,70 @@ export default function Hotels() {
         </div>
       </div>
 
+      {/* Advantages */}
+      <section className="bg-gray-100 py-12 px-6 md:px-12">
+  <div className="max-w-7xl container mx-auto text-center">
+    <h2 className="text-2xl md:text-3xl font-bold mb-4 font-serif">
+      Looking for the best hotel deals worldwide?
+    </h2>
+    <p className="text-gray-600 mb-10 font-serif">
+      Compare hotel prices from top booking sites in one place. With flexible options and no hidden fees, 
+      booking your perfect stay has never been easier – here’s why.
+    </p>
+
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      {/* Wide Selection */}
+      <div className="bg-white p-6 rounded-lg shadow-md text-center hover:shadow-lg">
+        <img
+          src="https://cdn-icons-png.flaticon.com/512/168/168812.png"
+          alt="Wide Selection"
+          className="w-16 h-16 mx-auto mb-4"
+        />
+        <h3 className="text-lg font-bold font-serif">Wide Selection, Best Prices</h3>
+        <p className="text-gray-600 mt-2 font-serif">
+          Choose from thousands of hotels, resorts, and apartments worldwide. Find the perfect stay at the best price.
+        </p>
+      </div>
+
+      {/* No Hidden Fees */}
+      <div className="bg-white p-6 rounded-lg shadow-md text-center hover:shadow-lg">
+        <img
+          src="https://cdn-icons-png.flaticon.com/512/2910/2910791.png"
+          alt="No Hidden Fees"
+          className="w-16 h-16 mx-auto mb-4"
+        />
+        <h3 className="text-lg font-bold font-serif">No Hidden Fees, No Surprises</h3>
+        <p className="text-gray-600 mt-2 font-serif">
+          The price you see is the price you pay. No unexpected charges – just clear, transparent hotel pricing.
+        </p>
+      </div>
+
+      {/* Free Cancellation */}
+      <div className="bg-white p-6 rounded-lg shadow-md text-center hover:shadow-lg">
+        <img
+          src="https://cdn-icons-png.flaticon.com/512/709/709790.png"
+          alt="Free Cancellation"
+          className="w-16 h-16 mx-auto mb-4"
+        />
+        <h3 className="text-lg font-bold font-serif">Free Cancellation on Most Bookings</h3>
+        <p className="text-gray-600 mt-2 font-serif">
+          Plans changed? No worries! Many hotels offer free cancellation, so you can book with confidence.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
       {/* Swiper Section */}
       <section className="bg-white">
         <TravelDeals />
       </section>
+
+      {/* Hotel FAQ */}
+      <div className="bg-white">
+      <HotelFAQ />
+      </div>
 
       {/* Footer */}
       <Footer />
