@@ -6,7 +6,7 @@ import FAQSection from "./FAQSection";
 
 export default function Hotels() {
   return (
-    <section className="relative w-full pt-16">
+    <section className="relative w-full">
       {/* Header */}
       <Header />
 
