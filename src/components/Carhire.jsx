@@ -194,7 +194,6 @@ export default function CarHire() {
           <FeaturesSection features={carFeatures} />
         </div>
       </div>
-            <FeaturesSection features={carFeatures} />
       
 
 
