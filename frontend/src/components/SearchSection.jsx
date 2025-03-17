@@ -10,7 +10,7 @@ import { FaPlane, FaCalendarAlt, FaTag } from "react-icons/fa";
 import FeaturesSection from "./FeaturesSection";
 import FlightDealsCards from "../FlightDealsCards";
 
-export default function SearchSection() {
+export default function SearchSection() {   
     const [tripType, setTripType] = useState("return");
     const [from, setFrom] = useState(""); 
     const [to, setTo] = useState(""); 
