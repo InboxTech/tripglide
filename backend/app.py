@@ -31,8 +31,8 @@ def get_flights():
     flights = cursor.fetchall()
    
     # Convert timedelta to string for JSON serialization
-    for flight in flights:
-        flight['duration'] = timedelta_to_str(flight['duration'])  # Convert duration to string
+    # for flight in flights:
+        # flight['duration'] = timedelta_to_str(flight['duration'])  # Convert duration to string
    
     cursor.close()
     connection.close()

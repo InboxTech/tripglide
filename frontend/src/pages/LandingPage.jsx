@@ -55,17 +55,17 @@ const FlightSearch = () => {
 
   // Get unique departure and arrival airports
   const departureAirports = [
-    ...new Set(flights.map((flight) => flight.departure_airport)),
+    ...new Set(flights.map((flight) => flight.departure)),
   ];
   const arrivalAirports = [
-    ...new Set(flights.map((flight) => flight.arrival_airport)),
+    ...new Set(flights.map((flight) => flight.arrival)),
   ];
 
   // Filter flights based on the selected "from" and "to"
   const filteredFlights = flights.filter(
     (flight) =>
-      (from ? flight.departure_airport === from : true) &&
-      (to ? flight.arrival_airport === to : true)
+      (from ? flight.departure === from : true) &&
+      (to ? flight.arrival === to : true)
   );
 
   // Change the background image every 5 seconds
@@ -149,14 +149,14 @@ const FlightSearch = () => {
               className="w-full p-3 border rounded"
               placeholder="Type your destination city"
             />
-            <datalist id="arrival-airports">
+            <datalist id="arrival-airports" className="">
               {loading ? (
                 <option>Loading...</option>
               ) : error ? (
                 <option>{error}</option>
               ) : (
                 arrivalAirports.map((airport) => (
-                  <option key={airport} value={airport}>
+                  <option key={airport} value={airport} className="bg-white">
                     {airport}
                   </option>
                 ))
