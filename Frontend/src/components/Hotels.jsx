@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react"; // Add useEffect
 import Header from "./Header";
 import TravelDeals from "./TravelDeals";
 import Footer from "./Footer";
@@ -10,14 +10,13 @@ import "swiper/css";
 import "swiper/css/navigation";
 import { Navigation } from "swiper/modules";
 import { Star } from "lucide-react";
-
-
+import axios from "axios"; // Add axios
 
 export default function Hotels() {
   const [checkInDate, setCheckInDate] = useState("");
   const [checkOutDate, setCheckOutDate] = useState("");
-  const [destination, setDestination] = useState("");
-  const today = new Date().toISOString().split("T")[0];
+  const [destinations, setDestinations] = useState([]);
+    const today = new Date().toISOString().split("T")[0];
 
   const [adults, setAdults] = useState(2);
   const [children, setChildren] = useState(0);
@@ -35,7 +34,7 @@ export default function Hotels() {
     setCheckOutDate(event.target.value);
   };
 
-  const isFormComplete = destination && checkInDate && checkOutDate;
+  const isFormComplete = destinations && checkInDate && checkOutDate;
 
   const hotelFeatures = [
     {
@@ -64,7 +63,19 @@ export default function Hotels() {
     }
     
   };
-
+  useEffect(() => {
+    axios
+      .get("http://127.0.0.1:5001/hotels")  // Ensure the correct endpoint
+      .then((response) => {
+        console.log("Fetched Data:", response.data); // Debugging
+        // Extract only hotel names
+        const names = response.data.map((hotel) => hotel.name);
+        setDestinations(names);
+      })
+      .catch((error) => {
+        console.error("Error fetching destinations:", error);
+      });
+  }, []);
   // Hotel Slider Data
   const cities = ["Mumbai", "New Delhi", "Bengaluru", "Jaipur", "Hyderabad"];
   const hotels = [
@@ -121,8 +132,6 @@ export default function Hotels() {
   const [selectedCity, setSelectedCity] = useState("Mumbai");
 
 
-  
-
   return (
     <section className="relative w-full">
       {/* Header */}
@@ -155,9 +164,20 @@ export default function Hotels() {
                 type="text"
                 placeholder="Enter destination or hotel name"
                 className="w-full p-3 rounded-lg bg-white text-black"
-                value={destination}
-                onChange={(e) => setDestination(e.target.value)}
+                value={destinations}
+                onChange={(e) => setDestinations(e.target.value)}
+                list="destinations" // Add datalist for autocomplete
               />
+              
+              <datalist id="destinations">
+        {destinations.length > 0 ? (
+          destinations.map((dest, index) => (
+            <option key={index} value={dest} />
+          ))
+        ) : (
+          <option disabled>No destinations available</option>
+        )}
+      </datalist>
             </div>
 
             {/* Check-In */}
