@@ -1,4 +1,5 @@
 import { FaInstagram, FaTwitter, FaMedium } from "react-icons/fa";
+// aa icone use karela chhe?
 
 export default function Footer() {
   return (
