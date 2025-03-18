@@ -47,7 +47,7 @@ def get_data():
         connection.close()
 
 # ✅ API: Fetch unique departure & arrival airports
-@app.route('/get_cities', methods=['GET'])
+@app.route('/get_flights', methods=['GET'])
 def get_cities():
     connection = get_db_connection()
     if connection is None:
@@ -56,12 +56,12 @@ def get_cities():
     cursor = connection.cursor(dictionary=True)
     try:
         # Fetch unique departure airports
-        cursor.execute("SELECT DISTINCT departure_airport FROM flights")
-        departure_airports = [row["departure_airport"] for row in cursor.fetchall()]
+        cursor.execute("SELECT DISTINCT departure FROM flights")
+        departure_airports = [row["departure"] for row in cursor.fetchall()]
 
         # Fetch unique arrival airports
-        cursor.execute("SELECT DISTINCT arrival_airport FROM flights")
-        arrival_airports = [row["arrival_airport"] for row in cursor.fetchall()]
+        cursor.execute("SELECT DISTINCT arrival FROM flights")
+        arrival_airports = [row["arrival"] for row in cursor.fetchall()]
 
         return jsonify({
             "departure_airport": departure_airports if departure_airports else [],
