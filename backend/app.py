@@ -1,8 +1,8 @@
 from flask import Flask, jsonify, request
 import mysql.connector
 from flask_cors import CORS
-from datetime import timedelta
-
+from datetime import timedelta   
+         
 app = Flask(_name_)
 CORS(app)  # Enable CORS for all domains
 
@@ -12,8 +12,8 @@ def get_db_connection():
         host='localhost',
         user='root',  # Update with your MySQL username
         password='',  # Update with your MySQL password
-        port="3307",
-        database='main'  # Update with your actual database name
+        
+          database='main'  # Update with your actual database name
     )
     return connection
 
