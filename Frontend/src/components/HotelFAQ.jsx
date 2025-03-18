@@ -14,42 +14,36 @@ const hotelFaqs = [
 ];
 
 const HotelFAQ = () => {
-  const [openIndex, setOpenIndex] = useState(-1);
+  const [openIndex, setOpenIndex] = useState(null);
 
   const toggleFAQ = (index) => {
     setOpenIndex(openIndex === index ? null : index);
-    console.log("Updated openIndex:", openIndex);
   };
 
   useEffect(() => {
-    console.log("State changed, openIndex is now:", openIndex);
+    console.log("openIndex changed to:", openIndex);
   }, [openIndex]);
 
   return (
-    <div className="max-w-7xl container mx-auto p-6 pointer-events-auto">
-      <h2 className="text-2xl font-bold font-serif mb-6">Hotel Booking with Tripglide</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+      <h2 className="text-2xl sm:text-3xl font-bold font-serif mb-8 text-center">Hotel Booking with Tripglide</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {hotelFaqs.map((faq, index) => (
           <div key={index} className="border-b pb-4">
             <button
-              className="w-full text-left font-semibold py-2 flex justify-between items-center cursor-pointer pointer-events-auto"
+              className="w-full text-left font-semibold text-base sm:text-lg py-3 flex justify-between items-center focus:outline-none"
               onClick={() => toggleFAQ(index)}
-              style={{
-                pointerEvents: "auto !important",
-                cursor: "pointer !important",
-                zIndex: 999,
-              }}
             >
-              {faq.question}
-              <span>{openIndex === index ? "−" : "+"}</span>
+              <span>{faq.question}</span>
+              <span className="text-xl">{openIndex === index ? "−" : "+"}</span>
             </button>
-            <p
-              className={`mt-2 text-gray-600 transition-all duration-300 ease-in-out ${
-                openIndex === index ? "block opacity-100 max-h-40" : "hidden opacity-0 max-h-0"
+            <div
+              className={`transition-all overflow-hidden duration-300 ease-in-out ${
+                openIndex === index ? "max-h-[500px] opacity-100 mt-2" : "max-h-0 opacity-0"
               }`}
             >
-              {faq.answer}
-            </p>
+              <p className="text-gray-600 text-sm sm:text-base leading-relaxed">{faq.answer}</p>
+            </div>
           </div>
         ))}
       </div>

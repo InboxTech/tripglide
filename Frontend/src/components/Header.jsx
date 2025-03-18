@@ -34,7 +34,7 @@ export default function Header() {
           {/* Logo */}
           <div className="flex items-center gap-3 flex-shrink-0">
             <Link to="/" className="flex items-center gap-3 cursor-pointer hover:text-blue-300">
-              <img src={logo} alt="Tripglide Logo" className="h-8 md:h-10 w-auto" />
+              {/* <img src={logo} alt="Tripglide Logo" className="h-8 md:h-10 w-auto" /> */}
               <span className="text-lg md:text-2xl font-bold font-serif">Tripglide</span>
             </Link>
           </div>
