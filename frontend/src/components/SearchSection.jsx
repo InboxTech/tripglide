@@ -374,7 +374,7 @@ export default function SearchSection() {
                 <p className="text-gray-600 mb-10 font-serif">
                 It’s easy around here. 100 million travellers use us as their go-to tool, comparing flight deals and offers
                 from more than 1,200 airlines and travel providers. With so many options to choose from in one place, you can
-                say hello to savings, and goodbye to stress – here’s how.
+                say hello to savings, and goodbye to stress – here’s how. 
                 </p>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div className="bg-white p-6 rounded-lg shadow-md text-center hover:shadow-lg">
