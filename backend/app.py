@@ -3,7 +3,7 @@ import mysql.connector
 from flask_cors import CORS
 from datetime import timedelta   
          
-app = Flask(_name_)
+app = Flask(__name__)
 CORS(app)  # Enable CORS for all domains
 
 # MySQL connection function
@@ -24,21 +24,22 @@ def timedelta_to_str(td):
     return td
      
 @app.route('/', methods=['GET'])
-def get_flights():
+def get_hotels():
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
-    cursor.execute('SELECT * FROM flight_oneway')  # Replace 'flight_oneway' with your actual table name
-    flights = cursor.fetchall()
+    cursor.execute('SELECT * FROM hotels')  # Replace 'hotel_oneway' with your actual table name
+    hotels = cursor.fetchall()
 
     # Convert timedelta fields to string
-    for flight in flights:
-        for key, value in flight.items():
+    for hotel in hotels:
+        for key, value in hotel.items():
             if isinstance(value, timedelta):
-                flight[key] = timedelta_to_str(value)
+                hotel[key] = timedelta_to_str(value)
+        print(hotel,"\n")
 
     cursor.close()
     connection.close()
-    return jsonify(flights)
+    return jsonify(hotels)
 
-if _name_ == '_main_':
+if __name__ == '__main__':
     app.run(debug=True, port=5001)
