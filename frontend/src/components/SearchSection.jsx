@@ -9,9 +9,8 @@ import { useNavigate } from "react-router-dom";
 import { FaPlane, FaCalendarAlt, FaTag } from "react-icons/fa";
 import FeaturesSection from "./FeaturesSection";
 import FlightDealsCards from "../FlightDealsCards";
-import axios from "axios";
 
-export default function SearchSection() {   
+export default function SearchSection() {
     const [tripType, setTripType] = useState("return");
     const [from, setFrom] = useState(""); 
     const [to, setTo] = useState(""); 
@@ -21,8 +20,6 @@ export default function SearchSection() {
         { id: 1, from: "", to: "", depart: "" },
         { id: 2, from: "", to: "", depart: "" }
     ]);
-    const [departureAirports, setDepartureAirports] = useState([]);
-    const [arrivalAirports, setArrivalAirports] = useState([]);
     {/* Calculate if search button should be disabled */}
     const isMultiCityValid = multiCityFlights.every(flight => flight.from && flight.to && flight.depart);
     const isOneWayValid = from && to && departDate;
@@ -43,21 +40,6 @@ export default function SearchSection() {
         }, 5000);
         return () => clearInterval(interval);
       }, []);
-
-      useEffect(() => {
-        // Fetch airport data from the Flask API
-        const fetchAirports = async () => {
-            try {
-                const response = await axios.get('http://127.0.0.1:5000/get_flights');
-                setDepartureAirports(response.data.departure_airport || []);
-                setArrivalAirports(response.data.arrival_airport || []);
-            } catch (error) {
-                console.error('Error fetching airport data:', error);
-            }
-        };
-
-        fetchAirports();
-    }, []);
 
       const handleSearch = (e) => {
         e.preventDefault();    
@@ -150,106 +132,90 @@ export default function SearchSection() {
                      {tripType === "multicity" ? (
                         // Multi-City Form
                         <form className="space-y-4">
-    {multiCityFlights.map((flight, index) => (
-        <div key={flight.id} className="flex flex-wrap md:flex-nowrap gap-4 items-center">
-            {/* From */}
-            <div className="flex-1 min-w-[100px]">
-                <label className="block text-white font-semibold mb-1">From</label>
-                <input 
-                    list={`departure-airports-${index}`} 
-                    value={flight.from} 
-                    onChange={(e) => {
-                        const updatedFlights = [...multiCityFlights];
-                        updatedFlights[index].from = e.target.value;
-                        setMultiCityFlights(updatedFlights);
-                    }} 
-                    className="w-full p-3 rounded-lg bg-white text-black"
-                    placeholder="Select or type departure airport"
-                    required
-                />
-                <datalist id={`departure-airports-${index}`}>
-                    {departureAirports.filter(airport => airport !== flight.to).map((airport, idx) => (
-                        <option key={idx} value={airport} />
-                    ))}
-                </datalist>
-            </div>
-
-            {/* To */}
-            <div className="flex-1 min-w-[100px]">
-                <label className="block text-white font-semibold mb-1">To</label>
-                <input 
-                    list={`arrival-airports-${index}`} 
-                    value={flight.to}
-                    onChange={(e) => {
-                        const updatedFlights = [...multiCityFlights];
-                        updatedFlights[index].to = e.target.value;
-                        setMultiCityFlights(updatedFlights);
-                    }} 
-                    className="w-full p-3 rounded-lg bg-white text-black"
-                    placeholder="Select or type arrival airport"
-                    required
-                />
-                <datalist id={`arrival-airports-${index}`}>
-                    {arrivalAirports.filter(airport => airport !== flight.from).map((airport, idx) => (
-                        <option key={idx} value={airport} />
-                    ))}
-                </datalist>
-            </div>
-
-            {/* Depart Date */}
-            <input 
-                type="date" 
-                min={index === 0 ? today : multiCityFlights[index - 1].depart || today} // Only allow today or after previous flight date
-                value={flight.depart} 
-                required
-                onChange={(e) => {
-                    const updatedFlights = [...multiCityFlights];
-                    updatedFlights[index].depart = e.target.value;
-                    setMultiCityFlights(updatedFlights);
-                }} 
-                className="w-full md:w-1/4 p-3 rounded-lg bg-white text-black cursor-pointer"
-            />
-
-            {/* Cross Button for Removing Flight */}
-            <button 
-                type="button"
-                onClick={() => removeMultiCityFlight(flight.id)}
-                disabled={multiCityFlights.length <= 2} // Only enable when more than 2 flights exist
-                className={`text-white px-4 py-2 rounded-lg transition 
-                    ${multiCityFlights.length <= 2 ? "bg-gray-400 cursor-not-allowed" : "bg-red-500 hover:bg-red-700 cursor-pointer"}`}
-            >
-                ✖
-            </button>
-        </div>
-    ))}
-
-    {/* Add Flight Button */}
-    {multiCityFlights.length < 6 && (
-        <button 
-            type="button" 
-            onClick={addMultiCityFlight} 
-            className="bg-white text-black px-6 py-2 rounded-lg hover:bg-gray-400 transition cursor-pointer"
-        >
-            ➕ Add another flight
-        </button>
-    )}
-
-    {/* Travelers & Search */}
-    <div className="flex flex-wrap md:flex-nowrap items-center gap-4 mt-4">
-        <div className="flex-1">
-            <TravelersCabinClass />
-        </div>
-        <button 
-            onClick={handleSearch}
-            type="submit" 
-            disabled={isSearchDisabled}
-            className={`mt-5 px-6 py-3 font-semibold rounded-lg transition 
-                ${isSearchDisabled ? "bg-blue-300 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700 text-white"}`}
-        >
-            Search
-        </button>   
-    </div>
-</form>
+                        {multiCityFlights.map((flight, index) => (
+                            <div key={flight.id} className="flex flex-wrap md:flex-nowrap gap-4 items-center">
+                                {/* From */}
+                                <input 
+                                    type="text" 
+                                    placeholder="From" 
+                                    value={flight.from} 
+                                    required
+                                    onChange={(e) => {
+                                        const updatedFlights = [...multiCityFlights];
+                                        updatedFlights[index].from = e.target.value;
+                                        setMultiCityFlights(updatedFlights);
+                                    }} 
+                                    className="w-full md:w-1/3 p-3 rounded-lg bg-white text-black"
+                                />
+                
+                                {/* To */}
+                                <input 
+                                    type="text" 
+                                    placeholder="To" 
+                                    value={flight.to}
+                                    required 
+                                    onChange={(e) => {
+                                        const updatedFlights = [...multiCityFlights];
+                                        updatedFlights[index].to = e.target.value;
+                                        setMultiCityFlights(updatedFlights);
+                                    }} 
+                                    className="w-full md:w-1/3 p-3 rounded-lg bg-white text-black"
+                                />
+                
+                                {/* Depart Date */}
+                                <input 
+                                        type="date" 
+                                        min={index === 0 ? today : multiCityFlights[index - 1].depart || today} // Only allow today or after previous flight date
+                                        value={flight.depart} 
+                                        required
+                                        onChange={(e) => {
+                                            const updatedFlights = [...multiCityFlights];
+                                            updatedFlights[index].depart = e.target.value;
+                                            setMultiCityFlights(updatedFlights);
+                                        }} 
+                                        className="w-full md:w-1/4 p-3 rounded-lg bg-white text-black cursor-pointer"
+                                    />
+                
+                                {/* Cross Button for Removing Flight */}
+                                <button 
+                                    type="button"
+                                    onClick={() => removeMultiCityFlight(flight.id)}
+                                    disabled={multiCityFlights.length <= 2} // Only enable when more than 2 flights exist
+                                    className={`text-white px-4 py-2 rounded-lg transition 
+                                        ${multiCityFlights.length <= 2 ? "bg-gray-400 cursor-not-allowed" : "bg-red-500 hover:bg-red-700 cursor-pointer"}`}
+                                >
+                                    ✖
+                                </button>
+                            </div>
+                        ))}
+                
+                        {/* Add Flight Button */}
+                        {multiCityFlights.length < 6 && (
+                            <button 
+                                type="button" 
+                                onClick={addMultiCityFlight} 
+                                className="bg-white text-black px-6 py-2 rounded-lg hover:bg-gray-400 transition cursor-pointer"
+                            >
+                                ➕ Add another flight
+                            </button>
+                        )}
+                
+                        {/* Travelers & Search */}
+                        <div className="flex flex-wrap md:flex-nowrap items-center gap-4 mt-4">
+                            <div className="flex-1">
+                                <TravelersCabinClass />
+                            </div>
+                            <button 
+                                onClick={handleSearch}
+                                type="submit" 
+                                disabled={isSearchDisabled}
+                                className={`mt-5 px-6 py-3 font-semibold rounded-lg transition 
+                                    ${isSearchDisabled ? "bg-blue-300 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700 text-white"}`}
+                            >
+                                Search
+                            </button>   
+                        </div>
+                    </form>
                     ) : (
                     
 
@@ -258,19 +224,10 @@ export default function SearchSection() {
                         {/* From */}
                         <div className="flex-1 min-w-[100px]">
                             <label className="block text-white font-semibold mb-1">From</label>
-                            <input 
-                                list="departure-airports" 
-                                value={from} 
-                                onChange={(e) => setFrom(e.target.value)} 
-                                className="w-full p-3 rounded-lg bg-white text-black"
-                                placeholder="Select airport"
-                                required
-                            />
-                            <datalist id="departure-airports">
-                                {departureAirports.filter(airport => airport !== to).map((airport, index) => (
-                                    <option key={index} value={airport} />
-                                ))}
-                            </datalist>
+                            <input type="text" required placeholder="Enter your city" 
+                            value={from} 
+                            onChange={(e) => setFrom(e.target.value)} 
+                            className="w-full p-3 rounded-lg bg-white text-black" />
                         </div>
 
                         {/* Swap Button */}
@@ -283,19 +240,10 @@ export default function SearchSection() {
                         {/* To */}
                         <div className="flex-1 min-w-[100px]">
                             <label className="block required: text-white font-semibold mb-1">To</label>
-                            <input 
-                                list="arrival-airports" 
-                                value={to} 
-                                onChange={(e) => setTo(e.target.value)} 
-                                className="w-full p-3 rounded-lg bg-white text-black"
-                                placeholder="Select airport"
-                                required
-                            />
-                            <datalist id="arrival-airports">
-                                {arrivalAirports.filter(airport => airport !== from).map((airport, index) => (
-                                    <option key={index} value={airport} />
-                                ))}
-                            </datalist>
+                            <input type="text" placeholder="Enter your city" 
+                            value={to} 
+                            onChange={(e) => setTo(e.target.value)} 
+                            className="w-full p-3 rounded-lg bg-white text-black" />
                         </div>
 
                         {/* Depart */}
@@ -426,7 +374,7 @@ export default function SearchSection() {
                 <p className="text-gray-600 mb-10 font-serif">
                 It’s easy around here. 100 million travellers use us as their go-to tool, comparing flight deals and offers
                 from more than 1,200 airlines and travel providers. With so many options to choose from in one place, you can
-                say hello to savings, and goodbye to stress – here’s how. 
+                say hello to savings, and goodbye to stress – here’s how.
                 </p>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div className="bg-white p-6 rounded-lg shadow-md text-center hover:shadow-lg">
