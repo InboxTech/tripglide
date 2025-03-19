@@ -8,6 +8,7 @@ import SignUp from "./components/Signup";
 import FlightCardList from "./components/FlightCardList";
 import CarHire from "./components/Carhire";
 import FeaturesSection from "./components/FeaturesSection";
+import CabListing from "./components/CabListing";
 
 function App() {
 
@@ -22,6 +23,7 @@ function App() {
           <Route path="/flights" element={<SearchSection />} />
           <Route path="/" element={<SearchSection />} />
           <Route path="/features" element={<FeaturesSection />} />
+          <Route path="/cabs" element={<CabListing />} />
         </Routes>
       </div>
     </Router>

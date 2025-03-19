@@ -19,7 +19,7 @@ export default function Header() {
     const path = location.pathname;
     if (path.includes("/hotels")) {
       setActiveTab("hotels");
-    } else if (path.includes("/carhire")) {
+    } else if (path.includes("/carhire") || path.includes("/cabs")) {
       setActiveTab("carhire");
     } else {
       setActiveTab("flights");

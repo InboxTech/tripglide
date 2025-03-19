@@ -6,6 +6,8 @@ import Footer from "./Footer";
 import FeaturesSection from "./FeaturesSection";
 import { FaCar, FaCalendarAlt, FaTag } from "react-icons/fa";
 import CarHireFAQ from "./CarHireFAQ";
+import PopularCarDeals from "./PopularCarDeals";
+import { useNavigate } from "react-router-dom";
 
 export default function CarHire() {
   const [pickupDate, setPickupDate] = useState("");
@@ -56,6 +58,14 @@ export default function CarHire() {
       },
     ];
 
+    const navigate = useNavigate(); 
+
+    const handleSearch = (e) => {
+      e.preventDefault(); 
+      navigate("/cabs", {
+        state: { pickupLocation, pickupDate, dropoffDate, pickupTime, dropoffTime },
+      });
+    };
 
   return (
     <section className="relative w-full">
@@ -66,7 +76,7 @@ export default function CarHire() {
       {/* Background Image - Hidden on Small Screens */}
       <div className="absolute inset-0 hidden lg:block -z-10">
         <img
-          src="/public/images/carbg.jpg"
+          src="/images/carbg.jpg"
           alt="Car rental background"
           className="w-full h-full object-cover object-center fixed"
         />
@@ -165,6 +175,7 @@ export default function CarHire() {
               </label>
 
               <button
+                onClick={handleSearch}
                 type="submit"
                 className={`ml-auto px-6 py-3 font-semibold rounded-lg transition ${
                   isFormComplete
@@ -194,6 +205,14 @@ export default function CarHire() {
           <FeaturesSection features={carFeatures} />
         </div>
       </div>
+
+      {/* Popular Car Deals */}
+      <div className="bg-gray-100">
+        <div className="container mx-auto max-w-7xl px-8 py-12">
+          <PopularCarDeals />
+        </div>
+      </div>
+      
 
 
       {/* Car Hire Deals Section */}
