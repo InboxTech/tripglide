@@ -8,7 +8,7 @@ import FlightCardList from "./FlightCardList";
 import { useNavigate } from "react-router-dom";
 import { FaPlane, FaCalendarAlt, FaTag } from "react-icons/fa";
 import FeaturesSection from "./FeaturesSection";
-import FlightDealsCards from "../FlightDealsCards";
+import FlightDealsCards from "./FlightDealsCards";
 
 export default function SearchSection() {
     const [tripType, setTripType] = useState("return");

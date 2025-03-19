@@ -3,72 +3,90 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
-import { motion } from "framer-motion";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 const carDeals = [
-  { city: "Dubai", img: "https://source.unsplash.com/400x250/?dubai", price: "₹1,135", carType: "Economy" },
-  { city: "Bangkok", img: "https://source.unsplash.com/400x250/?bangkok", price: "₹1,729", carType: "Economy" },
-  { city: "Pune", img: "https://source.unsplash.com/400x250/?pune", price: "₹2,794", carType: "Economy" },
-  { city: "New York", img: "https://source.unsplash.com/400x250/?newyork", price: "₹3,200", carType: "SUV" },
-  { city: "London", img: "https://source.unsplash.com/400x250/?london", price: "₹2,900", carType: "Luxury" },
-  { city: "Sydney", img: "https://source.unsplash.com/400x250/?sydney", price: "₹1,950", carType: "Compact" },
+  {
+    city: "Dubai",
+    image: "/images/dubai.jpeg",
+    price: "₹1,135",
+  },
+  {
+    city: "Bangkok",
+    image: "/images/bangkok.jpeg",
+    price: "₹1,729",
+  },
+  {
+    city: "Pune",
+    image: "/images/pune.jpeg",
+    price: "₹2,794",
+  },
+  {
+    city: "Paris",
+    image: "/images/paris.jpeg",
+    price: "₹3,200",
+  },
+  {
+    city: "New York",
+    image: "/images/new york.jpeg",
+    price: "₹4,150",
+  },
+  {
+    city: "Tokyo",
+    image: "/images/tokyo.jpeg",
+    price: "₹3,900",
+  },
+  {
+    city: "Bengaluru",
+    image: "/images/bengaluru.jpeg",
+    price: "₹6,370",
+  },
 ];
 
 const PopularCarDeals = () => {
   return (
-    <div className="relative px-6 py-10">
-      {/* Title */}
-      <h2 className="text-2xl font-bold mb-4">Popular car rental destinations</h2>
-
-      {/* Navigation Arrows */}
-      <div className="absolute top-0 right-0 flex space-x-2">
-        <button className="swiper-button-prev bg-gray-200 p-2 rounded-full shadow-md hover:bg-gray-300">
-          <ChevronLeft className="w-6 h-6 text-gray-600" />
-        </button>
-        <button className="swiper-button-next bg-gray-200 p-2 rounded-full shadow-md hover:bg-gray-300">
-          <ChevronRight className="w-6 h-6 text-gray-600" />
-        </button>
+    <div className="w-full px-10 py-6">
+      {/* Header */}
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-2xl font-semibold">Popular car rental destinations</h2>
+        <div className="flex gap-2">
+          <button className="swiper-button-prev-custom text-gray-500 hover:text-black">
+            <FaChevronLeft size={20} />
+          </button>
+          <button className="swiper-button-next-custom text-gray-500 hover:text-black">
+            <FaChevronRight size={20} />
+          </button>
+        </div>
       </div>
 
-      {/* Swiper Carousel */}
+      {/* Swiper */}
       <Swiper
-        spaceBetween={20}
-        slidesPerView={3}
-        navigation={{
-          nextEl: ".swiper-button-prev",
-          prevEl: ".swiper-button-next",
-        }}
         modules={[Navigation]}
-        className="mySwiper"
+        spaceBetween={20}
+        breakpoints={{
+          320: { slidesPerView: 1, slidesPerGroup: 1 },
+          768: { slidesPerView: 2, slidesPerGroup: 2 },
+          1024: { slidesPerView: 3, slidesPerGroup: 3 },
+        }}
+        navigation={{
+          nextEl: ".swiper-button-next-custom",
+          prevEl: ".swiper-button-prev-custom",
+        }}
+        className="overflow-hidden"
       >
         {carDeals.map((deal, index) => (
           <SwiperSlide key={index}>
-            <motion.div
-              whileHover={{ scale: 1, boxShadow: "0px 10px 20px rgba(0, 0, 0, 0.2)" }}
-              transition={{ duration: 0.3 }}
-              className="bg-white rounded-xl shadow-lg overflow-hidden cursor-pointer py-3"
-            >
-              <img src={deal.img} alt={deal.city} className="w-full h-40 object-cover" />
-              <div className="p-4">
-                <h3 className="text-lg font-bold">Car hire in {deal.city}</h3>
-                <p className="text-gray-600">
-                  Most popular car type: <strong>{deal.carType}</strong>
-                </p>
-                <p className="mt-2 font-bold text-lg">From {deal.price} per day</p>
+            <div className="cursor-pointer rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300">
+              <img src={deal.image} alt={deal.city} className="w-full h-48 object-cover" />
+              <div className="p-4 bg-white">
+                <h3 className="text-lg font-semibold">Car hire in {deal.city}</h3>
+                <p className="text-gray-600 text-sm">Most popular car type: Economy</p>
+                <p className="text-black font-bold mt-2">From {deal.price}  per day</p>
               </div>
-            </motion.div>
+            </div>
           </SwiperSlide>
         ))}
       </Swiper>
-
-      {/* Info Box */}
-      <div className="mt-4 p-4 bg-gray-100 rounded-md text-gray-700 flex items-center">
-        <span className="text-xl">ℹ️</span>
-        <p className="ml-2">
-          These are estimated prices based on the lowest <strong>car rental</strong> prices found in the last 15 days.
-        </p>
-      </div>
     </div>
   );
 };
