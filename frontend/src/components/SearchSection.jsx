@@ -43,10 +43,7 @@ export default function SearchSection() {
           setCurrentImage((prevImage) => (prevImage + 1) % images.length);
         }, 5000);
         return () => clearInterval(interval);
-      }
-
-      
-, []);
+      }, []);
 
       const handleSearch = (e) => {
         e.preventDefault();    
@@ -67,7 +64,6 @@ export default function SearchSection() {
         setTo(from);
     };
     
-
      // Function to add flight in Multi-city
      const addMultiCityFlight = () => {
         if (multiCityFlights.length < 6) {
@@ -113,7 +109,7 @@ export default function SearchSection() {
     }, []);
     
     // Extract unique departure and arrival cities
-   const departureCity = [...new Set(flights.map((flight) => flight.departure))];
+    const departureCity = [...new Set(flights.map((flight) => flight.departure))];
     const arrivalCity = [...new Set(flights.map((flight) => flight.arrival))];
       
 
@@ -136,9 +132,8 @@ export default function SearchSection() {
                 <h1 className="text-4xl lg:text-6xl font-bold text-white mb-8">
                     The best flight offers from anywhere, to everywhere
                 </h1>
-                
 
-                {/* Search Form */}
+             {/* Search Form */}
                 <div className="bg-[#001533] p-6 rounded-2xl shadow-lg">
                     {/* Radio Buttons */}
                     <div className="flex gap-6 text-white mb-4">
@@ -173,7 +168,7 @@ export default function SearchSection() {
                                     className="w-full md:w-1/3 p-3 rounded-lg bg-white text-black"
                                 />
                 
-                                {/* To */}
+                                 {/* To */}
                                 <input 
                                     type="text" 
                                     placeholder="To" 
@@ -243,40 +238,33 @@ export default function SearchSection() {
                     </form>
                     ) : (
                     
-
                     // Return, One Way
                     <form className="flex flex-wrap gap-2 sm:gap-4 items-center w-full">
                         {/* From */}
                         <div className="flex-1 min-w-[100px]">
                             <label className="block text-white font-semibold mb-1">From</label>
-                            <input
-    list="departure-city"
-    id="from"
-    value={from}
-    onChange={(e) => setFrom(e.target.value)}
-    className="w-full p-3 border bg-white rounded"
-    placeholder="Type your departure city"
-/>
+                            <input list="departure-city"
+                                   id="from"
+                                   value={from}
+                                   onChange={(e) => setFrom(e.target.value)}
+                                   className="w-full p-3 border bg-white rounded"
+                                   placeholder="Type your departure city"
+                            />
 
-            <datalist className="bg-white" id="departure-city">
-  {loading ? (
-    <option className="bg-white">Loading...</option>
-  ) : error ? (
-    <option>{error}</option>
-  ) : (
-    departureCity
-      .filter((airport) => airport) // Remove invalid values
-      .map((airport, index) => (
-        <option key={`${airport}-${index}`} value={airport}>
-            
-          {airport}
-        </option>
-      ))
-  )}
-</datalist>
-
-
-                        </div>
+                    <datalist className="bg-white" id="departure-city">
+                      {loading ? (
+                      <option className="bg-white">Loading...</option>
+                         ) : error ? (
+                         <option>{error}</option>
+                         ) : (
+                         departureCity
+                         .filter((airport) => airport) // Remove invalid values
+                         .map((airport, index) => (
+                          <option key={`${airport}-${index}`} value={airport}>{airport} </option>
+                         ))
+                         )}
+                    </datalist>
+                </div>
 
                         {/* Swap Button */}
                         <div className="flex relative mt-7 justify-center items-center">
@@ -375,7 +363,6 @@ export default function SearchSection() {
       <FeaturesSection features={flightFeatures} />
       </div>
 
-
             {/* Banner */}
             <section className="relative w-full py-20 bg-gray-100">
                 <div className="max-w-7xl mx-auto px-6">
@@ -397,18 +384,16 @@ export default function SearchSection() {
                             </p>
                             <button 
                                 className="mt-5 px-6 py-1 w-36 bg-white text-black rounded-2xl font-semibold shadow-md hover:bg-gray-500 hover:text-white cursor-pointer"
-                                onClick={() => alert('How it works clicked!')}
-                            >
-                                How it works
+                                onClick={() => alert('How it works clicked!')}>
+                             How it works
                             </button>
                         </div>
                     </div>
                 </div>
             </section>
-
             <hr className="border-black"></hr>
-
             <section className="bg-white">
+
             {/* Swiper Section */}
             <TravelDeals />
             </section>

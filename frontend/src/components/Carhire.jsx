@@ -6,14 +6,18 @@ import Footer from "./Footer";
 import FeaturesSection from "./FeaturesSection";
 import { FaCar, FaCalendarAlt, FaTag } from "react-icons/fa";
 import CarHireFAQ from "./CarHireFAQ";
+import axios from "axios";
 
 export default function CarHire() {
+  // const [cars, setCar] = useState("");
+  const [cars, setCars] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [pickupDate, setPickupDate] = useState("");
   const [dropoffDate, setDropoffDate] = useState("");
   const [pickupTime, setPickupTime] = useState("");
   const [dropoffTime, setDropoffTime] = useState("");
   const [pickupLocation, setPickupLocation] = useState("");
-
   const today = new Date().toISOString().split("T")[0];
   const [currentTime, setCurrentTime] = useState("");
 
@@ -56,17 +60,32 @@ export default function CarHire() {
       },
     ];
 
-
+    useEffect(() => {
+      axios
+          .get("http://127.0.0.1:5001/")
+          .then((response) => {
+              setCars(response.data || []); // Ensure it's an array
+              setLoading(false);
+              console.log(response.data);
+          })
+          .catch((error) => {
+              console.error("Error fetching data:", error);
+              setCars([]); // Ensure cars is always an array
+              setLoading(false);
+          });
+  }, []);
+  
+  const from = [...new Set(cars.map((car) => car?.from).filter(Boolean))];
+  
   return (
     <section className="relative w-full">
       {/* Header */}
       <Header />
 
-
       {/* Background Image - Hidden on Small Screens */}
       <div className="absolute inset-0 hidden lg:block -z-10">
         <img
-          src="/public/images/carbg.jpg"
+          src="https://images.pexels.com/photos/17495572/pexels-photo-17495572/free-photo-of-kia-k9-on-rooftop-in-city-downtown.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
           alt="Car rental background"
           className="w-full h-full object-cover object-center fixed"
         />
@@ -180,8 +199,6 @@ export default function CarHire() {
           </form>
         </div>
       </div>
-
-
 
       {/* Features Section */}
             <div className="bg-white">
