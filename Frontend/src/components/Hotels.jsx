@@ -41,7 +41,7 @@ export default function Hotels() {
   const hotelFeatures = [
     {
       icon: <FaHotel />,
-      text: "Search and compare hotels in seconds – anywhere in the world",
+      text: "Search and compare hotels in seconds – anywhere in the India",
     },
     {
       icon: <FaCalendarAlt />,
@@ -69,7 +69,6 @@ export default function Hotels() {
   // Hotel Slider Data
   const hotelData = {
     Mumbai: [
-
       {
         name: "The Taj Mahal Palace, Mumbai",
         distance: "14.39 km",
@@ -109,7 +108,7 @@ export default function Hotels() {
         rating: 4.5,
         reviews: "900 reviews",
         price: "₹14,500",
-        image: "https://your-image-url/mumbai2.jpg",
+        image: "/images/ITC_Grand_centeral.png",
       },
     ],
     Jaipur: [
@@ -119,7 +118,7 @@ export default function Hotels() {
         rating: 5,
         reviews: "1 review",
         price: "₹77,027",
-        image: "https://your-image-url/jaipur1.jpg",
+        image: "/images/oberoi.jpg",
       },
       {
         name: "Nahar Singh Haveli",
@@ -127,7 +126,7 @@ export default function Hotels() {
         rating: 3,
         reviews: "702 reviews",
         price: "₹821",
-        image: "https://your-image-url/jaipur2.jpg",
+        image: "/images/nahar-singh-haveli.jpg",
       },
       {
         name: "Holiday Inn Jaipur City Centre",
@@ -135,33 +134,49 @@ export default function Hotels() {
         rating: 5,
         reviews: "6381 reviews",
         price: "₹5,812",
-        image: "https://your-image-url/jaipur3.jpg",
+        image: "/images/Holiday_Inn.jpg",
       },
       {
-        name: "Nahar Singh Haveli",
-        distance: "2.87 km from city centre",
-        rating: 3,
-        reviews: "702 reviews",
-        price: "₹821",
-        image: "https://your-image-url/jaipur2.jpg",
+        name: "Hyatt Regency Jaipur Mansarovar",
+        distance: "12.10 km from city centre",
+        rating: 4.5,
+        reviews: "510 reviews",
+        price: "₹9,127",
+        image: "/images/Hyatt_regency.jpg",
       },
-      {
-        name: "Holiday Inn Jaipur City Centre",
-        distance: "3.70 km from city centre",
-        rating: 5,
-        reviews: "6381 reviews",
-        price: "₹5,812",
-        image: "https://your-image-url/jaipur3.jpg",
-      }
     ],
     Delhi: [
       {
-        name: "The Leela Palace",
-        distance: "3 km from city centre",
+        name: "The LaLiT New Delhi",
+        distance: "0.75 km from city centre",
+        rating: 4.5,
+        reviews: "6100 reviews",
+        price: "₹9,800",
+        image: "/images/The LaLiT New Delhi.jpg",
+      },
+      {
+        name: "Radisson Blu Marina Hotel Connaught Place",
+        distance: "0.2f7 km from city centre",
+        rating: 4.5,
+        reviews: "15 reviews",
+        price: "₹14,000",
+        image: "/images/Radisson Blu Marina Hotel Connaught Place.jpg",
+      },
+      {
+        name: "Hyatt Regency Delhi",
+        distance: "7.82 km from city centre",
+        rating: 4.5,
+        reviews: "25 reviews",
+        price: "₹13,300",
+        image: "/images/Hyatt Regency Delhi.webp",
+      },
+      {
+        name: "JW Marriott Hotel New Delhi Aerocity",
+        distance: "13.06 km from city centre",
         rating: 5,
-        reviews: "2100 reviews",
-        price: "₹18,500",
-        image: "https://your-image-url/delhi1.jpg",
+        reviews: "5500 reviews",
+        price: "₹42,000",
+        image: "/images/JW Marriott Hotel New Delhi Aerocity.avif",
       },
     ],
     Bengaluru: [
