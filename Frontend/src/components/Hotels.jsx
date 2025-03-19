@@ -69,7 +69,6 @@ export default function Hotels() {
   // Hotel Slider Data
   const hotelData = {
     Mumbai: [
-
       {
         name: "The Taj Mahal Palace, Mumbai",
         distance: "14.39 km",
