@@ -7,14 +7,14 @@ export default function Footer() {
         {/* Top Section */}
         <div className="flex flex-col md:flex-row justify-between items-center md:items-start gap-10">
           {/* About Us */}
-          <div className="bg-[#06214a] text-white px-6 py-4 rounded-lg w-full md:w-1/3 text-center md:text-left">
-            <h2 className="text-lg font-semibold font-serif">About Us</h2>
-            <p className="mt-3 text-sm leading-relaxed">
-              Tripglide is a travel website project designed to help<br className="hidden sm:inline" />
-              users find the best flights, hotels, and car hire deals.<br className="hidden sm:inline" />
-              Our goal is to make travel seamless and affordable.
-            </p>
-          </div>
+          <div className="bg-[#06214a] text-white px-6 py-3 rounded-lg w-full md:w-auto">
+          <h2 className="text-lg font-semibold font-serif text-center md:text-left">About Us</h2>
+          <p className="mt-2 font-normal text-sm text-center md:text-left max-w-xl md:max-w-lg leading-relaxed">
+            Tripglide is a travel website project designed to help<br className="hidden sm:inline" /> 
+            users find the best flights, hotels, and car hire deals.<br className="hidden sm:inline" /> 
+            Our goal is to make travel seamless and affordable.
+          </p>
+        </div>
 
           {/* Links Section */}
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-8 w-full md:w-2/3 text-center md:text-left">
