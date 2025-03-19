@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "./Header";
 import TravelDeals from "./TravelDeals";
 import Footer from "./Footer";
@@ -11,7 +11,7 @@ import { Navigation, Pagination } from "swiper/modules";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-
+import axios from "axios"; // Add axios
 
 
 export default function Hotels() {
@@ -24,6 +24,19 @@ export default function Hotels() {
   const [children, setChildren] = useState(0);
   const [rooms, setRooms] = useState(1);
   const [showGuestOptions, setShowGuestOptions] = useState(false);
+  const [destinations, setDestinations] = useState([]); // Add state for destinations
+
+  useEffect(() => {
+    axios.get("http://127.0.0.1:5001/hotels")
+      .then(response => {
+        console.log("Fetched Data:", response.data); // Debugging
+        const names = response.data.map((hotel) => hotel.name);
+        setDestinations(names);
+      })
+      .catch(error => {
+        console.error("Error fetching destinations:", error);
+      });
+  }, []);
 
   const handleCheckInDateChange = (event) => {
     setCheckInDate(event.target.value);
