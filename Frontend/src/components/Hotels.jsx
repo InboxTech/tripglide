@@ -7,9 +7,10 @@ import HotelFAQ from "./HotelFAQ";
 import { FaHotel, FaCalendarAlt, FaTag, FaPlus, FaMinus, FaChevronDown } from "react-icons/fa";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
+import { Navigation, Pagination } from "swiper/modules";
 import "swiper/css/navigation";
-import { Navigation } from "swiper/modules";
-import { Star } from "lucide-react";
+import "swiper/css/pagination";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 
 
@@ -62,66 +63,140 @@ export default function Hotels() {
     if (type === "rooms") {
       setRooms((prev) => (operation === "inc" ? prev + 1 : prev > 1 ? prev - 1 : 1));
     }
-    
+
   };
 
   // Hotel Slider Data
-  const cities = ["Mumbai", "New Delhi", "Bengaluru", "Jaipur", "Hyderabad"];
-  const hotels = [
-    {
-      name: "The Taj Mahal Palace, Mumbai",
-      distance: "14.39 km from city centre",
-      rating: 4.8,
-      reviews: 22,
-      price: "₹18,236",
-      image: "/images/taj_mumbai.jpg",
-    },
-    {
-      name: "Hotel Marine Plaza",
-      distance: "13.69 km from city centre",
-      rating: 4.4,
-      reviews: 13,
-      price: "₹1,528",
-      image: "/images/marine_plaza.webp",
-    },
-    {
-      name: "ITC Maratha, a Luxury Collection",
-      distance: "6.39 km from city centre",
-      rating: 4.6,
-      reviews: 29,
-      price: "₹15,741",
-      image: "/images/itc_maratha.png",
-    },
-    {
-      name: "The Taj Mahal Palace, Mumbai",
-      distance: "14.39 km from city centre",
-      rating: 4.8,
-      reviews: 22,
-      price: "₹18,236",
-      image: "/images/taj_mumbai.jpg",
-    },
-    {
-      name: "Hotel Marine Plaza",
-      distance: "13.69 km from city centre",
-      rating: 4.4,
-      reviews: 13,
-      price: "₹1,528",
-      image: "/images/marine_plaza.webp",
-    },
-    {
-      name: "ITC Maratha, a Luxury Collection",
-      distance: "6.39 km from city centre",
-      rating: 4.6,
-      reviews: 29,
-      price: "₹15,741",
-      image: "/images/itc_maratha.png",
-    }
-  ];
+  const hotelData = {
+    Mumbai: [
+
+      {
+        name: "The Taj Mahal Palace, Mumbai",
+        distance: "14.39 km",
+        rating: 4.8,
+        reviewCount: 22,
+        reviewText: "Excellent",
+        price: "₹18,236",
+        image:
+          "/images/taj_mumbai.jpg",
+        stars: 5,
+      },
+      {
+        name: "Hotel Marine Plaza",
+        distance: "13.69 km",
+        rating: 4.4,
+        reviewCount: 13,
+        reviewText: "Very good",
+        price: "₹1,528",
+        image:
+          "/images/marine_plaza.webp",
+        stars: 4,
+      },
+      {
+        name: "ITC Maratha, a Luxury Collection Hotel",
+        distance: "6.39 km",
+        rating: 4.6,
+        reviewCount: 29,
+        reviewText: "Excellent",
+        price: "₹15,741",
+        image:
+          "/images/itc_maratha.png",
+        stars: 5,
+      },
+      {
+        name: "ITC Grand Central",
+        distance: "2.5 km from city centre",
+        rating: 4.5,
+        reviews: "900 reviews",
+        price: "₹14,500",
+        image: "https://your-image-url/mumbai2.jpg",
+      },
+    ],
+    Jaipur: [
+      {
+        name: "The Oberoi Rajvilas Jaipur",
+        distance: "7.56 km from city centre",
+        rating: 5,
+        reviews: "1 review",
+        price: "₹77,027",
+        image: "https://your-image-url/jaipur1.jpg",
+      },
+      {
+        name: "Nahar Singh Haveli",
+        distance: "2.87 km from city centre",
+        rating: 3,
+        reviews: "702 reviews",
+        price: "₹821",
+        image: "https://your-image-url/jaipur2.jpg",
+      },
+      {
+        name: "Holiday Inn Jaipur City Centre",
+        distance: "3.70 km from city centre",
+        rating: 5,
+        reviews: "6381 reviews",
+        price: "₹5,812",
+        image: "https://your-image-url/jaipur3.jpg",
+      },
+      {
+        name: "Nahar Singh Haveli",
+        distance: "2.87 km from city centre",
+        rating: 3,
+        reviews: "702 reviews",
+        price: "₹821",
+        image: "https://your-image-url/jaipur2.jpg",
+      },
+      {
+        name: "Holiday Inn Jaipur City Centre",
+        distance: "3.70 km from city centre",
+        rating: 5,
+        reviews: "6381 reviews",
+        price: "₹5,812",
+        image: "https://your-image-url/jaipur3.jpg",
+      }
+    ],
+    Delhi: [
+      {
+        name: "The Leela Palace",
+        distance: "3 km from city centre",
+        rating: 5,
+        reviews: "2100 reviews",
+        price: "₹18,500",
+        image: "https://your-image-url/delhi1.jpg",
+      },
+    ],
+    Bengaluru: [
+      {
+        name: "The Leela Palace",
+        distance: "3 km from city centre",
+        rating: 5,
+        reviews: "2100 reviews",
+        price: "₹18,500",
+        image: "https://your-image-url/delhi1.jpg",
+      },
+    ],
+    Hyderabad: [
+      {
+        name: "The Leela Palace",
+        distance: "3 km from city centre",
+        rating: 5,
+        reviews: "2100 reviews",
+        price: "₹18,500",
+        image: "https://your-image-url/delhi1.jpg",
+      },
+    ],
+
+  };
 
   const [selectedCity, setSelectedCity] = useState("Mumbai");
+  const breakpoints = {
+    320: { slidesPerView: 1 },
+    640: { slidesPerView: 1.2 },
+    768: { slidesPerView: 2 },
+    1024: { slidesPerView: 3 },
+  };
 
 
-  
+
 
   return (
     <section className="relative w-full">
@@ -326,77 +401,88 @@ export default function Hotels() {
 
       {/* Hotel section */}
       <div className="w-full bg-gray-100">
-      <div className="max-w-7xl mx-auto px-4 py-10 bg-gray-100 w-full">
-        <h2 className="text-3xl font-bold mb-2">Hotels in your home country</h2>
-        <p className="text-gray-600 mb-6">
-          Your next adventure may be closer than you think. Discover hotels just beyond your doorstep.
-        </p>
+        <div className="max-w-7xl mx-auto px-4 py-10 bg-gray-100 w-full">
+          <h2 className="text-3xl font-bold mb-2">Hotels in your home country</h2>
+          <p className="text-gray-500 mb-6">
+            Your next adventure may be closer than you think. Discover hotels just
+            beyond your doorstep.
+          </p>
 
-        {/* City Filter */}
-        <div className="flex gap-2 mb-8 flex-wrap">
-          {cities.map((city) => (
-            <button
-              key={city}
-              onClick={() => setSelectedCity(city)}
-              className={`px-4 py-2 rounded-full border ${selectedCity === city
-                ? "bg-blue-900 text-white"
-                : "text-gray-700 bg-white"
-                }`}
+          {/* City Buttons */}
+          <div className="flex gap-4 mb-6 flex-wrap">
+            {Object.keys(hotelData).map((city) => (
+              <button
+                key={city}
+                className={`px-4 py-2 rounded-full border ${selectedCity === city
+                    ? "bg-black text-white"
+                    : "bg-white text-black border-gray-300"
+                  }`}
+                onClick={() => setSelectedCity(city)}
+              >
+                {city}
+              </button>
+            ))}
+          </div>
+
+          {/* Hotel Cards Swiper */}
+          <div className="relative">
+            <Swiper
+              modules={[Navigation, Pagination]}
+              spaceBetween={20}
+              navigation={{
+                prevEl: ".prev-btn",
+                nextEl: ".next-btn",
+              }}
+              pagination={{ clickable: true }}
+              breakpoints={breakpoints}
             >
-              {city}
-            </button>
-          ))}
-        </div>
+              {hotelData[selectedCity].map((hotel, index) => (
+                <SwiperSlide key={index}>
+                  <div className="rounded-2xl shadow-md overflow-hidden bg-white">
+                    <img
+                      src={hotel.image}
+                      alt={hotel.name}
+                      className="h-48 w-full object-cover"
+                    />
+                    <div className="p-4">
+                      <h3 className="font-semibold text-lg mb-1">{hotel.name}</h3>
+                      <p className="text-sm text-gray-500 mb-2">{hotel.distance}</p>
+                      <div className="flex items-center mb-2">
+                        <span className="font-bold mr-2">{hotel.rating}</span>
+                        <div className="flex text-yellow-400">
+                          {Array.from({ length: Math.floor(hotel.rating) }).map(
+                            (_, idx) => (
+                              <span key={idx}>★</span>
+                            )
+                          )}
+                        </div>
+                        <span className="ml-2 text-sm text-gray-500">
+                          {hotel.reviews}
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center mt-4">
+                        <div>
+                          <span className="text-lg font-semibold">
+                            {hotel.price}
+                          </span>
+                          <p className="text-sm text-gray-500">Per night</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </SwiperSlide>
+              ))}
+            </Swiper>
 
-        {/* Swiper */}
-        <Swiper
-          modules={[Navigation]}
-          navigation
-          spaceBetween={20}
-          breakpoints={{
-            320: { slidesPerView: 1 },
-            640: { slidesPerView: 1.2 },
-            768: { slidesPerView: 2 },
-            1024: { slidesPerView: 3 },
-          }}
-        >
-          {hotels.map((hotel, index) => (
-            <SwiperSlide key={index}>
-              <div className="bg-white rounded-2xl shadow-md overflow-hidden">
-                <img
-                  src={hotel.image}
-                  alt={hotel.name}
-                  className="h-48 w-full object-cover"
-                />
-                <div className="p-4">
-                  <h3 className="text-lg font-semibold truncate">{hotel.name}</h3>
-                  <p className="text-sm text-gray-500">{hotel.distance}</p>
-                  <div className="flex items-center mt-2">
-                    <span className="font-bold mr-1">{hotel.rating}</span>/5
-                    <span className="mx-2 text-sm font-medium text-green-700">
-                      {hotel.rating >= 4.5 ? "Excellent" : "Very good"}
-                    </span>
-                    <span className="text-sm text-gray-500">
-                      ({hotel.reviews} reviews)
-                    </span>
-                  </div>
-                  <div className="flex mt-1 text-red-500">
-                    {Array.from({ length: Math.round(hotel.rating) }).map(
-                      (_, idx) => (
-                        <Star key={idx} size={16} fill="#ef4444" strokeWidth={0} />
-                      )
-                    )}
-                  </div>
-                  <div className="mt-4 flex justify-between items-center">
-                    <span className="font-bold text-lg">{hotel.price}</span>
-                    <span className="text-sm text-gray-500">Per night</span>
-                  </div>
-                </div>
-              </div>
-            </SwiperSlide>
-          ))}
-        </Swiper>
-      </div>
+            {/* Navigation Buttons */}
+            <button className="prev-btn absolute left-0 top-1/2 transform -translate-y-1/2 bg-white p-2 shadow rounded-full z-10">
+              <ChevronLeft />
+            </button>
+            <button className="next-btn absolute right-0 top-1/2 transform -translate-y-1/2 bg-white p-2 shadow rounded-full z-10">
+              <ChevronRight />
+            </button>
+          </div>
+        </div>
       </div>
 
 
@@ -459,7 +545,7 @@ export default function Hotels() {
         </div>
       </section>
 
-      
+
 
       {/* Hotel FAQ */}
       <div className="bg-white">
