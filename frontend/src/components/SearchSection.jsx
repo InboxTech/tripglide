@@ -1,16 +1,16 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Header from "./Header";
 import Footer from "./Footer";
 import TravelersCabinClass from "./TravelersCabinClass"; 
 import TravelDeals from "./TravelDeals";
-import FAQSection from "./FAQSecton";
+import FAQSection from "./FAQSection";
 import FlightCardList from "./FlightCardList";
 import { useNavigate } from "react-router-dom";
 import { FaPlane, FaCalendarAlt, FaTag } from "react-icons/fa";
 import FeaturesSection from "./FeaturesSection";
-import FlightDealsCards from "../FlightDealsCards";
+import FlightDealsCards from "./FlightDealsCards";
 
-export default function SearchSection() {   
+export default function SearchSection() {
     const [tripType, setTripType] = useState("return");
     const [from, setFrom] = useState(""); 
     const [to, setTo] = useState(""); 
@@ -25,6 +25,11 @@ export default function SearchSection() {
     const isOneWayValid = from && to && departDate;
     const isReturnValid = isOneWayValid && returnDate;
     const [currentImage, setCurrentImage] = useState(0);
+    // Keyboard Navigation
+    const fromInputRef = useRef(null);
+    const toInputRef = useRef(null);
+    const multiCityRefs = useRef([]);
+    // Navigate
     const navigate = useNavigate();
 
     const images = [
@@ -145,6 +150,12 @@ export default function SearchSection() {
                                         updatedFlights[index].from = e.target.value;
                                         setMultiCityFlights(updatedFlights);
                                     }} 
+                                    ref={(el) => (multiCityRefs.current[index] = { ...multiCityRefs.current[index], from: el })}
+                                    onKeyDown={(e) => {
+                                        if (e.key === "ArrowRight") {
+                                            multiCityRefs.current[index]?.to?.focus();
+                                        }
+                                    }}
                                     className="w-full md:w-1/3 p-3 rounded-lg bg-white text-black"
                                 />
                 
@@ -159,6 +170,12 @@ export default function SearchSection() {
                                         updatedFlights[index].to = e.target.value;
                                         setMultiCityFlights(updatedFlights);
                                     }} 
+                                    ref={(el) => (multiCityRefs.current[index] = { ...multiCityRefs.current[index], to: el })}
+                                    onKeyDown={(e) => {
+                                        if (e.key === "ArrowLeft") {
+                                            multiCityRefs.current[index]?.from?.focus();
+                                        }
+                                    }}
                                     className="w-full md:w-1/3 p-3 rounded-lg bg-white text-black"
                                 />
                 
@@ -227,6 +244,12 @@ export default function SearchSection() {
                             <input type="text" required placeholder="Enter your city" 
                             value={from} 
                             onChange={(e) => setFrom(e.target.value)} 
+                            ref={fromInputRef}
+                            onKeyDown={(e) => {
+                                if (e.key === "ArrowRight") {
+                                    toInputRef.current.focus();
+                                }
+                            }}
                             className="w-full p-3 rounded-lg bg-white text-black" />
                         </div>
 
@@ -243,6 +266,12 @@ export default function SearchSection() {
                             <input type="text" placeholder="Enter your city" 
                             value={to} 
                             onChange={(e) => setTo(e.target.value)} 
+                            ref={toInputRef}
+                            onKeyDown={(e) => {
+                                if (e.key === "ArrowLeft") {
+                                    fromInputRef.current.focus();
+                                }
+                            }}
                             className="w-full p-3 rounded-lg bg-white text-black" />
                         </div>
 
@@ -374,7 +403,7 @@ export default function SearchSection() {
                 <p className="text-gray-600 mb-10 font-serif">
                 It’s easy around here. 100 million travellers use us as their go-to tool, comparing flight deals and offers
                 from more than 1,200 airlines and travel providers. With so many options to choose from in one place, you can
-                say hello to savings, and goodbye to stress – here’s how. 
+                say hello to savings, and goodbye to stress – here’s how.
                 </p>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div className="bg-white p-6 rounded-lg shadow-md text-center hover:shadow-lg">

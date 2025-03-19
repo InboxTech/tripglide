@@ -26,6 +26,14 @@ export default function Header() {
     }
   }, [location.pathname]);
 
+  // Handle search submission (should be called from the search form)
+  const handleSearchSubmit = (params) => {
+    setSearchParams(params);
+    setIsExpanded(false); // Collapse form after search
+    navigate("/search-results"); // Redirect to search results page
+  };
+
+
   return (
     <div>
       {/* Navbar */}
