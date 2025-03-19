@@ -23,7 +23,7 @@ def timedelta_to_str(td):
         return str(td)
     return td
      
-@app.route('/hotels', methods=['GET'])
+@app.route('/', methods=['GET'])
 def get_hotels():
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
