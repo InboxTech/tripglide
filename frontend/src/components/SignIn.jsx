@@ -97,7 +97,12 @@ const SignIn = ({ onSignIn, mockUsers }) => {
 
           {/* Password Field */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">Password</label>
+            <div className="flex justify-between">
+              <label className="block text-sm font-medium text-gray-700">Password</label>
+              <Link to="/forgot-password" className="text-sm text-blue-600 hover:underline">
+                Forgot password?
+              </Link>
+            </div>
             <input
               type="password"
               {...register('password', {
@@ -145,7 +150,7 @@ const SignIn = ({ onSignIn, mockUsers }) => {
 
         {/* Sign Up Link */}
         <p className="mt-4 text-sm text-center">
-          Don’t have an account?{' '}
+          Don't have an account?{' '}
           <Link to="/signup" className="text-blue-600 hover:underline">
             Sign up
           </Link>

@@ -1,4 +1,3 @@
-// src/components/SignUp.jsx
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
@@ -18,25 +17,44 @@ const SignUp = ({ onSignUp, mockUsers }) => {
   const password = watch('password');
 
   const onSubmit = (data) => {
-    // Check for duplicate username or email
-    const userExists = mockUsers.some(
-      (user) => user.username === data.username || user.email === data.email
-    );
+    // Load existing users from localStorage
+    const storedUsers = JSON.parse(localStorage.getItem("mockUsers")) || [];
+    console.log("Users before signup:", storedUsers);
 
-    if (userExists) {
-      alert('Username or email already exists');
-      return;
-    }
 
-    // Create user data for the mock database
+     // Check if the email or username already exists
+  const userExists = storedUsers.some(
+    (user) => user.username === data.username || user.email === data.email
+  );
+
+  if (userExists) {
+    alert("Username or email already exists");
+    return;
+  }
+
+    // Create user data for the mock database with all fields
     const userData = {
       email: data.email,
       username: data.username,
       password: data.password,
     };
 
+      // Add new user to the stored users list
+  const updatedUsers = [...storedUsers, userData];
+  console.log("Saving users:", updatedUsers);
+
+  // Save updated users back to localStorage
+  localStorage.setItem("mockUsers", JSON.stringify(updatedUsers));
+
+    // Store complete user data in mockUsers (similar to how SignIn adds Google users)
+    mockUsers.push(userData);
+
     // Pass user data to onSignUp (only username and email are stored in the state)
-    onSignUp(userData);
+    onSignUp({
+      username: userData.username,
+      email: userData.email,
+    });
+    
     navigate('/');
   };
 
@@ -45,6 +63,7 @@ const SignUp = ({ onSignUp, mockUsers }) => {
     const userData = {
       username: userObject.name,
       email: userObject.email,
+      password: 'google-auth', // Same as in SignIn
     };
 
     // Check for duplicate email (Google sign-up)
@@ -54,7 +73,14 @@ const SignUp = ({ onSignUp, mockUsers }) => {
       return;
     }
 
-    onSignUp(userData);
+    // Store complete user data in mockUsers
+    mockUsers.push(userData);
+
+    onSignUp({
+      username: userData.username,
+      email: userData.email,
+    });
+    
     navigate('/');
   };
 
@@ -199,6 +225,10 @@ const SignUp = ({ onSignUp, mockUsers }) => {
           Already have an account?{' '}
           <Link to="/signin" className="text-blue-600 hover:underline">
             Sign in
+          </Link>
+          {' | '}
+          <Link to="/forgot-password" className="text-blue-600 hover:underline">
+            Forgot password?
           </Link>
         </p>
       </div>

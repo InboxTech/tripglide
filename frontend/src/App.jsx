@@ -5,6 +5,7 @@ import Header from "./components/Header";
 import SearchSection from "./components/SearchSection";
 import SignIn from "./components/SignIn";
 import SignUp from "./components/Signup";
+import ForgotPassword from "./components/ForgotPassword";
 import FlightCardList from "./components/FlightCardList";
 import CarHire from "./components/Carhire";
 import FeaturesSection from "./components/FeaturesSection";
@@ -17,14 +18,15 @@ function App() {
     return savedUser ? JSON.parse(savedUser) : null;
   });
 
+  // Initialize mockUsers with a default user and load from localStorage if available
   const [mockUsers, setMockUsers] = useState(() => {
     const savedMockUsers = localStorage.getItem("mockUsers");
     return savedMockUsers 
       ? JSON.parse(savedMockUsers) 
-      : [{ username: "testuser", email: "test@example.com", password: "password123" }];
+      : [{ username: "testuser", email: "test@example.com", password: "Password123" }];
   });
 
-  // Update localStorage whenever user or mockUsers changes
+  // Update localStorage whenever user changes
   useEffect(() => {
     if (user) {
       localStorage.setItem("user", JSON.stringify(user));
@@ -33,22 +35,47 @@ function App() {
     }
   }, [user]);
 
+  // Update localStorage whenever mockUsers changes
   useEffect(() => {
     localStorage.setItem("mockUsers", JSON.stringify(mockUsers));
+    console.log("Updated mockUsers:", mockUsers); // Debug log
   }, [mockUsers]);
 
+  // Handle user signup - store complete user data
   const handleSignUp = (userData) => {
-    setMockUsers([...mockUsers, userData]);
-    setUser({ username: userData.username, email: userData.email });
+    // Ensure we store the complete user object including password in mockUsers
+    const completeUserData = {
+      username: userData.username,
+      email: userData.email,
+      password: userData.password || 'google-auth' // Handle Google sign-up
+    };
+    
+    // Update mockUsers with the new user
+    setMockUsers(prevUsers => {
+      const newUsers = [...prevUsers, completeUserData];
+      console.log("Added new user:", completeUserData); // Debug log
+      return newUsers;
+    });
+    
+    // Set the current user (without password)
+    setUser({ 
+      username: userData.username, 
+      email: userData.email 
+    });
   };
 
+  // Handle user signin
   const handleSignIn = (userData) => {
     setUser(userData);
   };
 
+  // Handle user logout
   const handleLogout = () => {
     setUser(null);
   };
+
+  // For debugging - can be removed in production
+  console.log("Current mockUsers:", mockUsers);
 
   return (
     <GoogleOAuthProvider clientId="903553660853-d2uiue8osd3cjshdgidtd2hq3pge2sce.apps.googleusercontent.com">
@@ -57,6 +84,13 @@ function App() {
         <Routes>
           <Route path="/signin" element={<SignIn onSignIn={handleSignIn} mockUsers={mockUsers} />} />
           <Route path="/signup" element={<SignUp onSignUp={handleSignUp} mockUsers={mockUsers} />} />
+          <Route 
+            path="/forgot-password" 
+            element={<ForgotPassword 
+              mockUsers={mockUsers} 
+              setMockUsers={setMockUsers} 
+            />} 
+          />
           <Route path="/carhire" element={<CarHire />} />
           <Route path="/search-results" element={<FlightCardList />} />
           <Route path="/" element={<SearchSection />} />
