@@ -1,43 +1,34 @@
-// src/components/SignUp.jsx
+// src/components/SignIn.jsx
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
 
-const SignUp = ({ onSignUp, mockUsers }) => {
+const SignIn = ({ onSignIn, mockUsers }) => {
   const navigate = useNavigate();
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm();
 
-  // Watch the password field to compare with confirm password
-  const password = watch('password');
-
   const onSubmit = (data) => {
-    // Check for duplicate username or email
-    const userExists = mockUsers.some(
-      (user) => user.username === data.username || user.email === data.email
+    // Simulate authentication
+    const user = mockUsers.find(
+      (u) => u.username === data.username && u.password === data.password
     );
 
-    if (userExists) {
-      alert('Username or email already exists');
-      return;
+    if (user) {
+      const userData = {
+        username: user.username,
+        email: user.email,
+      };
+      onSignIn(userData);
+      navigate('/');
+    } else {
+      alert('Invalid username or password');
     }
-
-    // Create user data for the mock database
-    const userData = {
-      email: data.email,
-      username: data.username,
-      password: data.password,
-    };
-
-    // Pass user data to onSignUp (only username and email are stored in the state)
-    onSignUp(userData);
-    navigate('/');
   };
 
   const handleGoogleSuccess = (credentialResponse) => {
@@ -47,19 +38,19 @@ const SignUp = ({ onSignUp, mockUsers }) => {
       email: userObject.email,
     };
 
-    // Check for duplicate email (Google sign-up)
+    // Check for duplicate email (Google sign-in)
     const emailExists = mockUsers.some((user) => user.email === userData.email);
-    if (emailExists) {
-      alert('Email already exists');
-      return;
+    if (!emailExists) {
+      // Add the Google user to mockUsers (simulate sign-up)
+      mockUsers.push({ ...userData, password: 'google-auth' });
     }
 
-    onSignUp(userData);
+    onSignIn(userData);
     navigate('/');
   };
 
   const handleGoogleError = () => {
-    console.log('Google Sign Up Failed');
+    console.log('Google Sign In Failed');
   };
 
   return (
@@ -77,33 +68,11 @@ const SignUp = ({ onSignUp, mockUsers }) => {
         >
           ✕
         </button>
-        <h2 className="text-xl font-semibold text-gray-900">Create account</h2>
-        <p className="mt-1 text-sm text-gray-500">Sign up to access your account</p>
+        <h2 className="text-xl font-semibold text-gray-900">Welcome back</h2>
+        <p className="mt-1 text-sm text-gray-500">Enter your details to sign in to your account</p>
 
         {/* Form */}
         <form onSubmit={handleSubmit(onSubmit)} className="mt-4 space-y-4">
-          {/* Email Field */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Email</label>
-            <input
-              type="email"
-              {...register('email', {
-                required: 'Email is required',
-                pattern: {
-                  value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                  message: 'Please enter a valid email address',
-                },
-              })}
-              placeholder="name@example.com"
-              className={`mt-1 w-full px-3 py-2 border ${
-                errors.email ? 'border-red-500' : 'border-gray-300'
-              } rounded-md text-gray-900 focus:outline-none focus:ring-1 focus:ring-gray-800 focus:border-gray-800`}
-            />
-            {errors.email && (
-              <p className="mt-1 text-sm text-red-500">{errors.email.message}</p>
-            )}
-          </div>
-
           {/* Username Field */}
           <div>
             <label className="block text-sm font-medium text-gray-700">Username</label>
@@ -148,32 +117,12 @@ const SignUp = ({ onSignUp, mockUsers }) => {
             )}
           </div>
 
-          {/* Confirm Password Field */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Confirm Password</label>
-            <input
-              type="password"
-              {...register('confirmPassword', {
-                required: 'Please confirm your password',
-                validate: (value) =>
-                  value === password || 'Passwords do not match',
-              })}
-              placeholder="Confirm your password"
-              className={`mt-1 w-full px-3 py-2 border ${
-                errors.confirmPassword ? 'border-red-500' : 'border-gray-300'
-              } rounded-md text-gray-900 focus:outline-none focus:ring-1 focus:ring-gray-800 focus:border-gray-800`}
-            />
-            {errors.confirmPassword && (
-              <p className="mt-1 text-sm text-red-500">{errors.confirmPassword.message}</p>
-            )}
-          </div>
-
-          {/* Sign Up Button */}
+          {/* Sign In Button */}
           <button
             type="submit"
             className="w-full py-2 bg-gray-800 text-white rounded-md text-sm font-medium hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-800"
           >
-            SIGN UP
+            Sign In
           </button>
         </form>
 
@@ -184,21 +133,21 @@ const SignUp = ({ onSignUp, mockUsers }) => {
           <div className="flex-1 border-t border-gray-300"></div>
         </div>
 
-        {/* Google Sign Up */}
+        {/* Google Sign In */}
         <div className="mt-4 w-full">
           <GoogleLogin
             onSuccess={handleGoogleSuccess}
             onError={handleGoogleError}
-            text="signup_with"
+            text="signin_with"
             width="100%"
           />
         </div>
 
-        {/* Sign In Link */}
+        {/* Sign Up Link */}
         <p className="mt-4 text-sm text-center">
-          Already have an account?{' '}
-          <Link to="/signin" className="text-blue-600 hover:underline">
-            Sign in
+          Don’t have an account?{' '}
+          <Link to="/signup" className="text-blue-600 hover:underline">
+            Sign up
           </Link>
         </p>
       </div>
@@ -206,4 +155,4 @@ const SignUp = ({ onSignUp, mockUsers }) => {
   );
 };
 
-export default SignUp;
+export default SignIn;

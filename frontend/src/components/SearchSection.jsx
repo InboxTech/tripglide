@@ -5,10 +5,10 @@ import TravelersCabinClass from "./TravelersCabinClass";
 import TravelDeals from "./TravelDeals";
 import FAQSection from "./FAQSection";
 import FlightCardList from "./FlightCardList";
-import { useNavigate } from "react-router-dom";
+import { useLocation ,useNavigate } from "react-router-dom";
 import { FaPlane, FaCalendarAlt, FaTag } from "react-icons/fa";
 import FeaturesSection from "./FeaturesSection";
-import FlightDealsCards from "../FlightDealsCards";
+import FlightDealsCards from "./FlightDealsCards";
 import axios from "axios";
 
 export default function SearchSection() {
@@ -17,6 +17,7 @@ export default function SearchSection() {
     const [to, setTo] = useState(""); 
     const [departDate, setDepartDate] = useState("");
     const [returnDate, setReturnDate] = useState("");
+    const [cabinClass, setCabinClass] = useState("Economy");
     const [multiCityFlights, setMultiCityFlights] = useState([
         { id: 1, from: "", to: "", depart: "" },
         { id: 2, from: "", to: "", depart: "" }
@@ -67,8 +68,16 @@ export default function SearchSection() {
       const handleSearch = (e) => {
         e.preventDefault();    
         console.log("Navigating to search results...");
-        navigate("/search-results"); 
-        //navigate("/flights");  
+        navigate("/search-results", { 
+            state: { 
+              tripType: tripType || "", 
+              from: from || "", 
+              to: to || "", 
+              departDate: departDate || null, 
+              returnDate: returnDate || null, 
+              cabinClass: cabinClass || "" 
+            } 
+          });
       };
 
     // Disable logic based on trip type
@@ -116,9 +125,9 @@ export default function SearchSection() {
       ];
 
     return (
-        <section className="relative w-full">
+        <section className="w-full">
             {/* Header */}
-            <Header />
+            {/* <Header /> */}
 
             {/* Background Image */}
              <div className="absolute inset-0 block -z-10">
@@ -212,7 +221,7 @@ export default function SearchSection() {
                     updatedFlights[index].depart = e.target.value;
                     setMultiCityFlights(updatedFlights);
                 }} 
-                className="w-full md:w-1/4 p-3 rounded-lg bg-white text-black cursor-pointer"
+                className="w-full md:w-1/4 p-3 mt-7 rounded-lg bg-white text-black cursor-pointer"
             />
 
             {/* Cross Button for Removing Flight */}
@@ -220,7 +229,7 @@ export default function SearchSection() {
                 type="button"
                 onClick={() => removeMultiCityFlight(flight.id)}
                 disabled={multiCityFlights.length <= 2} // Only enable when more than 2 flights exist
-                className={`text-white px-4 py-2 rounded-lg transition 
+                className={`text-white px-4 py-2 mt-7 rounded-lg transition 
                     ${multiCityFlights.length <= 2 ? "bg-gray-400 cursor-not-allowed" : "bg-red-500 hover:bg-red-700 cursor-pointer"}`}
             >
                 ✖
@@ -242,7 +251,7 @@ export default function SearchSection() {
     {/* Travelers & Search */}
     <div className="flex flex-wrap md:flex-nowrap items-center gap-4 mt-4">
         <div className="flex-1">
-            <TravelersCabinClass />
+        <TravelersCabinClass selectedCabinClass={cabinClass} setSelectedCabinClass={setCabinClass} />
         </div>
         <button 
             onClick={handleSearch}
@@ -337,7 +346,7 @@ export default function SearchSection() {
 
                         {/* Travelers and Cabin */}
                         <div className="flex-1">
-                            <TravelersCabinClass />
+                        <TravelersCabinClass selectedCabinClass={cabinClass} setSelectedCabinClass={setCabinClass} />
                         </div>
 
                         {/* Search Button */}

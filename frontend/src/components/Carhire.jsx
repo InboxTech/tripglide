@@ -68,9 +68,9 @@ export default function CarHire() {
     };
 
   return (
-    <section className="relative w-full">
+    <section className="w-full">
       {/* Header */}
-      <Header />
+      {/* <Header /> */}
 
 
       {/* Background Image - Hidden on Small Screens */}
