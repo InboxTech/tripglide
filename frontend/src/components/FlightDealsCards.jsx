@@ -10,9 +10,6 @@ const flightDeals = [
   { city: "Bali", country: "Indonesia", date: "Fri, 8 Apr", returnDate: "Mon, 12 Apr", price: "₹ 15,450", image: "https://i.pinimg.com/474x/0b/40/7f/0b407f324f3948b4b5878e834d4839a2.jpg", link: "/" },
   { city: "Istanbul", country: "Turkey", date: "Sat, 10 May", returnDate: "Thu, 15 May", price: "₹ 19,800", image: "https://i.pinimg.com/474x/4d/5c/d1/4d5cd1565e04ee98ec74056275136d1e.jpg", link: "/" },
   { city: "Paris", country: "France", date: "Sun, 15 Jun", returnDate: "Sat, 22 Jun", price: "₹ 34,500", image: "https://i.pinimg.com/474x/6a/99/ee/6a99ee843798375c5f7049316e8d31ed.jpg", link: "/" },
-//   { city: "Ras al Khaimah", country: "UAE", date: "Wed, 12 Mar", returnDate: "Thu, 13 Mar", price: "₹ 13,730", image: "https://i.pinimg.com/474x/b5/b9/50/b5b9508f565c91e781714445beca26e4.jpg", link: "/" },
-//   { city: "Phuket", country: "Thailand", date: "Mon, 5 May", returnDate: "Fri, 9 May", price: "₹ 13,933", image: "https://i.pinimg.com/474x/2a/0f/c5/2a0fc56c63ed836b7a4e2151179c2edf.jpg", link: "/" },
-//   { city: "Kathmandu", country: "Nepal", date: "Thu, 3 Apr", returnDate: "Wed, 9 Apr", price: "₹ 14,941", image: "https://i.pinimg.com/474x/9e/e7/fa/9ee7fa0d2fcb2be5a25a40e9cdb0745c.jpg", link: "/" },
 ];
 
 const FlightDealsCards = () => {

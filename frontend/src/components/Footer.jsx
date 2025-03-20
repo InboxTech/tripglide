@@ -16,7 +16,6 @@ export default function Footer() {
           </p>
         </div>
 
-
           {/* Links Section */}
           <div className="grid grid-cols-2 md:grid-cols-3 gap-6 w-full md:w-auto text-center md:text-left">
             {/* Column 1 */}
