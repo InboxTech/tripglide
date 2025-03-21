@@ -73,7 +73,7 @@ export default function CarHire() {
       {/* <Header /> */}
 
 
-      {/* Background Image - Hidden on Small Screens */}
+      {/* Background Image */}
       <div className="absolute inset-0 hidden lg:block -z-10">
         <img
           src="/images/carbg.jpg"
