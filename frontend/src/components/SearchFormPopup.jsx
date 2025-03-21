@@ -157,15 +157,6 @@ export default function SearchFormPopup({
                   </button>
                 </div>
               ))}
-<<<<<<< HEAD
-              <button
-                type="button"
-                onClick={() => setMultiCityFlights([...multiCityFlights, { id: Date.now(), from: "", to: "", depart: "" }])}
-                className="text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg"
-              >
-                Add Flight
-              </button>
-=======
               <div className="flex flex-col md:flex-row justify-between gap-4 items-end">
               <button
                 type="button"
@@ -190,7 +181,6 @@ export default function SearchFormPopup({
                 Search
               </button>
             </div>
->>>>>>> 35fe6736fdae29ee2cfcc03ea7b5ff4a7e41e7b4
             </div>
           ) : (
             // One-way or Return Form
@@ -250,10 +240,7 @@ export default function SearchFormPopup({
               </div>
 
               <div className="grid grid-cols-1 gap-2">
-<<<<<<< HEAD
-=======
                 {/* oneway */}
->>>>>>> 35fe6736fdae29ee2cfcc03ea7b5ff4a7e41e7b4
                 {tripType === "oneway" ? (
                   <div className="flex flex-col md:flex-row gap-2">
                     <div className="flex-1">
@@ -291,10 +278,7 @@ export default function SearchFormPopup({
                     </div>
                   </div>
                 ) : (
-<<<<<<< HEAD
-=======
                   // return
->>>>>>> 35fe6736fdae29ee2cfcc03ea7b5ff4a7e41e7b4
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-white font-semibold mb-1">Depart</label>

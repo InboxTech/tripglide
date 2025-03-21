@@ -1,26 +1,8 @@
-<<<<<<< HEAD
-import { useState, useEffect } from "react";
-=======
 import { useState, useEffect, useRef } from "react";
->>>>>>> 35fe6736fdae29ee2cfcc03ea7b5ff4a7e41e7b4
 import Header from "./Header";
 import Footer from "./Footer";
 import TravelersCabinClass from "./TravelersCabinClass"; 
 import TravelDeals from "./TravelDeals";
-<<<<<<< HEAD
-
-import FAQSection from "./FAQSecton";
-import FlightCardList from "./FlightCardList";
-import { useNavigate } from "react-router-dom";
-import { FaPlane, FaCalendarAlt, FaTag } from "react-icons/fa";
-import FeaturesSection from "./FeaturesSection";
-import axios from "axios";
-
-export default function SearchSection() {
-    const [flights, setFlights] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-=======
 import FAQSection from "./FAQSection";
 import FlightCardList from "./FlightCardList";
 import { useLocation ,useNavigate } from "react-router-dom";
@@ -30,38 +12,28 @@ import FlightDealsCards from "./FlightDealsCards";
 import axios from "axios";
 
 export default function SearchSection() {
->>>>>>> 35fe6736fdae29ee2cfcc03ea7b5ff4a7e41e7b4
     const [tripType, setTripType] = useState("return");
     const [from, setFrom] = useState(""); 
     const [to, setTo] = useState(""); 
     const [departDate, setDepartDate] = useState("");
     const [returnDate, setReturnDate] = useState("");
-<<<<<<< HEAD
-=======
     const [cabinClass, setCabinClass] = useState("Economy");
->>>>>>> 35fe6736fdae29ee2cfcc03ea7b5ff4a7e41e7b4
     const [multiCityFlights, setMultiCityFlights] = useState([
         { id: 1, from: "", to: "", depart: "" },
         { id: 2, from: "", to: "", depart: "" }
     ]);
-<<<<<<< HEAD
-=======
     const [departureAirports, setDepartureAirports] = useState([]);
     const [arrivalAirports, setArrivalAirports] = useState([]);
->>>>>>> 35fe6736fdae29ee2cfcc03ea7b5ff4a7e41e7b4
     {/* Calculate if search button should be disabled */}
     const isMultiCityValid = multiCityFlights.every(flight => flight.from && flight.to && flight.depart);
     const isOneWayValid = from && to && departDate;
     const isReturnValid = isOneWayValid && returnDate;
     const [currentImage, setCurrentImage] = useState(0);
-<<<<<<< HEAD
-=======
     // Keyboard Navigation
     const fromInputRef = useRef(null);
     const toInputRef = useRef(null);
     const multiCityRefs = useRef([]);
     // Navigate
->>>>>>> 35fe6736fdae29ee2cfcc03ea7b5ff4a7e41e7b4
     const navigate = useNavigate();
 
     const images = [
@@ -78,33 +50,6 @@ export default function SearchSection() {
         return () => clearInterval(interval);
       }, []);
 
-<<<<<<< HEAD
-    //   useEffect(() => {
-    //     // Fetch airport data from the Flask API
-    //     const fetchAirports = async () => {
-    //         try {
-    //             const response = await axios.get('http://127.0.0.1:5000/get_flights');
-    //             setDepartureAirports(response.data.departure_airport || []);
-    //             setArrivalAirports(response.data.arrival_airport || []);
-    //         } catch (error) {
-    //             console.error('Error fetching airport data:', error);
-    //         }
-    //     };
-        
-      const handleSearch = (e) => {
-        e.preventDefault();    
-        console.log("Navigating to search results...");
-        navigate("/search-results",{
-            state: { 
-            tripType: tripType || "", 
-            from: from || "", 
-            to: to || "", 
-            departDate: departDate || null, 
-            returnDate: returnDate || null, 
-            cabinClass: cabinClass || "" 
-          } 
-        }); 
-=======
       useEffect(() => {
         // Fetch airport data from the Flask API
         const fetchAirports = async () => {
@@ -133,7 +78,6 @@ export default function SearchSection() {
               cabinClass: cabinClass || "" 
             } 
           });
->>>>>>> 35fe6736fdae29ee2cfcc03ea7b5ff4a7e41e7b4
       };
 
     // Disable logic based on trip type
@@ -149,11 +93,6 @@ export default function SearchSection() {
             return to;
         });
     };
-<<<<<<< HEAD
-    
-=======
-
->>>>>>> 35fe6736fdae29ee2cfcc03ea7b5ff4a7e41e7b4
      // Function to add flight in Multi-city
      const addMultiCityFlight = () => {
         if (multiCityFlights.length < 6) {
@@ -184,39 +123,10 @@ export default function SearchSection() {
         },
       ];
 
-<<<<<<< HEAD
-//       useEffect(() => {
-//         axios
-//             .get("http://127.0.0.1:5001/")
-//             .then((response) => {
-//                 setFlights(response.data);
-//                 setLoading(false);
-//             })
-//             .catch((error) => {
-//                 console.error("Error fetching data:", error);
-//                 setFlights([]); // Corrected
-//                 setLoading(false);
-//             });
-//     }, []);
-//     const [flights, setFlights] = useState([]);
-    
-//     // Extract unique departure and arrival cities
-//     const departureCity = flights?.length
-//   ? [...new Set(flights.map((flight) => flight.departure))]
-//   : [];
-//     const arrivalCity = [...new Set(flights.map((flight) => flight.arrival))];
-      
-
-    return (
-        <section className="relative w-full">
-            {/* Header */}
-            <Header />
-=======
     return (
         <section className="w-full">
             {/* Header */}
             {/* <Header /> */}
->>>>>>> 35fe6736fdae29ee2cfcc03ea7b5ff4a7e41e7b4
 
             {/* Background Image */}
              <div className="absolute inset-0 block -z-10">
@@ -232,14 +142,9 @@ export default function SearchSection() {
                 <h1 className="text-4xl lg:text-6xl font-bold text-white mb-8">
                     The best flight offers from anywhere, to everywhere
                 </h1>
-<<<<<<< HEAD
-
-             {/* Search Form */}
-=======
                 
 
                 {/* Search Form */}
->>>>>>> 35fe6736fdae29ee2cfcc03ea7b5ff4a7e41e7b4
                 <div className="bg-[#001533] p-6 rounded-2xl shadow-lg">
                     {/* Radio Buttons */}
                     <div className="flex gap-6 text-white mb-4">
@@ -258,94 +163,6 @@ export default function SearchSection() {
                      {tripType === "multicity" ? (
                         // Multi-City Form
                         <form className="space-y-4">
-<<<<<<< HEAD
-                        {multiCityFlights.map((flight, index) => (
-                            <div key={flight.id} className="flex flex-wrap md:flex-nowrap gap-4 items-center">
-                                {/* From */}
-                                <input 
-                                    type="text" 
-                                    placeholder="From" 
-                                    value={flight.from} 
-                                    required
-                                    onChange={(e) => {
-                                        const updatedFlights = [...multiCityFlights];
-                                        updatedFlights[index].from = e.target.value;
-                                        setMultiCityFlights(updatedFlights);
-                                    }} 
-                                    className="w-full md:w-1/3 p-3 rounded-lg bg-white text-black"
-                                />
-                
-                                 {/* To */}
-                                <input 
-                                    type="text" 
-                                    placeholder="To" 
-                                    value={flight.to}
-                                    required 
-                                    onChange={(e) => {
-                                        const updatedFlights = [...multiCityFlights];
-                                        updatedFlights[index].to = e.target.value;
-                                        setMultiCityFlights(updatedFlights);
-                                    }} 
-                                    className="w-full md:w-1/3 p-3 rounded-lg bg-white text-black"
-                                />
-                
-                                {/* Depart Date */}
-                                <input 
-                                        type="date" 
-                                        min={index === 0 ? today : multiCityFlights[index - 1].depart || today} // Only allow today or after previous flight date
-                                        value={flight.depart} 
-                                        required
-                                        onChange={(e) => {
-                                            const updatedFlights = [...multiCityFlights];
-                                            updatedFlights[index].depart = e.target.value;
-                                            setMultiCityFlights(updatedFlights);
-                                        }} 
-                                        className="w-full md:w-1/4 p-3 rounded-lg bg-white text-black cursor-pointer"
-                                    />
-                
-                                {/* Cross Button for Removing Flight */}
-                                <button 
-                                    type="button"
-                                    onClick={() => removeMultiCityFlight(flight.id)}
-                                    disabled={multiCityFlights.length <= 2} // Only enable when more than 2 flights exist
-                                    className={`text-white px-4 py-2 rounded-lg transition 
-                                        ${multiCityFlights.length <= 2 ? "bg-gray-400 cursor-not-allowed" : "bg-red-500 hover:bg-red-700 cursor-pointer"}`}
-                                >
-                                    ✖
-                                </button>
-                            </div>
-                        ))}
-                
-                        {/* Add Flight Button */}
-                        {multiCityFlights.length < 6 && (
-                            <button 
-                                type="button" 
-                                onClick={addMultiCityFlight} 
-                                className="bg-white text-black px-6 py-2 rounded-lg hover:bg-gray-400 transition cursor-pointer"
-                            >
-                                ➕ Add another flight
-                            </button>
-                        )}
-                
-                        {/* Travelers & Search */}
-                        <div className="flex flex-wrap md:flex-nowrap items-center gap-4 mt-4">
-                            <div className="flex-1">
-                                <TravelersCabinClass />
-                            </div>
-                            <button 
-                                onClick={handleSearch}
-                                type="submit" 
-                                disabled={isSearchDisabled}
-                                className={`mt-5 px-6 py-3 font-semibold rounded-lg transition 
-                                    ${isSearchDisabled ? "bg-blue-300 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700 text-white"}`}
-                            >
-                                Search
-                            </button>   
-                        </div>
-                    </form>
-                    ) : (
-                    
-=======
     {multiCityFlights.map((flight, index) => (
         <div key={flight.id} className="flex flex-wrap md:flex-nowrap gap-4 items-center">
             {/* From */}
@@ -449,36 +266,11 @@ export default function SearchSection() {
                     ) : (
                     
 
->>>>>>> 35fe6736fdae29ee2cfcc03ea7b5ff4a7e41e7b4
                     // Return, One Way
                     <form className="flex flex-wrap gap-2 sm:gap-4 items-center w-full">
                         {/* From */}
                         <div className="flex-1 min-w-[100px]">
                             <label className="block text-white font-semibold mb-1">From</label>
-<<<<<<< HEAD
-                            <input list="departure-city"
-                                   id="from"
-                                   value={from}
-                                   onChange={(e) => setFrom(e.target.value)}
-                                   className="w-full p-3 border bg-white rounded"
-                                   placeholder="Type your departure city"
-                            />
-
-                    <datalist className="bg-white" id="departure-city">
-                      {loading ? (
-                      <option className="bg-white">Loading...</option>
-                         ) : error ? (
-                         <option>{error}</option>
-                         ) : (
-                         departureCity
-                         .filter((airport) => airport) // Remove invalid values
-                         .map((airport, index) => (
-                          <option key={`${airport}-${index}`} value={airport}>{airport} </option>
-                         ))
-                         )}
-                    </datalist>
-                </div>
-=======
                             <input 
                                 list="departure-airports" 
                                 value={from} 
@@ -493,7 +285,6 @@ export default function SearchSection() {
                                 ))}
                             </datalist>
                         </div>
->>>>>>> 35fe6736fdae29ee2cfcc03ea7b5ff4a7e41e7b4
 
                         {/* Swap Button */}
                         <div className="flex relative mt-7 justify-center items-center">
@@ -505,12 +296,6 @@ export default function SearchSection() {
                         {/* To */}
                         <div className="flex-1 min-w-[100px]">
                             <label className="block required: text-white font-semibold mb-1">To</label>
-<<<<<<< HEAD
-                            <input type="text" placeholder="Enter your city" 
-                            value={to} 
-                            onChange={(e) => setTo(e.target.value)} 
-                            className="w-full p-3 rounded-lg bg-white text-black" />
-=======
                             <input 
                                 list="arrival-airports" 
                                 value={to} 
@@ -524,7 +309,6 @@ export default function SearchSection() {
                                     <option key={index} value={airport} />
                                 ))}
                             </datalist>
->>>>>>> 35fe6736fdae29ee2cfcc03ea7b5ff4a7e41e7b4
                         </div>
 
                         {/* Depart */}
@@ -561,11 +345,7 @@ export default function SearchSection() {
 
                         {/* Travelers and Cabin */}
                         <div className="flex-1">
-<<<<<<< HEAD
-                            <TravelersCabinClass />
-=======
                         <TravelersCabinClass selectedCabinClass={cabinClass} setSelectedCabinClass={setCabinClass} />
->>>>>>> 35fe6736fdae29ee2cfcc03ea7b5ff4a7e41e7b4
                         </div>
 
                         {/* Search Button */}
@@ -601,18 +381,6 @@ export default function SearchSection() {
             </div>
 
              {/* Features Section */}
-<<<<<<< HEAD
-      <div className="bg-white">
-      <div className="px-8 pt-5">
-  <nav className="text-sm">
-    <a href="/" className="text-blue-600 hover:underline">Home</a>
-    <span className="mx-2 text-gray-400">›</span>
-    <span className="text-gray-600">Flights</span>
-  </nav>
-</div>
-      <FeaturesSection features={flightFeatures} />
-      </div>
-=======
              <div className="bg-white">
             <div className="container mx-auto px-8 pt-5 max-w-7xl">
                 <nav className="text-sm">
@@ -624,7 +392,6 @@ export default function SearchSection() {
             <FeaturesSection features={flightFeatures} />
             </div>
 
->>>>>>> 35fe6736fdae29ee2cfcc03ea7b5ff4a7e41e7b4
 
             {/* Banner */}
             <section className="relative w-full py-20 bg-gray-100">
@@ -638,20 +405,6 @@ export default function SearchSection() {
                         />
                         {/* Text Content */}
                         <div className="absolute inset-0 flex flex-col justify-center px-6 text-white bg-black/50">
-<<<<<<< HEAD
-                            <p className="text-lg uppercase">Grab a deal</p>
-                            <h2 className="text-3xl md:text-4xl font-bold mt-2">
-                                When the price is low, you'll know
-                            </h2>
-                            <p className="mt-2 text-lg">
-                                Score cheaper seats with Price Alerts
-                            </p>
-                            <button 
-                                className="mt-5 px-6 py-1 w-36 bg-white text-black rounded-2xl font-semibold shadow-md hover:bg-gray-500 hover:text-white cursor-pointer"
-                                onClick={() => alert('How it works clicked!')}>
-                             How it works
-                            </button>
-=======
                             <p className="text-lg uppercase font-serif">Grab a deal</p>
                             <h2 className="text-3xl md:text-4xl font-bold mt-2">
                                 When the price is low, you'll know
@@ -666,22 +419,11 @@ export default function SearchSection() {
                                 How it works
                             </a>
 
->>>>>>> 35fe6736fdae29ee2cfcc03ea7b5ff4a7e41e7b4
                         </div>
                     </div>
                 </div>
             </section>
             <hr className="border-black"></hr>
-<<<<<<< HEAD
-            <section className="bg-white">
-
-            {/* Swiper Section */}
-            <TravelDeals />
-            </section>
-
-            <section className="bg-white">
-            {/* FAQ Section */}
-=======
 
             {/* Flight Deals Cards */}
             <section className="bg-white">
@@ -748,7 +490,6 @@ export default function SearchSection() {
 
             {/* FAQ Section */}
             <section id="faq" className="bg-white">
->>>>>>> 35fe6736fdae29ee2cfcc03ea7b5ff4a7e41e7b4
             <FAQSection />
             </section>
 
@@ -756,8 +497,4 @@ export default function SearchSection() {
             <Footer />
         </section>
     );
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 35fe6736fdae29ee2cfcc03ea7b5ff4a7e41e7b4
