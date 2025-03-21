@@ -82,7 +82,7 @@ function App() {
   console.log("Current mockUsers:", mockUsers);
 
   return (
-    <GoogleOAuthProvider clientId="446079422792-q1q20crdehjvc4blhpkn91u2f30iqmee.apps.googleusercontent.com">
+    <GoogleOAuthProvider clientId="903553660853-d2uiue8osd3cjshdgidtd2hq3pge2sce.apps.googleusercontent.com">
       <Router>
         <Header user={user} handleLogout={handleLogout} />
         <Routes>
