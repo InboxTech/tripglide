@@ -8,6 +8,7 @@ import { FaCar, FaCalendarAlt, FaTag } from "react-icons/fa";
 import CarHireFAQ from "./CarHireFAQ";
 import PopularCarDeals from "./PopularCarDeals";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function CarHire() {
   const [pickupDate, setPickupDate] = useState("");
@@ -15,9 +16,22 @@ export default function CarHire() {
   const [pickupTime, setPickupTime] = useState("");
   const [dropoffTime, setDropoffTime] = useState("");
   const [pickupLocation, setPickupLocation] = useState("");
+  const [availableLocations, setAvailableLocations] = useState([]);
 
   const today = new Date().toISOString().split("T")[0];
   const [currentTime, setCurrentTime] = useState("");
+
+  // Fetch available cities from Flask API when component loads
+  useEffect(() => {
+    axios
+      .get("http://localhost:5001/location") // Flask API endpoint
+      .then((response) => {
+        setAvailableLocations(response.data.car_city || []); // Set available locations
+      })
+      .catch((error) => {
+        console.error("Error fetching locations:", error);
+      });
+  }, []);
 
   useEffect(() => {
     const now = new Date();
@@ -98,12 +112,18 @@ export default function CarHire() {
                 Pick-up location
               </label>
               <input
+              list="pickup-locations"
                 type="text"
                 placeholder="City, airport or station"
                 className="w-full p-3 rounded-lg bg-white text-black"
                 value={pickupLocation}
                 onChange={(e) => setPickupLocation(e.target.value)}
               />
+              <datalist id="pickup-locations">
+                {availableLocations.map((location, index) => (
+                  <option key={index} value={location} />
+                ))}
+              </datalist>
             </div>
 
             {/* Pickup Date */}

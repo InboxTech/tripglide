@@ -10,6 +10,7 @@ import FlightCardList from "./components/FlightCardList";
 import CarHire from "./components/Carhire";
 import FeaturesSection from "./components/FeaturesSection";
 import CabListing from "./components/CabListing";
+import HelpPage from "./components/HelpPage";
 
 function App() {
   // Initialize user state from localStorage
@@ -96,6 +97,7 @@ function App() {
           <Route path="/" element={<SearchSection />} />
           <Route path="/features" element={<FeaturesSection />} />
           <Route path="/cabs" element={<CabListing />} />
+          <Route path="/helppage" element={<HelpPage />} />
         </Routes>
       </Router>
     </GoogleOAuthProvider>
