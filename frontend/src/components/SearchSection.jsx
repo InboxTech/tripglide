@@ -45,11 +45,31 @@ export default function SearchSection() {
         return () => clearInterval(interval);
       }, []);
 
+    //   useEffect(() => {
+    //     // Fetch airport data from the Flask API
+    //     const fetchAirports = async () => {
+    //         try {
+    //             const response = await axios.get('http://127.0.0.1:5000/get_flights');
+    //             setDepartureAirports(response.data.departure_airport || []);
+    //             setArrivalAirports(response.data.arrival_airport || []);
+    //         } catch (error) {
+    //             console.error('Error fetching airport data:', error);
+    //         }
+    //     };
+        
       const handleSearch = (e) => {
         e.preventDefault();    
         console.log("Navigating to search results...");
-        navigate("/search-results"); 
-        //navigate("/flights");  
+        navigate("/search-results",{
+            state: { 
+            tripType: tripType || "", 
+            from: from || "", 
+            to: to || "", 
+            departDate: departDate || null, 
+            returnDate: returnDate || null, 
+            cabinClass: cabinClass || "" 
+          } 
+        }); 
       };
 
     // Disable logic based on trip type
@@ -60,8 +80,10 @@ export default function SearchSection() {
 
     // Function to swap from and to values
     const swapLocations = () => {
-        setFrom(to);
-        setTo(from);
+        setFrom((prevFrom) => {
+            setTo(prevFrom);
+            return to;
+        });
     };
     
      // Function to add flight in Multi-city
@@ -94,23 +116,26 @@ export default function SearchSection() {
         },
       ];
 
-      useEffect(() => {
-        axios
-            .get("http://127.0.0.1:5001/")
-            .then((response) => {
-                setFlights(response.data);
-                setLoading(false);
-            })
-            .catch((error) => {
-                console.error("Error fetching data:", error);
-                setFlights([]); // Corrected
-                setLoading(false);
-            });
-    }, []);
+//       useEffect(() => {
+//         axios
+//             .get("http://127.0.0.1:5001/")
+//             .then((response) => {
+//                 setFlights(response.data);
+//                 setLoading(false);
+//             })
+//             .catch((error) => {
+//                 console.error("Error fetching data:", error);
+//                 setFlights([]); // Corrected
+//                 setLoading(false);
+//             });
+//     }, []);
+//     const [flights, setFlights] = useState([]);
     
-    // Extract unique departure and arrival cities
-    const departureCity = [...new Set(flights.map((flight) => flight.departure))];
-    const arrivalCity = [...new Set(flights.map((flight) => flight.arrival))];
+//     // Extract unique departure and arrival cities
+//     const departureCity = flights?.length
+//   ? [...new Set(flights.map((flight) => flight.departure))]
+//   : [];
+//     const arrivalCity = [...new Set(flights.map((flight) => flight.arrival))];
       
 
     return (

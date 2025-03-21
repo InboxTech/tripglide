@@ -6,6 +6,7 @@ db_config = {
     "host": "127.0.0.1",
     "user": "root",
     "password": "",
+    "port": 3307,
     "database": "main"
 }
 
@@ -15,33 +16,63 @@ try:
     cursor = conn.cursor()
 
     # Load the CSV file into a DataFrame
-    file_path = r"C:\Users\Jinal\Downloads\Car_table.csv"
-    car_df = pd.read_csv(file_path)
+    #file_path = r"C:\Users\Jinal\Downloads\Car_table.csv"
+    car_df = pd.read_excel(r"C:\Users\Jinal\Downloads\Car_table.xlsx")
+    #car_df = pd.read_csv(file_path)
 
     # ✅ Rename DataFrame columns to match MySQL table structure
     car_df.rename(columns={
-        "Car_id": "CarID",
+        "Car_Id": "CarID",
         "Make": "Make",
         "Model": "Model",
         "Car Type": "CarType",
-        "Mileage(kmpl)": "Mileage_kmpl",
+        "Mileage (km/l)": "Mileage_kmpl",
         "Year of Manufacture": "Year_Of_Manufacture",
-        "Price per day": "Price_Per_Day",
-        "city": "City",
-        "car_agency": "Car_Agency",
-        "agency_price": "Agency_Price",
-        "LocationID": "LocationID"
+        "Price per Hour (INR)": "Price_Per_Hour_INR",
+        "Occupancy": "Seats",
+        "Fuel Policy": "Fuel_Policy",
+        "AC": "AC",
+        "Transmission": "Transmission",
+        "Luggage Capacity": "Luggage_Capacity",
+        "City": "City",
+        "Agency_Name": "Agency",
+        "Base_Fare": "Base_Fare",
+        "LocationID": "LocationID",
+        "Unlimited Mileage": "Unlimited_Mileage",
+        "Free Cancellation": "Free_Cancellation",
+        "Ratings": "Ratings"
     }, inplace=True)
 
     # ✅ Ensure numeric columns are converted to appropriate types
-    numeric_columns = ["Mileage_kmpl", "Year_Of_Manufacture", "Price_Per_Day", "Agency_Price", "LocationID"]
+    numeric_columns = ["Mileage_kmpl", "Year_Of_Manufacture", "Price_Per_Hour_INR", "Seats", "Luggage_Capacity", "Base_Fare", "LocationID"]
     for col in numeric_columns:
         car_df[col] = pd.to_numeric(car_df[col], errors='coerce').fillna(0).astype(int)
+    #✅ Clean and normalize column names (strip spaces + replace special characters)
+    #car_df.columns = car_df.columns.str.strip().str.replace(r'[^\w\s]', '_', regex=True)
+
+    
+     # ✅ Print column names after renaming to verify
+    print("After renaming columns:", car_df.columns.tolist())
+
+    # ✅ Check for any missing columns before processing
+    expected_columns = [
+        "Mileage_kmpl", "Year_Of_Manufacture", "Price_Per_Hour_INR",
+        "Seats", "Luggage_Capacity", "Base_Fare", "LocationID"
+    ]
+    
+    missing_columns = [col for col in expected_columns if col not in car_df.columns]
+    if missing_columns:
+        raise KeyError(f"❌ Missing columns: {missing_columns}")
+
+    # ✅ Ensure numeric columns are converted to appropriate types
+    for col in expected_columns:
+        car_df[col] = pd.to_numeric(car_df[col], errors='coerce').fillna(0).astype(int)
+
 
     # ✅ Exclude 'CarID' while inserting (since it's auto-increment)
     insert_query = """
-    INSERT INTO Cars (Make, Model, CarType, Mileage_kmpl, Year_Of_Manufacture, Price_Per_Day, City, Car_Agency, Agency_Price, LocationID) 
-    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+    INSERT INTO Cars (Make, Model, CarType, Mileage_kmpl, Year_Of_Manufacture, Price_Per_Hour_INR, Seats, Fuel_Policy, AC, Transmission, Luggage_Capacity, City, Agency, Base_Fare, LocationID, Unlimited_Mileage, Free_Cancellation, Ratings) 
+    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
     """
 
     # ✅ Convert DataFrame to list of tuples for insertion
