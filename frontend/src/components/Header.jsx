@@ -69,9 +69,9 @@ export default function Header({ user, handleLogout }) {
         </div>
 
         <div className="flex items-center gap-2 md:gap-4">
-          <div className="p-2 rounded-lg hover:bg-gray-600 transition cursor-pointer">
-            <FaGlobe />
-          </div>
+        <Link to="/country-facts" className="p-2 rounded-lg hover:bg-gray-600 transition cursor-pointer">
+          <FaGlobe />
+        </Link>
 
           <div className="p-2 rounded-lg hover:bg-gray-600 transition cursor-pointer">
             <FaHeart />
@@ -132,7 +132,7 @@ export default function Header({ user, handleLogout }) {
                   <Link to="/regional-settings" className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 transition">
                     <FaFlag /> Regional settings
                   </Link>
-                  <Link to="/explore" className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 transition">
+                  <Link to="/" className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 transition">
                     <FaSearchLocation className="text-[#0c828b]" /> Explore everywhere
                   </Link>
                   <Link to="/help" className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 transition">
