@@ -27,7 +27,7 @@ const CabListing = () => {
   const [filteredCars, setFilteredCars] = useState([]); // Stores filtered car listings
   const [isFilterOpen, setIsFilterOpen] = useState(false); // State for mobile filter toggle
 
-  // Dummy car data
+  // Dummy car data with 6 additional cars
   useEffect(() => {
     const initialCars = [
       {
@@ -41,7 +41,7 @@ const CabListing = () => {
         carAgency: "ZoomCar",
         agencyPrice: 2200,
         fuelType: "Petrol",
-        transmission: "Automatic", // Added for filtering
+        transmission: "Automatic",
         image: "/images/sedan.jpeg",
         passengers: 4,
       },
@@ -56,7 +56,7 @@ const CabListing = () => {
         carAgency: "Drivezy",
         agencyPrice: 2800,
         fuelType: "Diesel",
-        transmission: "Manual", // Added for filtering
+        transmission: "Manual",
         image: "/images/suv.jpeg",
         passengers: 5,
       },
@@ -71,9 +71,99 @@ const CabListing = () => {
         carAgency: "Drivezy",
         agencyPrice: 2800,
         fuelType: "Diesel",
-        transmission: "Automatic", // Added for filtering
+        transmission: "Automatic",
         image: "/images/hatchback.jpeg",
         passengers: 4,
+      },
+      {
+        id: 4,
+        carMake: "Mercedes-Benz",
+        model: "C-Class",
+        type: "Luxury",
+        mileage: "10",
+        yearOfMake: 2023,
+        pricePerDay: 6000,
+        carAgency: "LuxuryRides",
+        agencyPrice: 5500,
+        fuelType: "Petrol",
+        transmission: "Automatic",
+        image: "/images/Mercedes Benz CLE Coupe.jpeg",
+        passengers: 4,
+      },
+      {
+        id: 5,
+        carMake: "Tata",
+        model: "Nexon EV",
+        type: "Hatchback",
+        mileage: "N/A",
+        yearOfMake: 2023,
+        pricePerDay: 3800,
+        carAgency: "EcoDrive",
+        agencyPrice: 3500,
+        fuelType: "Electric",
+        transmission: "Automatic",
+        image: "/images/2023 டாடா நெக்ஸான்_இவி எஸ்யூவி அறிமுகம்.jpeg",
+        passengers: 5,
+      },
+      {
+        id: 6,
+        carMake: "Maruti Suzuki",
+        model: "Dzire",
+        type: "Sedan",
+        mileage: "20",
+        yearOfMake: 2022,
+        pricePerDay: 2200,
+        carAgency: "ZoomCar",
+        agencyPrice: 2000,
+        fuelType: "CNG",
+        transmission: "Manual",
+        image: "/images/AutoMowheelz - Automobile News, Car Reviews, Latest Bike Launches.jpeg",
+        passengers: 4,
+      },
+      {
+        id: 7,
+        carMake: "Mahindra",
+        model: "XUV700",
+        type: "SUV",
+        mileage: "13",
+        yearOfMake: 2023,
+        pricePerDay: 4500,
+        carAgency: "Drivezy",
+        agencyPrice: 4200,
+        fuelType: "Diesel",
+        transmission: "Automatic",
+        image: "/images/Mahindra XUV 3XO compact SUV launched in India from INR 7_49 Lakh _ AUTOBICS.jpeg",
+        passengers: 7,
+      },
+      {
+        id: 8,
+        carMake: "BMW",
+        model: "X5",
+        type: "Luxury",
+        mileage: "9",
+        yearOfMake: 2023,
+        pricePerDay: 8000,
+        carAgency: "LuxuryRides",
+        agencyPrice: 7500,
+        fuelType: "Petrol",
+        transmission: "Automatic",
+        image: "/images/BMW X5 model of 2018 recalled.jpeg",
+        passengers: 5,
+      },
+      {
+        id: 9,
+        carMake: "MG",
+        model: "ZS EV",
+        type: "SUV",
+        mileage: "N/A",
+        yearOfMake: 2023,
+        pricePerDay: 4200,
+        carAgency: "EcoDrive",
+        agencyPrice: 3900,
+        fuelType: "Electric",
+        transmission: "Automatic",
+        image: "/images/MG ZS EV Review_ Performance and Features Explained.jpeg",
+        passengers: 5,
       },
     ];
     setCars(initialCars);
@@ -84,9 +174,9 @@ const CabListing = () => {
     passengers: 1,
     carType: [],
     fuelType: [],
-    transmission: "all", // Added for transmission filter
-    priceRange: [2000, 4000], // Added for price range filter
-    carAgency: [], // Added for car agency filter
+    transmission: "all",
+    priceRange: [2000, 8000], // Updated max range to accommodate new cars
+    carAgency: [],
   });
 
   // Apply filters to car listings
@@ -208,7 +298,7 @@ const CabListing = () => {
                 min="1"
                 value={filters.passengers}
                 onChange={(e) => setFilters({ ...filters, passengers: e.target.value })}
-                className="w-full p-2 cursor-pointer border rounded text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full p-2 border rounded text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
 
@@ -300,7 +390,7 @@ const CabListing = () => {
               <input 
                 type="range" 
                 min="2000" 
-                max="4000" 
+                max="8000" 
                 step="100"
                 value={filters.priceRange[0]}
                 onChange={(e) => setFilters({ ...filters, priceRange: [parseInt(e.target.value), filters.priceRange[1]] })}
@@ -309,7 +399,7 @@ const CabListing = () => {
               <input 
                 type="range" 
                 min="2000" 
-                max="4000" 
+                max="8000" 
                 step="100"
                 value={filters.priceRange[1]}
                 onChange={(e) => setFilters({ ...filters, priceRange: [filters.priceRange[0], parseInt(e.target.value)] })}
@@ -356,7 +446,7 @@ const CabListing = () => {
                       ₹ {car.pricePerDay.toLocaleString()}/day{" "}
                       <span className="text-gray-500 text-sm">(Agency Price: ₹{car.agencyPrice.toLocaleString()})</span>
                     </p>
-                    <button className="mt-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 cursor-pointer transition">
+                    <button className="mt-2 bg-blue-600 text-white px-4 py-2 cursor-pointer rounded-lg hover:bg-blue-700 transition">
                       Book Now
                     </button>
                   </div>
