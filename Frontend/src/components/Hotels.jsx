@@ -28,6 +28,19 @@ export default function Hotels() {
   const [children, setChildren] = useState(0);
   const [rooms, setRooms] = useState(1);
   const [showGuestOptions, setShowGuestOptions] = useState(false);
+  const [destinations, setDestinations] = useState([]); // Add state for destinations
+
+  useEffect(() => {
+    axios.get("http://127.0.0.1:5001/hotels")
+      .then(response => {
+        console.log("Fetched Data:", response.data); // Debugging
+        const names = response.data.map((hotel) => hotel.name);
+        setDestinations(names);
+      })
+      .catch(error => {
+        console.error("Error fetching destinations:", error);
+      });
+  }, []);
 
   const handleSearch = (e) => {
     e.preventDefault(); // Prevents page refresh
