@@ -1,14 +1,11 @@
 {
-  "name": "landingpage",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
+  "name": "tripglide",
+  "version": "1.0.0",
+  "main": "index.js",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
+<<<<<<< HEAD
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
@@ -45,4 +42,10 @@
     "globals": "^15.15.0",
     "vite": "^6.2.0"
   }
+=======
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+>>>>>>> 35fe6736fdae29ee2cfcc03ea7b5ff4a7e41e7b4
 }

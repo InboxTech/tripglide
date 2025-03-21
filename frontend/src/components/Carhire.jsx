@@ -88,9 +88,9 @@ export default function CarHire() {
   };
 
   return (
-    <section className="relative w-full">
+    <section className="w-full">
       {/* Header */}
-      <Header />
+      {/* <Header /> */}
 
       {/* Background Image */}
       <div className="absolute inset-0 hidden lg:block -z-10">
@@ -223,6 +223,7 @@ export default function CarHire() {
             <a href="/" className="text-blue-600 hover:underline">
               Home
             </a>
+            <a href="/" className="text-blue-600 hover:underline">Home</a>
             <span className="mx-2 text-gray-400">›</span>
             <span className="text-gray-600">Car hire</span>
           </nav>
@@ -243,6 +244,76 @@ export default function CarHire() {
       <section className="bg-white">
         <TravelDeals />
       </section>
+
+      {/* Popular Car Deals */}
+      <div className="bg-gray-100">
+        <div className="container mx-auto max-w-7xl px-8 py-12">
+          <PopularCarDeals />
+        </div>
+      </div>
+      
+
+
+      {/* Car Hire Deals Section */}
+      <section className="bg-gray-100 py-12 px-6 md:px-12">
+        <div className="max-w-7xl container mx-auto text-center">
+          <h2 className="text-2xl md:text-3xl font-bold mb-4 font-serif">
+            Looking for the best car hire deals worldwide?
+          </h2>
+          <p className="text-gray-600 mb-10 font-serif">
+            Compare rental car deals from top providers, all in one place. With flexible options and no hidden fees, 
+            renting a car has never been easier – here’s how.
+          </p>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Wide Selection */}
+            <div className="bg-white p-6 rounded-lg shadow-md text-center hover:shadow-lg">
+              <img
+                src="https://cdn-icons-png.flaticon.com/512/1080/1080812.png"
+                alt="Wide Selection"
+                className="w-16 h-16 mx-auto mb-4"
+              />
+              <h3 className="text-lg font-bold font-serif">Wide Selection, Best Prices</h3>
+              <p className="text-gray-600 mt-2 font-serif">
+                Browse a wide range of vehicles from top rental companies. Find the best deals that suit your needs and budget.
+              </p>
+            </div>
+
+            {/* No Hidden Fees */}
+            <div className="bg-white p-6 rounded-lg shadow-md text-center hover:shadow-lg">
+              <img
+                src="https://cdn-icons-png.flaticon.com/512/1246/1246732.png"
+                alt="No Hidden Fees"
+                className="w-16 h-16 mx-auto mb-4"
+              />
+              <h3 className="text-lg font-bold font-serif">No Hidden Fees, No Surprises</h3>
+              <p className="text-gray-600 mt-2 font-serif">
+                The price you see is the price you pay. No extra costs, just transparent pricing for your peace of mind.
+              </p>
+            </div>
+
+            {/* Free Cancellation */}
+            <div className="bg-white p-6 rounded-lg shadow-md text-center hover:shadow-lg">
+              <img
+                src="https://cdn-icons-png.flaticon.com/512/747/747968.png"
+                alt="Free Cancellation"
+                className="w-16 h-16 mx-auto mb-4"
+              />
+              <h3 className="text-lg font-bold font-serif">Free Cancellation on Most Bookings</h3>
+              <p className="text-gray-600 mt-2 font-serif">
+                Change of plans? No worries! Most car rentals offer free cancellation, so you can book with confidence.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+      <hr className="bg-black"></hr>
+
+
+       {/* Swiper Section */}
+       <section className="bg-white">
+       <TravelDeals />
+       </section>
 
       {/* Car Hire FAQ */}
       <div className="bg-white">

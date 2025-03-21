@@ -3,13 +3,18 @@ import { FaInstagram, FaTwitter, FaMedium } from "react-icons/fa";
 export default function Footer() {
   return (
     <footer className="bg-[#06152B] text-white px-6 py-8">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-7xl container mx-auto">
         {/* Top Section */}
         <div className="flex flex-col md:flex-row justify-between items-center md:items-start gap-6">
-          {/* Language and Currency Button */}
-          <button className="bg-[#1A2C47] text-white px-6 py-3 rounded-lg w-full md:w-auto">
-            India · English (UK) · ₹ INR
-          </button>
+          {/* About Us */}
+          <div className="bg-[#06214a] text-white px-6 py-3 rounded-lg w-full md:w-auto">
+          <h2 className="text-lg font-semibold font-serif text-center md:text-left">About Us</h2>
+          <p className="mt-2 font-normal text-sm text-center md:text-left max-w-xl md:max-w-lg leading-relaxed">
+            Tripglide is a travel website project designed to help<br className="hidden sm:inline" /> 
+            users find the best flights, hotels, and car hire deals.<br className="hidden sm:inline" /> 
+            Our goal is to make travel seamless and affordable.
+          </p>
+        </div>
 
           {/* Links Section */}
           <div className="grid grid-cols-2 md:grid-cols-3 gap-6 w-full md:w-auto text-center md:text-left">
@@ -17,7 +22,7 @@ export default function Footer() {
             <div className="flex flex-col gap-2">
               <a href="#" className="hover:underline">Help</a>
               <a href="#" className="hover:underline">Privacy Settings</a>
-              <a href="/login" className="hover:underline">Log in</a>
+              {/* <a href="/signin" className="hover:underline">SignIn</a> */}
               {/* Social Media Icons */}
               <div className="flex justify-center md:justify-start gap-4 mt-2">
                 <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="hover:text-[#E4405F] transition duration-300">
