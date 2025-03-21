@@ -1,13 +1,30 @@
 import React from "react";
-import Header from "../components/Header"; 
 import { FaSearch, FaFilter } from "react-icons/fa";
 import { useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Footer from "./Footer";
+import CabPopup from "./CabPopup";
 
 const CabListing = () => {
   const locationState = useLocation();
   const { pickupLocation, pickupDate, dropoffDate, pickupTime, dropoffTime } = locationState.state || {};
+
+  // State for the search popup
+  const [isSearchPopupOpen, setIsSearchPopupOpen] = useState(false);
+  const [formPickupLocation, setFormPickupLocation] = useState(pickupLocation || '');
+  const [formPickupDate, setFormPickupDate] = useState(pickupDate || '');
+  const [formPickupTime, setFormPickupTime] = useState(pickupTime || '');
+  const [formDropoffDate, setFormDropoffDate] = useState(dropoffDate || '');
+  const [formDropoffTime, setFormDropoffTime] = useState(dropoffTime || '');
+  const [isDifferentLocation, setIsDifferentLocation] = useState(false);
+  const [dropoffLocation, setDropoffLocation] = useState('');
+  const [isDriverAgeValid, setIsDriverAgeValid] = useState(true);
+
+  const handleSearchSubmit = () => {
+    // Update the state with the form values
+    setIsSearchPopupOpen(false);
+    // You might want to trigger a search for cars based on these parameters
+  };
 
   const [cars, setCars] = useState([]); // Stores car listings
 
@@ -57,7 +74,7 @@ const CabListing = () => {
   }, []);
 
   const [filters, setFilters] = useState({
-    passengers: 0,
+    passengers: 1,
     carType: [],
     fuelType: [],
     luggageCapacity: [],
@@ -77,13 +94,13 @@ const CabListing = () => {
 
   return (
     <div className="min-h-screen text-white bg-gray-100">
-      {/* Header Component
-      <Header /> */}
 
       {/* Search Bar */}
       <div className=" bg-[#06152B] py-4 px-4 z-10 shadow-lg">
         <div className="flex justify-center">
-          <div className="flex items-center px-6 py-3 rounded-lg w-full max-w-6xl bg-[#0C1D3D] cursor-pointer">
+          <div className="flex items-center px-6 py-3 rounded-lg w-full max-w-6xl bg-[#0C1D3D] cursor-pointer"
+          onClick={() => setIsSearchPopupOpen(true)}
+          >
             <FaSearch className="text-blue-500 mr-3" size={18} />
             <p className="text-white text-sm text-center flex-1">
               {pickupLocation || "Enter Pickup Location"} • {pickupDate || "DD/MM/YYYY"}, {pickupTime || "HH:MM"} - {dropoffDate || "DD/MM/YYYY"}, {dropoffTime || "HH:MM"}
@@ -91,6 +108,29 @@ const CabListing = () => {
           </div>
         </div>
       </div>
+
+      {/* Search Form Popup */}
+      <CabPopup
+        isOpen={isSearchPopupOpen}
+        onClose={() => setIsSearchPopupOpen(false)}
+        pickupLocation={formPickupLocation}
+        setPickupLocation={setFormPickupLocation}
+        pickupDate={formPickupDate}
+        setPickupDate={setFormPickupDate}
+        pickupTime={formPickupTime}
+        setPickupTime={setFormPickupTime}
+        dropoffDate={formDropoffDate}
+        setDropoffDate={setFormDropoffDate}
+        dropoffTime={formDropoffTime}
+        setDropoffTime={setFormDropoffTime}
+        isDifferentLocation={isDifferentLocation}
+        setIsDifferentLocation={setIsDifferentLocation}
+        dropoffLocation={dropoffLocation}
+        setDropoffLocation={setDropoffLocation}
+        isDriverAgeValid={isDriverAgeValid}
+        setIsDriverAgeValid={setIsDriverAgeValid}
+        handleSearch={handleSearchSubmit}
+      />
 
       {/* Page Content */}
       <div className=" flex">
