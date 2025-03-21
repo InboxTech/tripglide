@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import Header from "./Header";
 import Footer from "./Footer";
-import { FaSearch, FaPlane, FaClock, FaExchangeAlt, FaFilter, FaStar, FaRegStar } from "react-icons/fa";
+import { FaSearch, FaPlane, FaClock, FaExchangeAlt, FaFilter, FaStar, FaRegStar, FaPlaneDeparture, FaPlaneArrival, FaCalendarAlt } from "react-icons/fa";
 import SearchFormPopup from "./SearchFormPopUp";
 
 const FlightCardList = () => {
@@ -184,13 +184,12 @@ const FlightCardList = () => {
   const [airlinesFilter, setAirlinesFilter] = useState([]);
   const [filteredFlights, setFilteredFlights] = useState([]);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [expandedFlightId, setExpandedFlightId] = useState(null); // State to track expanded flight details
 
   // Update flights when search params change
   useEffect(() => {
-    // In a real app, you would fetch flight data based on these params
     console.log("Search params updated:", { from, to, departDate, returnDate, cabinClass });
     
-    // For this demo, we'll just update the departure/arrival in our static data
     const updatedFlights = allFlights.map(flight => ({
       ...flight,
       departure: from || flight.departure,
@@ -207,6 +206,24 @@ const FlightCardList = () => {
   useEffect(() => {
     let results = [...allFlights];
     
+    // Filter by departure and arrival cities
+    if (from && to) {
+      results = results.filter(flight => 
+        flight.departure.toLowerCase() === from.toLowerCase() && 
+        flight.arrival.toLowerCase() === to.toLowerCase()
+      );
+    }
+
+    // Filter by departure date
+    if (departDate) {
+      results = results.filter(flight => flight.departureDate === departDate);
+    }
+
+    // Filter by cabin class
+    if (cabinClass) {
+      results = results.filter(flight => flight.cabinClass === cabinClass);
+    }
+
     // Price filter
     results = results.filter(flight => 
       flight.price >= priceRange[0] && flight.price <= priceRange[1]
@@ -252,7 +269,6 @@ const FlightCardList = () => {
         return durationA - durationB;
       });
     } else if (selectedFilter === "best") {
-      // Best is a combination of price, duration and stops
       results.sort((a, b) => {
         const scoreA = a.price / 10000 + parseInt(a.duration.split('h')[0]) + a.stops * 2;
         const scoreB = b.price / 10000 + parseInt(b.duration.split('h')[0]) + b.stops * 2;
@@ -261,11 +277,10 @@ const FlightCardList = () => {
     }
     
     setFilteredFlights(results);
-  }, [allFlights, selectedFilter, priceRange, stopFilter, timeFilter, airlinesFilter]);
+  }, [allFlights, selectedFilter, priceRange, stopFilter, timeFilter, airlinesFilter, from, to, departDate, cabinClass]);
 
   const handleSearch = (e) => {
     e.preventDefault();
-    // Updated search logic
     if (tripType === "multicity") {
       console.log("Multi-city search:", multiCityFlights);
     } else {
@@ -295,6 +310,10 @@ const FlightCardList = () => {
     } else {
       setAirlinesFilter([...airlinesFilter, airline]);
     }
+  };
+
+  const toggleFlightDetails = (flightId) => {
+    setExpandedFlightId(expandedFlightId === flightId ? null : flightId);
   };
 
   return (
@@ -364,7 +383,7 @@ const FlightCardList = () => {
                 step="1000"
                 value={priceRange[0]}
                 onChange={(e) => setPriceRange([parseInt(e.target.value), priceRange[1]])}
-                className="w-full mb-2"
+                className="w-full mb-2 cursor-pointer"
               />
               <input 
                 type="range" 
@@ -373,7 +392,7 @@ const FlightCardList = () => {
                 step="1000"
                 value={priceRange[1]}
                 onChange={(e) => setPriceRange([priceRange[0], parseInt(e.target.value)])}
-                className="w-full"
+                className="w-full cursor-pointer"
               />
             </div>
             
@@ -485,19 +504,19 @@ const FlightCardList = () => {
             {/* Sort Options */}
             <div className="bg-white rounded-xl p-4 mb-6 flex flex-wrap gap-2">
               <button
-                className={`px-4 py-2 rounded-lg ${selectedFilter === "best" ? "bg-blue-600 text-white" : "bg-gray-100 hover:bg-gray-200"}`}
+                className={`px-4 py-2 cursor-pointer rounded-lg ${selectedFilter === "best" ? "bg-blue-600 text-white" : "bg-gray-100 hover:bg-gray-200"}`}
                 onClick={() => setSelectedFilter("best")}
               >
                 Best
               </button>
               <button
-                className={`px-4 py-2 rounded-lg ${selectedFilter === "cheapest" ? "bg-blue-600 text-white" : "bg-gray-100 hover:bg-gray-200"}`}
+                className={`px-4 py-2 cursor-pointer rounded-lg ${selectedFilter === "cheapest" ? "bg-blue-600 text-white" : "bg-gray-100 hover:bg-gray-200"}`}
                 onClick={() => setSelectedFilter("cheapest")}
               >
                 Cheapest
               </button>
               <button
-                className={`px-4 py-2 rounded-lg ${selectedFilter === "fastest" ? "bg-blue-600 text-white" : "bg-gray-100 hover:bg-gray-200"}`}
+                className={`px-4 py-2 cursor-pointer rounded-lg ${selectedFilter === "fastest" ? "bg-blue-600 text-white" : "bg-gray-100 hover:bg-gray-200"}`}
                 onClick={() => setSelectedFilter("fastest")}
               >
                 Fastest
@@ -508,7 +527,7 @@ const FlightCardList = () => {
             <p className="mb-4">{filteredFlights.length} flights found</p>
             
             {/* Flight Cards */}
-            <div className="space-y-4">
+            <div className="space-y-4 cursor-pointer">
               {filteredFlights.length > 0 ? (
                 filteredFlights.map((flight) => (
                   <div key={flight.id} className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow">
@@ -562,19 +581,160 @@ const FlightCardList = () => {
                           
                           <div className="text-right">
                             <p className="text-2xl font-bold text-blue-600">₹{flight.price.toLocaleString()}</p>
-                            <button className="mt-2 bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">
+                            <button className="mt-2 bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 cursor-pointer transition">
                               Select
                             </button>
                           </div>
                         </div>
                       </div>
                       
-                      {/* Flight Details Toggle (simplified) */}
+                      {/* Flight Details Toggle */}
                       <div className="mt-4 pt-4 border-t border-gray-200">
-                        <button className="text-blue-600 text-sm flex items-center">
-                          <FaExchangeAlt className="mr-2" /> Flight details
+                        <button 
+                          className="text-blue-600 text-sm flex items-center cursor-pointer"
+                          onClick={() => toggleFlightDetails(flight.id)}
+                        >
+                          <FaExchangeAlt className="mr-2" /> 
+                          {expandedFlightId === flight.id ? "Hide details" : "Flight details"}
                         </button>
                       </div>
+
+                      {/* Expanded Flight Details */}
+                      {expandedFlightId === flight.id && (
+                        <div className="mt-4 p-4 bg-gray-50 rounded-lg">
+                          <h3 className="text-lg font-semibold mb-4">Flight Details</h3>
+                          <div className="space-y-6">
+                            {/* Flight Itinerary */}
+                            <div>
+                              <h4 className="font-medium mb-2">Itinerary</h4>
+                              <div className="flex items-start gap-4">
+                                <div className="flex flex-col items-center">
+                                  <FaPlaneDeparture className="text-blue-600" />
+                                  <div className="w-px h-16 bg-gray-300 my-1"></div>
+                                  <FaPlaneArrival className="text-blue-600" />
+                                </div>
+                                <div className="flex-1">
+                                  {/* Departure Leg */}
+                                  <div className="flex justify-between mb-4">
+                                    <div>
+                                      <p className="font-medium">{flight.departureTime} • {flight.departure}</p>
+                                      <p className="text-sm text-gray-500">{flight.departureDate}</p>
+                                      <p className="text-sm text-gray-500">{flight.airline} • {flight.airlineCode}{flight.flightNumber}</p>
+                                    </div>
+                                    <div className="text-right">
+                                      <p className="text-sm text-gray-500">Duration: {flight.duration}</p>
+                                    </div>
+                                  </div>
+
+                                  {/* Layover (if any) */}
+                                  {flight.stops > 0 && (
+                                    <div className="bg-gray-200 p-2 rounded-lg mb-4">
+                                      <p className="text-sm text-gray-600">
+                                        Layover in {flight.stopCities.join(", ")} • Approx. 2h 30m
+                                      </p>
+                                    </div>
+                                  )}
+
+                                  {/* Arrival Leg */}
+                                  <div className="flex justify-between">
+                                    <div>
+                                      <p className="font-medium">{flight.arrivalTime} • {flight.arrival}</p>
+                                      <p className="text-sm text-gray-500">{flight.departureDate}</p>
+                                      <p className="text-sm text-gray-500">{flight.airline} • {flight.airlineCode}{flight.flightNumber}</p>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Return Flight (if applicable) */}
+                            {tripType === "return" && returnDate && (
+                              <div>
+                                <h4 className="font-medium mb-2">Return Flight</h4>
+                                <div className="flex items-start gap-4">
+                                  <div className="flex flex-col items-center">
+                                    <FaPlaneDeparture className="text-blue-600" />
+                                    <div className="w-px h-16 bg-gray-300 my-1"></div>
+                                    <FaPlaneArrival className="text-blue-600" />
+                                  </div>
+                                  <div className="flex-1">
+                                    <div className="flex justify-between mb-4">
+                                      <div>
+                                        <p className="font-medium">{flight.departureTime} • {flight.arrival}</p>
+                                        <p className="text-sm text-gray-500">{flight.returnDate}</p>
+                                        <p className="text-sm text-gray-500">{flight.airline} • {flight.airlineCode}{flight.flightNumber}</p>
+                                      </div>
+                                      <div className="text-right">
+                                        <p className="text-sm text-gray-500">Duration: {flight.duration}</p>
+                                      </div>
+                                    </div>
+
+                                    {flight.stops > 0 && (
+                                      <div className="bg-gray-200 p-2 rounded-lg mb-4">
+                                        <p className="text-sm text-gray-600">
+                                          Layover in {flight.stopCities.join(", ")} • Approx. 2h 30m
+                                        </p>
+                                      </div>
+                                    )}
+
+                                    <div className="flex justify-between">
+                                      <div>
+                                        <p className="font-medium">{flight.arrivalTime} • {flight.departure}</p>
+                                        <p className="text-sm text-gray-500">{flight.returnDate}</p>
+                                        <p className="text-sm text-gray-500">{flight.airline} • {flight.airlineCode}{flight.flightNumber}</p>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            )}
+
+                            {/* Price Breakdown */}
+                            <div>
+                              <h4 className="font-medium mb-2">Price Breakdown</h4>
+                              <div className="space-y-2">
+                                <div className="flex justify-between">
+                                  <p className="text-sm">Base Fare</p>
+                                  <p className="text-sm">₹{(flight.price * 0.8).toLocaleString()}</p>
+                                </div>
+                                <div className="flex justify-between">
+                                  <p className="text-sm">Taxes & Fees</p>
+                                  <p className="text-sm">₹{(flight.price * 0.2).toLocaleString()}</p>
+                                </div>
+                                <div className="flex justify-between font-semibold border-t pt-2">
+                                  <p>Total Price</p>
+                                  <p>₹{flight.price.toLocaleString()}</p>
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Additional Information */}
+                            <div>
+                              <h4 className="font-medium mb-2">Additional Information</h4>
+                              <div className="space-y-2">
+                                <div className="flex items-center gap-2">
+                                  <FaCalendarAlt className="text-blue-600" />
+                                  <p className="text-sm">
+                                    Departure Date: {flight.departureDate}
+                                  </p>
+                                </div>
+                                {tripType === "return" && returnDate && (
+                                  <div className="flex items-center gap-2">
+                                    <FaCalendarAlt className="text-blue-600" />
+                                    <p className="text-sm">
+                                      Return Date: {flight.returnDate}
+                                    </p>
+                                  </div>
+                                )}
+                                <div className="flex items-center gap-2">
+                                  <FaPlane className="text-blue-600" />
+                                  <p className="text-sm">Cabin Class: {flight.cabinClass}</p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
                 ))
