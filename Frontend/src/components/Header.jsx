@@ -17,7 +17,7 @@ export default function Header() {
   // Update activeTab based on current path
   useEffect(() => {
     const path = location.pathname;
-    if (path.includes("/hotels")) {
+    if (path.includes("/hotel") || path.includes("/hotel-search")) {
       setActiveTab("hotels");
     } else if (path.includes("/carhire")) {
       setActiveTab("carhire");
