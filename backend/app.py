@@ -12,9 +12,9 @@ def get_db_connection():
         host='localhost',
         user='root',  # Update with your MySQL username
         password='',  # Update with your MySQL password
-        
-          database='main'  # Update with your actual database name
+        database='main'  # Update with your actual database name
     )
+    
     return connection
 
 # Convert timedelta to string format "HH:MM:SS"
