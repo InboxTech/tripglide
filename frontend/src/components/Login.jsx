@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { FaLaugh } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
@@ -25,6 +26,7 @@ const Login = () => {
         backgroundImage: "url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bW91bnRhaW5zfGVufDB8fDB8fHww')",
         backgroundSize: "cover",
     }}>
+
       <div className="bg-gray-300 p-8 rounded-lg shadow-md w-96">
         <h2 className="text-2xl font-semibold text-center mb-6">Login</h2>
         {error && <p className="text-red-500 text-sm text-center">{error}</p>}
@@ -80,3 +82,6 @@ const Login = () => {
 };
 
 export default Login;
+
+
+
