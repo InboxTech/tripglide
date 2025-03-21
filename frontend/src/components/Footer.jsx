@@ -22,7 +22,7 @@ export default function Footer() {
             <div className="flex flex-col gap-2">
               <a href="#" className="hover:underline">Help</a>
               <a href="#" className="hover:underline">Privacy Settings</a>
-              <a href="/login" className="hover:underline">Log in</a>
+              {/* <a href="/signin" className="hover:underline">SignIn</a> */}
               {/* Social Media Icons */}
               <div className="flex justify-center md:justify-start gap-4 mt-2">
                 <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="hover:text-[#E4405F] transition duration-300">

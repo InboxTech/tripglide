@@ -77,8 +77,8 @@ const CabListing = () => {
 
   return (
     <div className="min-h-screen text-white bg-gray-100">
-      {/* Header Component */}
-      <Header />
+      {/* Header Component
+      <Header /> */}
 
       {/* Search Bar */}
       <div className=" bg-[#06152B] py-4 px-4 z-10 shadow-lg">
