@@ -1,11 +1,11 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import Header from "./Header";
 import Footer from "./Footer";
 import TravelersCabinClass from "./TravelersCabinClass"; 
 import TravelDeals from "./TravelDeals";
-import FAQSection from "./FAQSection";
+import FAQSection from "./FAQSecton";
 import FlightCardList from "./FlightCardList";
-import { useLocation ,useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { FaPlane, FaCalendarAlt, FaTag } from "react-icons/fa";
 import FeaturesSection from "./FeaturesSection";
 import FlightDealsCards from "../FlightDealsCards";
@@ -16,7 +16,6 @@ export default function SearchSection() {
     const [to, setTo] = useState(""); 
     const [departDate, setDepartDate] = useState("");
     const [returnDate, setReturnDate] = useState("");
-    const [cabinClass, setCabinClass] = useState("Economy");
     const [multiCityFlights, setMultiCityFlights] = useState([
         { id: 1, from: "", to: "", depart: "" },
         { id: 2, from: "", to: "", depart: "" }
@@ -26,11 +25,6 @@ export default function SearchSection() {
     const isOneWayValid = from && to && departDate;
     const isReturnValid = isOneWayValid && returnDate;
     const [currentImage, setCurrentImage] = useState(0);
-    // Keyboard Navigation
-    const fromInputRef = useRef(null);
-    const toInputRef = useRef(null);
-    const multiCityRefs = useRef([]);
-    // Navigate
     const navigate = useNavigate();
 
     const images = [
@@ -50,16 +44,8 @@ export default function SearchSection() {
       const handleSearch = (e) => {
         e.preventDefault();    
         console.log("Navigating to search results...");
-        navigate("/search-results", { 
-            state: { 
-              tripType: tripType || "", 
-              from: from || "", 
-              to: to || "", 
-              departDate: departDate || null, 
-              returnDate: returnDate || null, 
-              cabinClass: cabinClass || "" 
-            } 
-          });
+        navigate("/search-results"); 
+        //navigate("/flights");  
       };
 
     // Disable logic based on trip type
@@ -107,9 +93,9 @@ export default function SearchSection() {
       ];
 
     return (
-        <section className="w-full">
+        <section className="relative w-full">
             {/* Header */}
-            {/* <Header /> */}
+            <Header />
 
             {/* Background Image */}
              <div className="absolute inset-0 block -z-10">
@@ -294,7 +280,7 @@ export default function SearchSection() {
 
                         {/* Travelers and Cabin */}
                         <div className="flex-1">
-                        <TravelersCabinClass selectedCabinClass={cabinClass} setSelectedCabinClass={setCabinClass} />
+                            <TravelersCabinClass />
                         </div>
 
                         {/* Search Button */}
