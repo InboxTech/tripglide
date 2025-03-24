@@ -17,13 +17,18 @@ function HotelSearch() {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setShowGuestDropdown(false);
-      }
+      // Delay to avoid conflict when toggling
+      setTimeout(() => {
+        if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+          setShowGuestDropdown(false);
+        }
+      }, 0);
     };
+  
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+  
 
   const handleGuestChange = (field, action) => {
     setSearchData(prev => ({
@@ -102,7 +107,10 @@ function HotelSearch() {
             </div>
 
             {/* Guests & Rooms */}
-            <div className="flex-1 flex flex-col items-start justify-center px-4 py-2 border-b md:border-b-0 md:border-r border-gray-300 relative" ref={dropdownRef}>
+            <div
+              className="flex-1 flex flex-col items-start justify-center px-4 py-2 border-b md:border-b-0 md:border-r border-gray-300 relative"
+              ref={dropdownRef}
+            >
               <span className="text-xs text-gray-600 mb-1">Guests & Rooms</span>
 
               <button
