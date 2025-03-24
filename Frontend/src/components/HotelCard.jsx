@@ -72,7 +72,7 @@ const HotelCard = () => {
             {hotels.map((hotel) => (
                 <div
                     key={hotel.id}
-                    className="border rounded-xl shadow-sm flex flex-col md:flex-row bg-white overflow-hidden relative max-w-[1150px] w-full mx-auto"
+                    className=" rounded-xl shadow-2xs flex flex-col md:flex-row bg-white overflow-hidden relative max-w-[1150px] w-full mx-auto"
                 >
                     {/* Hotel Image */}
                     <div className="flex flex-col md:flex-row w-full">

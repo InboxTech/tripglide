@@ -62,26 +62,26 @@ export default function Hotels() {
     }
   };
 
-  const handleCheckOutDateChange = (event) => {
-    setCheckOutDate(event.target.value);
-  };
+    const handleCheckOutDateChange = (event) => {
+      setCheckOutDate(event.target.value);
+    };
 
-  const isFormComplete = destination && checkInDate && checkOutDate;
+    const isFormComplete = destination && checkInDate && checkOutDate;
 
-  const hotelFeatures = [
-    {
-      icon: <FaHotel />,
-      text: "Search and compare hotels in seconds – anywhere in the India",
-    },
-    {
-      icon: <FaCalendarAlt />,
-      text: "Compare deals from trusted hotel providers in one place",
-    },
-    {
-      icon: <FaTag />,
-      text: "Book a hotel with flexible booking policies or free cancellation",
-    },
-  ];
+    const hotelFeatures = [
+      {
+        icon: <FaHotel />,
+        text: "Search and compare hotels in seconds – anywhere in the India",
+      },
+      {
+        icon: <FaCalendarAlt />,
+        text: "Compare deals from trusted hotel providers in one place",
+      },
+      {
+        icon: <FaTag />,
+        text: "Book a hotel with flexible booking policies or free cancellation",
+      },
+    ];
 
   const handleOption = (type, operation) => {
     if (type === "adults") {
@@ -272,13 +272,13 @@ export default function Hotels() {
     ],
   };
 
-  const [selectedCity, setSelectedCity] = useState("Mumbai");
-  const breakpoints = {
-    320: { slidesPerView: 1 },
-    640: { slidesPerView: 1.2 },
-    768: { slidesPerView: 2 },
-    1024: { slidesPerView: 3 },
-  };
+    const [selectedCity, setSelectedCity] = useState("Mumbai");
+    const breakpoints = {
+      320: { slidesPerView: 1 },
+      640: { slidesPerView: 1.2 },
+      768: { slidesPerView: 2 },
+      1024: { slidesPerView: 3 },
+    };
 
   return (
     <section className="relative w-full">
@@ -364,7 +364,7 @@ export default function Hotels() {
 
               {/* Dropdown */}
               {showGuestOptions && (
-                <div className="absolute bg-white shadow-lg rounded-lg p-4 w-full top-20 z-10 mt-7">
+                <div className="absolute bg-white shadow-lg rounded-lg p-4 w-full top-20 z-10 mt-5">
                   {/* Adults */}
                   <div className="flex justify-between items-center mb-4">
                     <span>Adults</span>

@@ -1,4 +1,4 @@
-import mysql.connector
+  import mysql.connector
 import pandas as pd
 
 # Database Configuration (For XAMPP MySQL)
