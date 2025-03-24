@@ -37,7 +37,6 @@ function HotelSearch() {
     }));
   };
 
-
   // State for editable search data
   const [searchData, setSearchData] = useState({
     destination: destination || "",
