@@ -59,7 +59,6 @@ function HotelSearch() {
     console.log("Updated Search Data: ", searchData);
   };
 
-
   return (
     <div className="flex flex-col min-h-screen">
       {/* Header */}
