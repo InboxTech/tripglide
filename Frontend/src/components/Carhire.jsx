@@ -66,7 +66,7 @@ export default function CarHire() {
       {/* Background Image - Hidden on Small Screens */}
       <div className="absolute inset-0 hidden lg:block -z-10">
         <img
-          src="/images/carbg.jpg"
+          src="/public/images/carbg.jpg"
           alt="Car rental background"
           className="w-full h-full object-cover object-center fixed"
         />
