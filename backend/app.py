@@ -78,6 +78,7 @@ def get_data():
         return jsonify({"error": "Database connection failed"}), 500
 
     cursor = connection.cursor(dictionary=True)
+    
     try:
         cursor.execute("SELECT * FROM hotel")
         data = cursor.fetchall()

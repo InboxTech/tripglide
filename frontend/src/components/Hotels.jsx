@@ -1,309 +1,285 @@
-  import React, { useState, useEffect } from "react";
-  import { FaHotel, FaCalendarAlt, FaTag, FaPlus, FaMinus, FaChevronDown } from "react-icons/fa";
-  import { Swiper, SwiperSlide } from "swiper/react";
-  import "swiper/css";
-  import { Navigation, Pagination } from "swiper/modules";
-  import "swiper/css/navigation";
-  import "swiper/css/pagination";
-  import { ChevronLeft, ChevronRight } from "lucide-react";
-  import { useNavigate } from "react-router-dom";
-  import Header from "./Header";
-  import TravelDeals from "./TravelDeals";
-  import FeaturesSection from "./FeaturesSection";
-  import HotelFAQ from "./HotelFAQ";
-  import Footer from "./Footer";
-  import axios from "axios";
+import React, { useState, useEffect } from "react";
+import { FaHotel, FaCalendarAlt, FaTag, FaPlus, FaMinus, FaChevronDown } from "react-icons/fa";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import { Navigation, Pagination } from "swiper/modules";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import Header from "./Header";
+import TravelDeals from "./TravelDeals";
+import FeaturesSection from "./FeaturesSection";
+import HotelFAQ from "./HotelFAQ";
+import Footer from "./Footer";
+import axios from "axios";
 
+export default function Hotels() {
+  const navigate = useNavigate();
 
-  export default function Hotels() {
+  const [checkInDate, setCheckInDate] = useState("");
+  const [checkOutDate, setCheckOutDate] = useState("");
+  const [destination, setDestination] = useState("");
+  const today = new Date().toISOString().split("T")[0];
+  const [adults, setAdults] = useState(2);
+  const [children, setChildren] = useState(0);
+  const [rooms, setRooms] = useState(1);
+  const [showGuestOptions, setShowGuestOptions] = useState(false);
+  const [destinations, setDestinations] = useState([]); // Add state for destinations
 
-    const navigate = useNavigate();
-
-    const [checkInDate, setCheckInDate] = useState("");
-    const [checkOutDate, setCheckOutDate] = useState("");
-    const [destination, setDestination] = useState("");
-    const today = new Date().toISOString().split("T")[0];
-  // const [availableDestinations, setAvailableDestinations] = useState([]);
-    const [adults, setAdults] = useState(2);
-    const [children, setChildren] = useState(0);
-    const [rooms, setRooms] = useState(1);
-    const [showGuestOptions, setShowGuestOptions] = useState(false);
-    const [destinations, setDestinations] = useState([]); // Add state for destinations
-    
-
-    // useEffect(() => {
-    //   axios.get("http://127.0.0.1:5001/hotel")
-    //     .then(response => {
-    //       console.log("Fetched Data:", response.data); // Debugging
-    //       const names = response.data.map((hotel) => hotel.name);
-    //       setDestinations(names);
-    //     })
-    //     .catch(error => {
-    //       console.error("Error fetching destinations:", error);
-    //     });
-    // }, []);/
-
-    useEffect(() => {
-      axios
-        .get("http://localhost:5001/hotel") // Flask API endpoint
-        .then((response) => {
-          setDestinations(response.data.hotel_type || []); 
-          console.log(response.data)// Set available locations
-        })
-        .catch((error) => {
-          console.error("Error fetching destinations:", error);
-        });
-    }, []);
-
-    const handleSearch = (e) => {
-      e.preventDefault(); // Prevents page refresh
-    
-      // Navigate to /hotel-search and pass form data as state
-      navigate('/hotel-search', {
-        state: {
-          destination,
-          checkInDate,
-          checkOutDate,
-          adults,
-          children,
-          rooms
-        }
+  useEffect(() => {
+    axios
+      .get("http://localhost:5001/hotel") // Flask API endpoint
+      .then((response) => {
+        setDestinations(response.data.hotel_type || []);
+        console.log(response.data); // Set available locations
+      })
+      .catch((error) => {
+        console.error("Error fetching destinations:", error);
       });
-    };
-    
-  
-    const handleCheckInDateChange = (event) => {
-      setCheckInDate(event.target.value);
-      if (checkOutDate && event.target.value > checkOutDate) {
-        setCheckOutDate("");
+  }, []);
+
+  const handleSearch = (e) => {
+    e.preventDefault(); // Prevents page refresh
+
+    // Navigate to /hotel-search and pass form data as state
+    navigate('/hotel-search', {
+      state: {
+        destination,
+        checkInDate,
+        checkOutDate,
+        adults,
+        children,
+        rooms
       }
-    };
+    });
+  };
 
-    const handleCheckOutDateChange = (event) => {
-      setCheckOutDate(event.target.value);
-    };
+  const handleCheckInDateChange = (event) => {
+    setCheckInDate(event.target.value);
+    if (checkOutDate && event.target.value > checkOutDate) {
+      setCheckOutDate("");
+    }
+  };
 
-    const isFormComplete = destination && checkInDate && checkOutDate;
+  const handleCheckOutDateChange = (event) => {
+    setCheckOutDate(event.target.value);
+  };
 
-    const hotelFeatures = [
+  const isFormComplete = destination && checkInDate && checkOutDate;
+
+  const hotelFeatures = [
+    {
+      icon: <FaHotel />,
+      text: "Search and compare hotels in seconds – anywhere in the India",
+    },
+    {
+      icon: <FaCalendarAlt />,
+      text: "Compare deals from trusted hotel providers in one place",
+    },
+    {
+      icon: <FaTag />,
+      text: "Book a hotel with flexible booking policies or free cancellation",
+    },
+  ];
+
+  const handleOption = (type, operation) => {
+    if (type === "adults") {
+      setAdults((prev) => (operation === "inc" ? prev + 1 : prev > 1 ? prev - 1 : 1));
+    }
+    if (type === "children") {
+      setChildren((prev) => (operation === "inc" ? prev + 1 : prev > 0 ? prev - 1 : 0));
+    }
+    if (type === "rooms") {
+      setRooms((prev) => (operation === "inc" ? prev + 1 : prev > 1 ? prev - 1 : 1));
+    }
+  };
+
+  // Hotel Slider Data
+  const hotelData = {
+    Mumbai: [
       {
-        icon: <FaHotel />,
-        text: "Search and compare hotels in seconds – anywhere in the India",
+        name: "The Taj Mahal Palace, Mumbai",
+        distance: "14.39 km",
+        rating: 4.8,
+        reviews: "22 review",
+        price: "₹18,236",
+        image: "/images/Hotel/taj_mumbai.jpg",
+        stars: 5,
       },
       {
-        icon: <FaCalendarAlt />,
-        text: "Compare deals from trusted hotel providers in one place",
+        name: "Hotel Marine Plaza",
+        distance: "13.69 km",
+        rating: 4.4,
+        reviews: "13 reviews",
+        price: "₹1,528",
+        image: "/images/Hotel/marine_plaza.webp",
+        stars: 4,
       },
       {
-        icon: <FaTag />,
-        text: "Book a hotel with flexible booking policies or free cancellation",
+        name: "ITC Maratha, a Luxury Collection Hotel",
+        distance: "6.39 km",
+        rating: 4.6,
+        reviews: "29 reviews",
+        price: "₹15,741",
+        image: "/images/Hotel/itc_maratha.png",
+        stars: 5,
       },
-    ];
+      {
+        name: "ITC Grand Central",
+        distance: "2.5 km from city centre",
+        rating: 4.5,
+        reviews: "900 reviews",
+        price: "₹14,500",
+        image: "/images/Hotel/ITC_Grand_centeral.png",
+      },
+    ],
+    Jaipur: [
+      {
+        name: "The Oberoi Rajvilas Jaipur",
+        distance: "7.56 km from city centre",
+        rating: 5,
+        reviews: "1 review",
+        price: "₹77,027",
+        image: "/images/Hotel/oberoi.jpg",
+      },
+      {
+        name: "Nahar Singh Haveli",
+        distance: "2.87 km from city centre",
+        rating: 3,
+        reviews: "702 reviews",
+        price: "₹821",
+        image: "/images/Hotel/nahar-singh-haveli.jpg",
+      },
+      {
+        name: "Holiday Inn Jaipur City Centre",
+        distance: "3.70 km from city centre",
+        rating: 5,
+        reviews: "6381 reviews",
+        price: "₹5,812",
+        image: "/images/Hotel/Holiday_Inn.jpg",
+      },
+      {
+        name: "Hyatt Regency Jaipur Mansarovar",
+        distance: "12.10 km from city centre",
+        rating: 4.5,
+        reviews: "510 reviews",
+        price: "₹9,127",
+        image: "/images/Hotel/Hyatt_regency.jpg",
+      },
+    ],
+    Delhi: [
+      {
+        name: "The LaLiT New Delhi",
+        distance: "0.75 km from city centre",
+        rating: 4.5,
+        reviews: "6100 reviews",
+        price: "₹9,800",
+        image: "/images/Hotel/The LaLiT New Delhi.jpg",
+      },
+      {
+        name: "Radisson Blu Marina Hotel Connaught Place",
+        distance: "0.2f7 km from city centre",
+        rating: 4.5,
+        reviews: "15 reviews",
+        price: "₹14,000",
+        image: "/images/Hotel/Radisson Blu Marina Hotel Connaught Place.jpg",
+      },
+      {
+        name: "Hyatt Regency Delhi",
+        distance: "7.82 km from city centre",
+        rating: 4.5,
+        reviews: "25 reviews",
+        price: "₹13,300",
+        image: "/images/Hotel/Hyatt Regency Delhi.webp",
+      },
+      {
+        name: "JW Marriott Hotel New Delhi Aerocity",
+        distance: "13.06 km from city centre",
+        rating: 5,
+        reviews: "5500 reviews",
+        price: "₹42,000",
+        image: "/images/Hotel/JW Marriott Hotel New Delhi Aerocity.avif",
+      },
+    ],
+    Bengaluru: [
+      {
+        name: "Radisson Blu Atria Bengaluru",
+        distance: "1.33 km from city centre",
+        rating: 4.5,
+        reviews: "1662 reviews",
+        price: "₹7,650",
+        image: "/images/Hotel/Radisson Blu Atria Bengaluru.jpg",
+      },
+      {
+        name: "ITC Gardenia, a Luxury Collection Hotel",
+        distance: "0.52 km from city centre",
+        rating: 5,
+        reviews: "5907 reviews",
+        price: "₹18,219",
+        image: "/images/Hotel/ITC Gardenia.webp",
+      },
+      {
+        name: "Prestige Residency",
+        distance: "1.87 km from city centre",
+        rating: 4.1,
+        reviews: "2 reviews",
+        price: "₹546",
+        image: "/images/Hotel/Prestige Residency.webp",
+      },
+      {
+        name: "Renaissance Bengaluru Race Course Hotel",
+        distance: "2.42 km from city centre",
+        rating: 4.5,
+        reviews: "1400 reviews",
+        price: "₹9,999",
+        image: "/images/Hotel/Renaissance Bengaluru Race Course Hotel.jpg",
+      },
+    ],
+    Hyderabad: [
+      {
+        name: "Taj Krishna",
+        distance: "6.65 km from city centre",
+        rating: 4.5,
+        reviews: "7 reviews",
+        price: "₹14,850",
+        image: "/images/Hotel/Taj Krishna.webp",
+      },
+      {
+        name: "Novotel Hyderabad Airport",
+        distance: "13.41 km from city centre",
+        rating: 4.5,
+        reviews: "10 reviews",
+        price: "₹12,741",
+        image: "/images/Hotel/Novotel Hyderabad Airport.jpg",
+      },
+      {
+        name: "Taj Falaknuma Palace",
+        distance: "3.37 km from city centre",
+        rating: 4.8,
+        reviews: "2 reviews",
+        price: "₹28,000",
+        image: "/images/Hotel/Taj Falaknuma Palace.jpg",
+      },
+      {
+        name: "The Westin Hyderabad Mindspace",
+        distance: "13.33 km from city centre",
+        rating: 4.8,
+        reviews: "5 reviews",
+        price: "₹34,000",
+        image: "/images/Hotel/The Westin Hyderabad Mindspace.jpg",
+      },
+    ],
+  };
 
-    const handleOption = (type, operation) => {
-      if (type === "adults") {
-        setAdults((prev) => (operation === "inc" ? prev + 1 : prev > 1 ? prev - 1 : 1));
-      }
-      if (type === "children") {
-        setChildren((prev) => (operation === "inc" ? prev + 1 : prev > 0 ? prev - 1 : 0));
-      }
-      if (type === "rooms") {
-        setRooms((prev) => (operation === "inc" ? prev + 1 : prev > 1 ? prev - 1 : 1));
-      }
+  const [selectedCity, setSelectedCity] = useState("Mumbai");
+  const breakpoints = {
+    320: { slidesPerView: 1 },
+    640: { slidesPerView: 1.2 },
+    768: { slidesPerView: 2 },
+    1024: { slidesPerView: 3 },
+  };
 
-    };
-
-    // Hotel Slider Data
-    const hotelData = {
-      Mumbai: [
-        {
-          name: "The Taj Mahal Palace, Mumbai",
-          distance: "14.39 km",
-          rating: 4.8,
-          reviews: "22 review",
-          price: "₹18,236",
-          image:
-            "/images/Hotel/taj_mumbai.jpg",
-          stars: 5,
-        },
-        {
-          name: "Hotel Marine Plaza",
-          distance: "13.69 km",
-          rating: 4.4,
-          reviews: "13 reviews",
-          price: "₹1,528",
-          image:
-            "/images/Hotel/marine_plaza.webp",
-          stars: 4,
-        },
-        {
-          name: "ITC Maratha, a Luxury Collection Hotel",
-          distance: "6.39 km",
-          rating: 4.6,
-          reviews: "29 reviews",
-          price: "₹15,741",
-          image:
-            "/images/Hotel/itc_maratha.png",
-          stars: 5,
-        },
-        {
-          name: "ITC Grand Central",
-          distance: "2.5 km from city centre",
-          rating: 4.5,
-          reviews: "900 reviews",
-          price: "₹14,500",
-          image: "/images/Hotel/ITC_Grand_centeral.png",
-        },
-      ],
-      Jaipur: [
-        {
-          name: "The Oberoi Rajvilas Jaipur",
-          distance: "7.56 km from city centre",
-          rating: 5,
-          reviews: "1 review",
-          price: "₹77,027",
-          image: "/images/Hotel/oberoi.jpg",
-        },
-        {
-          name: "Nahar Singh Haveli",
-          distance: "2.87 km from city centre",
-          rating: 3,
-          reviews: "702 reviews",
-          price: "₹821",
-          image: "/images/Hotel/nahar-singh-haveli.jpg",
-        },
-        {
-          name: "Holiday Inn Jaipur City Centre",
-          distance: "3.70 km from city centre",
-          rating: 5,
-          reviews: "6381 reviews",
-          price: "₹5,812",
-          image: "/images/Hotel/Holiday_Inn.jpg",
-        },
-        {
-          name: "Hyatt Regency Jaipur Mansarovar",
-          distance: "12.10 km from city centre",
-          rating: 4.5,
-          reviews: "510 reviews",
-          price: "₹9,127",
-          image: "/images/Hotel/Hyatt_regency.jpg",
-        },
-      ],
-      Delhi: [
-        {
-          name: "The LaLiT New Delhi",
-          distance: "0.75 km from city centre",
-          rating: 4.5,
-          reviews: "6100 reviews",
-          price: "₹9,800",
-          image: "/images/Hotel/The LaLiT New Delhi.jpg",
-        },
-        {
-          name: "Radisson Blu Marina Hotel Connaught Place",
-          distance: "0.2f7 km from city centre",
-          rating: 4.5,
-          reviews: "15 reviews",
-          price: "₹14,000",
-          image: "/images/Hotel/Radisson Blu Marina Hotel Connaught Place.jpg",
-        },
-        {
-          name: "Hyatt Regency Delhi",
-          distance: "7.82 km from city centre",
-          rating: 4.5,
-          reviews: "25 reviews",
-          price: "₹13,300",
-          image: "/images/Hotel/Hyatt Regency Delhi.webp",
-        },
-        {
-          name: "JW Marriott Hotel New Delhi Aerocity",
-          distance: "13.06 km from city centre",
-          rating: 5,
-          reviews: "5500 reviews",
-          price: "₹42,000",
-          image: "/images/Hotel/JW Marriott Hotel New Delhi Aerocity.avif",
-        },
-      ],
-      Bengaluru: [
-        {
-          name: "Radisson Blu Atria Bengaluru",
-          distance: "1.33 km from city centre",
-          rating: 4.5,
-          reviews: "1662 reviews",
-          price: "₹7,650",
-          image: "/images/Hotel/Radisson Blu Atria Bengaluru.jpg",
-        },
-        {
-          name: "ITC Gardenia, a Luxury Collection Hotel",
-          distance: "0.52 km from city centre",
-          rating: 5,
-          reviews: "5907 reviews",
-          price: "₹18,219",
-          image: "/images/Hotel/ITC Gardenia.webp",
-        },
-        {
-          name: "Prestige Residency",
-          distance: "1.87 km from city centre",
-          rating: 4.1,
-          reviews: "2 reviews",
-          price: "₹546",
-          image: "/images/Hotel/Prestige Residency.webp",
-        },
-        {
-          name: "Renaissance Bengaluru Race Course Hotel",
-          distance: "2.42 km from city centre",
-          rating: 4.5,
-          reviews: "1400 reviews",
-          price: "₹9,999",
-          image: "/images/Hotel/Renaissance Bengaluru Race Course Hotel.jpg",
-        },
-      ],
-      Hyderabad: [
-        {
-          name: "Taj Krishna",
-          distance: "6.65 km from city centre",
-          rating: 4.5,
-          reviews: "7 reviews",
-          price: "₹14,850",
-          image: "/images/Hotel/Taj Krishna.webp",
-        },
-        {
-          name: "Novotel Hyderabad Airport",
-          distance: "13.41 km from city centre",
-          rating: 4.5,
-          reviews: "10 reviews",
-          price: "₹12,741",
-          image: "/images/Hotel/Novotel Hyderabad Airport.jpg",
-        },
-        {
-          name: "Taj Falaknuma Palace",
-          distance: "3.37 km from city centre",
-          rating: 4.8,
-          reviews: "2 reviews",
-          price: "₹28,000",
-          image: "/images/Hotel/Taj Falaknuma Palace.jpg",
-        },
-        {
-          name: "The Westin Hyderabad Mindspace",
-          distance: "13.33 km from city centre",
-          rating: 4.8,
-          reviews: "5 reviews",
-          price: "₹34,000",
-          image: "/images/Hotel/The Westin Hyderabad Mindspace.jpg",
-        },
-
-      ],
-
-    };
-
-    const [selectedCity, setSelectedCity] = useState("Mumbai");
-    const breakpoints = {
-      320: { slidesPerView: 1 },
-      640: { slidesPerView: 1.2 },
-      768: { slidesPerView: 2 },
-      1024: { slidesPerView: 3 },
-    };
-
-    
   return (
     <section className="relative w-full">
       {/* Header */}
@@ -333,7 +309,7 @@
                 Where do you want to stay?
               </label>
               <input
-              list="destinations"
+                list="destinations"
                 type="text"
                 placeholder="Enter destination or hotel name"
                 className="w-full p-3 rounded-lg bg-white text-black"
@@ -341,12 +317,10 @@
                 onChange={(e) => setDestination(e.target.value)}
                 required
               />
-              <datalist id="destination">
-                {
-                  destinations.map((destination, index) => (
-                    <option key={index} value={destination} />
-                  ))
-                }
+              <datalist id="destinations">
+                {destinations.map((destination, index) => (
+                  <option key={index} value={destination} />
+                ))}
               </datalist>
             </div>
 
@@ -500,6 +474,16 @@
           </form>
         </div>
       </div>
+
+      {/* Remove the section that displays fetched data under the form */}
+      {/* <div className="max-w-7xl mx-auto px-6 py-16">
+        <h2 className="text-2xl font-bold mb-4">Available Destinations</h2>
+        <ul className="list-disc pl-5">
+          {destinations.map((destination, index) => (
+            <li key={index} className="text-lg">{destination}</li>
+          ))}
+        </ul>
+      </div> */}
 
       {/* Features Section */}
       <div className="bg-white">

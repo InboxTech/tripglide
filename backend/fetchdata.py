@@ -1,4 +1,4 @@
-  import mysql.connector
+import mysql.connector
 import pandas as pd
 
 # Database Configuration (For XAMPP MySQL)
@@ -61,7 +61,7 @@ try:
     #     conn.commit()
 
     # print("✅ Data successfully inserted into hotels table.")
-    cursor.execute('SELECT Hotel,Rating FROM hotel')  # Replace 'hotel_oneway' with your actual table name
+    cursor.execute('SELECT Hotel FROM hotel')  # Replace 'hotel_oneway' with your actual table name
     rows= cursor.fetchall()
     for row in rows:
         print(row)
