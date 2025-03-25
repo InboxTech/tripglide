@@ -161,7 +161,7 @@ const flightDeals = [
     stops: 0,
     stopCities: [],
     cabinClass: "Economy",
-    logo: "https://i.pinimg.com/474x/5b/8b/5b/5b8b5b5b5b5b5b5b5b5b5b5b5b5b5b5b.jpg",
+    logo: "https://i.pinimg.com/474x/5a/4a/a5/5a4aa5378d51b1c9da7c4e4d776b614c.jpg",
     image: "https://i.pinimg.com/474x/6a/99/ee/6a99ee843798375c5f7049316e8d31ed.jpg"
   }
 ];
@@ -211,7 +211,7 @@ const FlightDealsCards = () => {
         <div className="text-center mt-6">
           <button 
             onClick={() => setShowAll(!showAll)} 
-            className="text-blue-600 mt-4 mb-4 font-semibold hover:underline"
+            className="text-blue-600 mt-4 mb-4 cursor-pointer font-semibold hover:underline"
           >
             {showAll ? "See fewer deals" : "See more deals"}
           </button>
