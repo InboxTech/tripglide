@@ -1,4 +1,5 @@
 import { FaInstagram, FaTwitter, FaMedium } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 export default function Footer() {
   return (
@@ -19,14 +20,16 @@ export default function Footer() {
           {/* Links Section */}
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-8 w-full md:w-2/3 text-center md:text-left">
             {/* Column 1 */}
-            <div className="flex flex-col gap-3">
-              <a href="#" className="hover:underline">Help</a>
-              <a href="#" className="hover:underline">Privacy Settings</a>
-              <a href="/login" className="hover:underline">Log in</a>
-
+            <div className="flex flex-col gap-2">
+              <h3 className="text-base font-bold text-gray-400 mb-2">
+                Support
+              </h3>
+              <a href="/help" className="hover:underline">Help</a>
+              {/* <a href="#" className="hover:underline">Privacy Settings</a> */}
+              {/* <a href="/signin" className="hover:underline">SignIn</a> */}
               {/* Social Media Icons */}
-              <div className="flex justify-center md:justify-start gap-4 mt-3">
-                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="hover:text-[#E4405F] transition">
+              <div className="flex justify-center md:justify-start gap-4 mt-1">
+                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="hover:text-[#E4405F] transition duration-300">
                   <FaInstagram size={20} />
                 </a>
                 <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="hover:text-[#1DA1F2] transition">
@@ -39,19 +42,25 @@ export default function Footer() {
             </div>
 
             {/* Column 2 */}
-            <div className="flex flex-col gap-3">
-              <a href="#" className="hover:underline">Cookie Policy</a>
-              <a href="#" className="hover:underline">Privacy Policy</a>
-              <a href="#" className="hover:underline">Terms of Service</a>
-              <a href="#" className="hover:underline">Company Details</a>
+            <div className="flex flex-col gap-2">
+              <h3 className="text-base font-bold text-gray-400 mb-2">
+                Policies
+              </h3>
+              {/* <a href="#" className="hover:underline">Cookie policy</a> */}
+              <a href="/privacy-policy" className="hover:underline">Privacy Policy</a>
+              {/* <a href="#" className="hover:underline">Terms of service</a> */}
+              <a href="https://inboxtechs.com/" target="_blank" className="hover:underline">Company Details</a>
             </div>
 
             {/* Column 3 */}
-            <div className="flex flex-col gap-3">
-              <a href="#" className="hover:underline">Explore</a>
-              <a href="#" className="hover:underline">Company</a>
-              <a href="#" className="hover:underline">Partners</a>
-              <a href="#" className="hover:underline">Trips</a>
+            <div className="flex flex-col gap-2">
+              <h3 className="text-base font-bold text-gray-400 mb-2">
+                Discover
+              </h3>
+              <a href="/" className="hover:underline">Explore</a>
+              {/* <a href="https://inboxtechs.com/" target="_blank" className="hover:underline">Company</a> */}
+              {/* <a href="#" className="hover:underline">Partners</a> */}
+              <a href="/" className="hover:underline">Trips</a>
             </div>
           </div>
         </div>

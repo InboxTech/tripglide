@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # from flask import Flask, jsonify, request
 # import mysql.connector
 # from flask_cors import CORS
@@ -47,6 +48,8 @@
 
 
 
+=======
+>>>>>>> 8996b9dca3699a4b3d92fe541eb524c39d077196
 #frontend conn
 from flask import Flask, jsonify
 import mysql.connector
@@ -63,7 +66,10 @@ def get_db_connection():
         host='localhost',
         user='root',  # Update with your MySQL username
         password='',  # Update with your MySQL password
+<<<<<<< HEAD
         # port="3307",  # Update the port if different
+=======
+>>>>>>> 8996b9dca3699a4b3d92fe541eb524c39d077196
         database='main'  # Update with your actual database name
     )
     except mysql.connector.Error as e:
@@ -71,13 +77,18 @@ def get_db_connection():
         return None
 
 # API endpoint to fetch cars data
+<<<<<<< HEAD
 @app.route('/hotel', methods=['GET'])
+=======
+@app.route('/', methods=['GET'])
+>>>>>>> 8996b9dca3699a4b3d92fe541eb524c39d077196
 def get_data():
     connection = get_db_connection()
     if connection is None:
         return jsonify({"error": "Database connection failed"}), 500
 
     cursor = connection.cursor(dictionary=True)
+<<<<<<< HEAD
     
     try:
         cursor.execute("SELECT * FROM hotel")
@@ -93,6 +104,22 @@ def get_data():
         return jsonify({
             "hotel_type": hotel_type if hotel_type else [],
             # "car_model": car_model if car_model else [],
+=======
+    try:
+        cursor.execute("SELECT * FROM cars")
+        data = cursor.fetchall()
+
+        # Fetch unique cars
+        cursor.execute("SELECT DISTINCT cartype FROM cars")
+        car_type = [row["cartype"] for row in cursor.fetchall()]
+        
+        cursor.execute("SELECT DISTINCT model FROM cars")
+        car_model = [row["model"] for row in cursor.fetchall()]
+
+        return jsonify({
+            "car_type": car_type if car_type else [],
+            "car_model": car_model if car_model else [],
+>>>>>>> 8996b9dca3699a4b3d92fe541eb524c39d077196
         })
     except Exception as e:
         return jsonify({"error": str(e)})
@@ -100,6 +127,30 @@ def get_data():
         cursor.close()
         connection.close()
 
+<<<<<<< HEAD
+=======
+# ✅ API: Fetch unique departure & arrival airports
+@app.route('/location', methods=['GET'])
+def get_cities():
+    connection = get_db_connection()
+    if connection is None:
+        return jsonify({"error": "Database connection failed"}), 500
+
+    cursor = connection.cursor(dictionary=True)
+    try:
+        # Fetch unique cars
+        cursor.execute("SELECT DISTINCT city FROM locations")
+        car_city = [row["city"] for row in cursor.fetchall()]
+
+        return jsonify({
+            "car_city": car_city if car_city else [],
+        })
+    except Exception as e:
+        return jsonify({"error": str(e)})
+    finally:
+        cursor.close()
+        connection.close()
+>>>>>>> 8996b9dca3699a4b3d92fe541eb524c39d077196
 
 # Run the Flask app and print data in the console
 if __name__ == '__main__':

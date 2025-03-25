@@ -282,11 +282,10 @@ export default function Hotels() {
 
   return (
     <section className="relative w-full">
-      {/* Header */}
+{/* Header */}
       <Header />
-
       {/* Background Image */}
-      <div className="absolute inset-0 hidden lg:block -z-10 h-[600px] lg:h-[800px]">
+      <div className="relative inset-0 hidden lg:block -z-10">
         <img
           src="/images/Hotel/Heroimg.jpg"
           alt="Hotel background"
