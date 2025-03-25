@@ -14,6 +14,8 @@ import Help from "./components/Help";
 import PrivacyPolicy from "./components/PrivacyPolicy";
 import RegionalSettings from "./components/RegionalSettings";
 import CountryFacts from "./components/CountryFacts";
+import Hotels from "./components/Hotels";
+import HotelSearch from "./components/HotelSearch";
 
 function App() {
   // Initialize user state from localStorage
@@ -104,6 +106,8 @@ function App() {
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/regional-settings" element={<RegionalSettings />} />
           <Route path="/country-facts" element={<CountryFacts />} />
+          <Route path="/hotels" element={<Hotels />} />
+          <Route path="/hotel-search" element={<HotelSearch />} />
         </Routes>
       </Router>
     </GoogleOAuthProvider>
