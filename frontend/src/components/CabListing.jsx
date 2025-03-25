@@ -26,6 +26,7 @@ const CabListing = () => {
   const [cars, setCars] = useState([]); // Stores car listings
   const [filteredCars, setFilteredCars] = useState([]); // Stores filtered car listings
   const [isFilterOpen, setIsFilterOpen] = useState(false); // State for mobile filter toggle
+  const [expandedCarId, setExpandedCarId] = useState(null); // State to track which car's deals are expanded
 
   // Dummy car data with 6 additional cars
   useEffect(() => {
@@ -132,7 +133,7 @@ const CabListing = () => {
         agencyPrice: 4200,
         fuelType: "Diesel",
         transmission: "Automatic",
-        image: "/images/Mahindra XUV 3XO compact SUV launched in India from INR 7_49 Lakh _ AUTOBICS.jpeg",
+        image: "/images/Mahindra XUV 3XO compact SUV launched in India from INR 7_49 Lakh _ AUTOBICS.jpeg",
         passengers: 7,
       },
       {
@@ -165,6 +166,43 @@ const CabListing = () => {
         image: "/images/MG ZS EV Review_ Performance and Features Explained.jpeg",
         passengers: 5,
       },
+      // Adding Skoda Octavia with different agencies for demonstration
+      {
+        id: 10,
+        carMake: "Skoda",
+        model: "Octavia",
+        type: "Sedan",
+        mileage: "15",
+        yearOfMake: 2023,
+        pricePerDay: 14829,
+        carAgency: "VIPCars",
+        agencyPrice: 14829,
+        fuelType: "Petrol",
+        transmission: "Manual",
+        image: "/images/skoda-octavia.jpeg",
+        passengers: 5,
+        rating: "9.3/10",
+        reviews: 48882,
+        features: ["Unlimited mileage", "Full to full", "Pick-up: Terminal (BOM)"],
+      },
+      {
+        id: 11,
+        carMake: "Skoda",
+        model: "Octavia",
+        type: "Sedan",
+        mileage: "15",
+        yearOfMake: 2023,
+        pricePerDay: 15978,
+        carAgency: "Holiday Autos",
+        agencyPrice: 15978,
+        fuelType: "Petrol",
+        transmission: "Manual",
+        image: "/images/skoda-octavia.jpeg",
+        passengers: 5,
+        rating: "9.0/10",
+        reviews: 35037,
+        features: ["Unlimited mileage", "Same to same", "Pick-up: Check when booking (BOM)"],
+      },
     ];
     setCars(initialCars);
     setFilteredCars(initialCars); // Initialize filtered cars
@@ -175,7 +213,6 @@ const CabListing = () => {
     carType: [],
     fuelType: [],
     transmission: "all",
-    priceRange: [2000, 8000], // Updated max range to accommodate new cars
     carAgency: [],
   });
 
@@ -203,11 +240,6 @@ const CabListing = () => {
       results = results.filter(car => car.transmission === filters.transmission);
     }
 
-    // Filter by price range
-    results = results.filter(car => 
-      car.pricePerDay >= filters.priceRange[0] && car.pricePerDay <= filters.priceRange[1]
-    );
-
     // Filter by car agency
     if (filters.carAgency.length > 0) {
       results = results.filter(car => filters.carAgency.includes(car.carAgency));
@@ -230,6 +262,16 @@ const CabListing = () => {
 
   // Unique car agencies for filter
   const carAgencies = [...new Set(cars.map(car => car.carAgency))];
+
+  // Function to get all deals for a specific car model
+  const getDealsForCarModel = (carModel) => {
+    return cars.filter(car => car.model === carModel);
+  };
+
+  // Function to toggle the expanded state
+  const toggleDeals = (carId) => {
+    setExpandedCarId(expandedCarId === carId ? null : carId);
+  };
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -279,7 +321,7 @@ const CabListing = () => {
           <button 
             className="flex items-center md:hidden bg-blue-600 text-white px-4 py-2 rounded-lg"
             onClick={() => setIsFilterOpen(!isFilterOpen)}
-          >
+          > 
             <FaFilter className="mr-2" /> Filters
           </button>
         </div>
@@ -380,33 +422,6 @@ const CabListing = () => {
               </div>
             </div>
 
-            {/* Price Range */}
-            <div className="mb-6">
-              <h4 className="font-semibold mb-2 text-black">Price Range (₹/day)</h4>
-              <div className="flex justify-between text-sm mb-1 text-black">
-                <span>₹{filters.priceRange[0].toLocaleString()}</span>
-                <span>₹{filters.priceRange[1].toLocaleString()}</span>
-              </div>
-              <input 
-                type="range" 
-                min="2000" 
-                max="8000" 
-                step="100"
-                value={filters.priceRange[0]}
-                onChange={(e) => setFilters({ ...filters, priceRange: [parseInt(e.target.value), filters.priceRange[1]] })}
-                className="w-full mb-2 cursor-pointer"
-              />
-              <input 
-                type="range" 
-                min="2000" 
-                max="8000" 
-                step="100"
-                value={filters.priceRange[1]}
-                onChange={(e) => setFilters({ ...filters, priceRange: [filters.priceRange[0], parseInt(e.target.value)] })}
-                className="w-full cursor-pointer"
-              />
-            </div>
-
             {/* Car Agency */}
             <div className="mb-6">
               <h4 className="font-semibold mb-2 text-black">Car Agency</h4>
@@ -432,24 +447,84 @@ const CabListing = () => {
             {/* Car Cards */}
             {filteredCars.length > 0 ? (
               filteredCars.map((car) => (
-                <div key={car.id} className="bg-white p-4 shadow-lg rounded-xl mb-4 flex hover:shadow-xl transition-shadow">
-                  <img src={car.image} alt={car.model} className="w-32 h-24 object-cover rounded-lg mr-4" />
-                  <div className="flex-1">
-                    <h3 className="text-lg font-semibold text-black">
-                      {car.carMake} {car.model} ({car.yearOfMake})
-                    </h3>
-                    <p className="text-sm text-gray-500">
-                      {car.type} • {car.fuelType} • {car.transmission} • {car.mileage} km/l • Seats: {car.passengers}
-                    </p>
-                    <p className="text-sm text-gray-700">Agency: {car.carAgency}</p>
-                    <p className="text-green-600 font-semibold mt-1">
-                      ₹ {car.pricePerDay.toLocaleString()}/day{" "}
-                      <span className="text-gray-500 text-sm">(Agency Price: ₹{car.agencyPrice.toLocaleString()})</span>
-                    </p>
-                    <button className="mt-2 bg-blue-600 text-white px-4 py-2 cursor-pointer rounded-lg hover:bg-blue-700 transition">
-                      Book Now
-                    </button>
+                <div key={car.id} className="bg-white p-4 shadow-lg rounded-xl mb-4">
+                  {/* Main Card */}
+                  <div className="flex hover:shadow-xl transition-shadow">
+                    <img src={car.image} alt={car.model} className="w-32 h-24 object-cover rounded-lg mr-4" />
+                    <div className="flex-1">
+                      <h3 className="text-lg font-semibold text-black">
+                        {car.carMake} {car.model} ({car.yearOfMake})
+                      </h3>
+                      <p className="text-sm text-gray-500">
+                        {car.type} • {car.fuelType} • {car.transmission} • {car.mileage} km/l • Seats: {car.passengers}
+                      </p>
+                      <p className="text-sm text-gray-700">Agency: {car.carAgency}</p>
+                      <p className="text-green-600 font-semibold mt-1">
+                        ₹ {car.pricePerDay.toLocaleString()}/day{" "}
+                        <span className="text-gray-500 text-sm">(Agency Price: ₹{car.agencyPrice.toLocaleString()})</span>
+                      </p>
+                      <button
+                        className="mt-2 bg-blue-600 text-white px-4 py-2 cursor-pointer rounded-lg hover:bg-blue-700 transition"
+                        onClick={() => toggleDeals(car.id)}
+                      >
+                        {expandedCarId === car.id ? "Hide Deals" : "View Deals"}
+                      </button>
+                    </div>
                   </div>
+
+                  {/* Expanded Deals Section */}
+                  {expandedCarId === car.id && (
+                    <div className="mt-4 border-t pt-4">
+                      <div className="flex items-center mb-4">
+                        <div className="flex items-center space-x-2">
+                          <span className="text-lg font-semibold">{car.carMake} {car.model} or similar economy</span>
+                        </div>
+                        <div className="ml-auto flex items-center space-x-2">
+                          <span className="text-sm text-gray-500">{getDealsForCarModel(car.model).length} deals from</span>
+                          <button
+                            className="text-gray-500 border border-gray-300 px-3 py-1 rounded-lg"
+                            onClick={() => toggleDeals(car.id)}
+                          >
+                            Hide
+                          </button>
+                        </div>
+                      </div>
+                      <div className="flex items-center mb-4">
+                        <div className="flex items-center space-x-2">
+                          <span className="text-sm">👤 4-5</span>
+                          <span className="text-sm">🧳 2</span>
+                          <span className="text-sm">❄️ AC</span>
+                          <span className="text-sm">⚙️ Manual</span>
+                        </div>
+                        <div className="ml-auto">
+                          <img src={car.image} alt={car.model} className="w-48 h-32 object-cover rounded-lg" />
+                        </div>
+                      </div>
+                      {getDealsForCarModel(car.model).map((deal, index) => (
+                        <div key={index} className="flex items-center justify-between mb-4 p-4 border rounded-lg">
+                          <div>
+                            <div className="flex items-center space-x-2">
+                              <span className="font-semibold">{deal.carAgency}</span>
+                              <span className="text-yellow-500">{"★".repeat(Math.round(parseFloat(deal.rating?.split("/")[0]) / 2))}</span>
+                              <span className="text-sm text-gray-500">{deal.rating} Excellent deal</span>
+                              <span className="text-sm text-gray-500">({deal.reviews?.toLocaleString()} reviews)</span>
+                            </div>
+                            <ul className="text-sm text-gray-700 mt-2 space-y-1">
+                              {deal.features?.map((feature, i) => (
+                                <li key={i}>• {feature}</li>
+                              ))}
+                            </ul>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <span className="text-lg font-semibold">₹{deal.pricePerDay.toLocaleString()} total</span>
+                            <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
+                              Select
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               ))
             ) : (
