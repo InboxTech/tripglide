@@ -71,7 +71,7 @@ export default function Header() {
   
               {/* Dropdown Menu */}
               {isDropdownOpen && (
-                <div className="absolute right-0 mt-3 w-56 bg-white text-black shadow-lg rounded-xl z-10">
+                <div className="absolute right-0 mt-3 w-56 bg-white text-black shadow-lg rounded-xl z-100">
                   <div className="py-2">
                     <Link to="/" className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 transition">
                       <FaPlane className="text-blue-500" /> Flights

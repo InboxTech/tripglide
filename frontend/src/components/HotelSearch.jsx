@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Header from './Header';
-import { ChevronDown, ArrowRight, Filter as FilterIcon } from "lucide-react";
+import { ChevronDown, ArrowRight, Filter as FilterIcon, Calendar } from "lucide-react";
 import { useLocation } from "react-router-dom";
 import HotelCard from './HotelCard';
 import Footer from './Footer';
@@ -10,32 +10,8 @@ function HotelSearch() {
   const { destination, checkInDate, checkOutDate, adults, children, rooms } = locationState.state || {};
 
   const [showFilters, setShowFilters] = useState(true); // Toggle for filters (responsive)
-  const [showGuestDropdown, setShowGuestDropdown] = useState(false);
+  const [showGuestsDropdown, setShowGuestsDropdown] = useState(false);
 
-  // Close dropdown when clicking outside
-  const dropdownRef = useRef();
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      // Delay to avoid conflict when toggling
-      setTimeout(() => {
-        if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-          setShowGuestDropdown(false);
-        }
-      }, 0);
-    };
-  
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-  
-
-  const handleGuestChange = (field, action) => {
-    setSearchData(prev => ({
-      ...prev,
-      [field]: action === 'increment' ? prev[field] + 1 : Math.max(0, prev[field] - 1)
-    }));
-  };
 
   // State for editable search data
   const [searchData, setSearchData] = useState({
@@ -47,17 +23,72 @@ function HotelSearch() {
     rooms: rooms || 1
   });
 
-  // Handle changes
+  // Ref to handle click outside of dropdown
+  const guestsDropdownRef = useRef(null);
+
+  // Handle changes to guests and rooms
+  const handleGuestChange = (type, increment) => {
+    setSearchData(prev => {
+      // Handle adults
+      if (type === 'adults') {
+        const newAdults = Math.max(1, Math.min(prev.adults + increment, 10));
+        // Ensure at least one adult per room
+        const newRooms = Math.min(prev.rooms, Math.ceil(newAdults / 2));
+        return {
+          ...prev,
+          adults: newAdults,
+          rooms: newRooms
+        };
+      }
+
+      // Handle children
+      if (type === 'children') {
+        const newChildren = Math.max(0, Math.min(prev.children + increment, 10));
+        return { ...prev, children: newChildren };
+      }
+
+      // Handle rooms
+      if (type === 'rooms') {
+        const newRooms = Math.max(1, Math.min(prev.rooms + increment, 5));
+        // Ensure enough adults for rooms (2 adults per room max)
+        const newAdults = Math.max(newRooms, prev.adults);
+        return {
+          ...prev,
+          rooms: newRooms,
+          adults: newAdults
+        };
+      }
+
+      return prev;
+    });
+  };
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (guestsDropdownRef.current && !guestsDropdownRef.current.contains(event.target)) {
+        setShowGuestsDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Handle changes to other inputs
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setSearchData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSearch = () => {
-    // Here, call backend API to fetch hotels based on searchData (if needed)
     console.log("Updated Search Data: ", searchData);
   };
 
+  const handleGuestsDropdownClick = (e) => {
+    e.stopPropagation();
+    setShowGuestsDropdown(!showGuestsDropdown);
+  };
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -65,9 +96,10 @@ function HotelSearch() {
       <Header />
 
       {/* Search Bar Container */}
-      <div className="sticky top-0 z-50">
-        <div className="w-full bg-[#06152B] py-4 px-2">
-          <div className="max-w-7xl mx-auto bg-white rounded-md flex flex-col md:flex-row overflow-hidden shadow-lg">
+      <div className="sticky top-0 z-50 flex justify-center w-full bg-[#06152B]">
+        <div className="w-full max-w-7xl px-4  py-4">
+
+          < div className="w-full bg-white rounded-md flex flex-col md:flex-row overflow-hidden shadow-lg">
             {/* Destination */}
             <div className="flex-1 flex flex-col items-start justify-center px-4 py-2 border-b md:border-b-0 md:border-r border-gray-300">
               <span className="text-xs text-gray-600">Where do you want to stay?</span>
@@ -83,14 +115,15 @@ function HotelSearch() {
 
             {/* Check-in */}
             <div className="flex-1 flex flex-col items-start justify-center px-4 py-2 border-b md:border-b-0 md:border-r border-gray-300">
-              <span className="text-xs text-gray-600">Check-in</span>
+              <span className="text-xs text-gray-600 ">Check-in</span>
               <input
                 type="date"
                 name="checkInDate"
                 value={searchData.checkInDate}
                 onChange={handleInputChange}
-                className="text-blue-600 font-semibold text-base bg-transparent outline-none"
+                className="w-full text-blue-600 font-semibold text-base bg-transparent outline-none"
               />
+              {/* <Calendar className="absolute right-4 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500" /> */}
             </div>
 
             {/* Check-out */}
@@ -101,74 +134,131 @@ function HotelSearch() {
                 name="checkOutDate"
                 value={searchData.checkOutDate}
                 onChange={handleInputChange}
-                className="text-blue-600 font-semibold text-base bg-transparent outline-none"
+                className="w-full text-blue-600 font-semibold text-base bg-transparent outline-none "
               />
             </div>
 
-            {/* Guests & Rooms */}
+            {/* Guests */}
             <div
+              ref={guestsDropdownRef}
               className="flex-1 flex flex-col items-start justify-center px-4 py-2 border-b md:border-b-0 md:border-r border-gray-300 relative"
-              ref={dropdownRef}
+              onClick={handleGuestsDropdownClick}
             >
-              <span className="text-xs text-gray-600 mb-1">Guests & Rooms</span>
+              <span className="text-xs text-gray-600">Guests and rooms</span>
+              <span className="text-blue-600 font-semibold text-base">
+                {searchData.adults} adults{searchData.children > 0 ? `, ${searchData.children} children` : ""}, {searchData.rooms} room
+              </span>
+              <ChevronDown className={`absolute right-4 top-7 w-4 h-4 text-black transition-transform ${showGuestsDropdown ? 'rotate-180' : ''}`} />
 
-              <button
-                onClick={() => setShowGuestDropdown(!showGuestDropdown)}
-                className="flex gap-1 items-center"
-              >
-                <span className="text-blue-600 font-semibold">{searchData.adults}</span> Adults,
-                <span className="ml-1 text-blue-600 font-semibold">{searchData.children}</span> Children,
-                <span className="ml-1 text-blue-600 font-semibold">{searchData.rooms}</span> Rooms
-                <ChevronDown className="ml-2 w-4 h-4 text-black" />
-              </button>
 
-              {/* Dropdown */}
-              {showGuestDropdown && (
+              {/* Guests Dropdown */}
+              {showGuestsDropdown && (
                 <div
-                  className="absolute top-full left-0 mt-2 bg-white shadow-md rounded-md p-4 w-64 z-50"
+                  className="absolute top-full left-0 right-0 bg-white shadow-lg rounded-b-xl z-[100] p-4 mt-1"
+                  onClick={(e) => e.stopPropagation()}
                 >
-                  {['adults', 'children', 'rooms'].map((field, idx) => (
-                    <div key={idx} className="flex justify-between items-center mb-3">
-                      <span className="capitalize">{field}</span>
-                      <div className="flex items-center gap-2">
-                        <button
-                          onClick={() => handleGuestChange(field, 'decrement')}
-                          className="bg-gray-200 px-2 rounded"
-                        >-</button>
-                        <span>{searchData[field]}</span>
-                        <button
-                          onClick={() => handleGuestChange(field, 'increment')}
-                          className="bg-gray-200 px-2 rounded"
-                        >+</button>
-                      </div>
+                  {/* Adults */}
+                  <div className="flex justify-between items-center mb-4">
+                    <div>
+                      <span className="block text-sm font-medium">Adults</span>
+                      <span className="text-xs text-gray-500">Ages 18+</span>
                     </div>
-                  ))}
+                    <div className="flex items-center space-x-3">
+                      <button
+                        onClick={() => handleGuestChange('adults', -1)}
+                        className="bg-gray-200 w-8 h-8 flex items-center justify-center rounded-full disabled:opacity-50"
+                        disabled={searchData.adults <= 1}
+                      >
+                        -
+                      </button>
+                      <span className="w-8 text-center">{searchData.adults}</span>
+                      <button
+                        onClick={() => handleGuestChange('adults', 1)}
+                        className="bg-gray-200 w-8 h-8 flex items-center justify-center rounded-full disabled:opacity-50"
+                        disabled={searchData.adults >= 10}
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Children */}
+                  <div className="flex justify-between items-center mb-4">
+                    <div>
+                      <span className="block text-sm font-medium">Children</span>
+                      <span className="text-xs text-gray-500">Ages 0-17</span>
+                    </div>
+                    <div className="flex items-center space-x-3">
+                      <button
+                        onClick={() => handleGuestChange('children', -1)}
+                        className="bg-gray-200 w-8 h-8 flex items-center justify-center rounded-full disabled:opacity-50"
+                        disabled={searchData.children <= 0}
+                      >
+                        -
+                      </button>
+                      <span className="w-8 text-center">{searchData.children}</span>
+                      <button
+                        onClick={() => handleGuestChange('children', 1)}
+                        className="bg-gray-200 w-8 h-8 flex items-center justify-center rounded-full disabled:opacity-50"
+                        disabled={searchData.children >= 10}
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Rooms */}
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <span className="block text-sm font-medium">Rooms</span>
+                      <span className="text-xs text-gray-500">Max 5 rooms</span>
+                    </div>
+                    <div className="flex items-center space-x-3">
+                      <button
+                        onClick={() => handleGuestChange('rooms', -1)}
+                        className="bg-gray-200 w-8 h-8 flex items-center justify-center rounded-full disabled:opacity-50"
+                        disabled={searchData.rooms <= 1}
+                      >
+                        -
+                      </button>
+                      <span className="w-8 text-center">{searchData.rooms}</span>
+                      <button
+                        onClick={() => handleGuestChange('rooms', 1)}
+                        className="bg-gray-200 w-8 h-8 flex items-center justify-center rounded-full disabled:opacity-50"
+                        disabled={searchData.rooms >= 5}
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Done Button */}
                   <button
-                    onClick={() => setShowGuestDropdown(false)}
-                    className="text-blue-600 font-semibold mt-2"
-                  >Done</button>
+                    onClick={() => setShowGuestsDropdown(false)}
+                    className="mt-4 w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition-colors"
+                  >
+                    Done
+                  </button>
                 </div>
               )}
             </div>
-
             {/* Search Button */}
-            <button
-              className="bg-blue-600 text-white flex items-center justify-center gap-2 px-6 py-4 md:rounded-none rounded-b-md md:rounded-r-md font-semibold"
-              onClick={handleSearch}
-            >
+            <button className="bg-blue-600 text-white flex items-center justify-center gap-2 px-6 py-4 md:rounded-none rounded-b-md md:rounded-r-md font-semibold">
               Search hotels <ArrowRight className="w-4 h-4" />
             </button>
+
           </div>
         </div>
       </div>
 
 
       {/* Content */}
-      <div className="flex-1 flex flex-col md:flex-row h-[calc(100vh-180px)] bg-gray-100">
-        <div className="max-w-7xl w-full mx-auto flex flex-col md:flex-row mt-8 px-4 md:px-0 gap-4 flex-1">
+      <div className="flex-1 flex flex-col md:flex-row bg-gray-100">
+        {/* Main content */}
+        <div className="w-full max-w-7xl mx-auto flex flex-col md:flex-row mt-8 px-4 gap-4 flex-1">
           {/* Filters Sidebar */}
           <div className={`md:w-1/4 w-full ${showFilters ? 'block' : 'hidden'} md:block`}>
-            <div className="bg-[#06152B] text-white p-4 rounded-md sticky top-[110px] h-[calc(100vh-180px)] overflow-y-auto">
+            <div className="bg-white text-black p-4 rounded-md sticky top-[110px] h-[calc(100vh-180px)] overflow-y-auto">
               <h3 className="text-lg font-bold mb-4">Select Filters</h3>
               {/* Filter Options */}
               <div className="mb-4">
@@ -259,11 +349,11 @@ function HotelSearch() {
       </div>
 
       {/* Footer */}
-      <div className='mt-3'>
+      <div className='mt-3 bg-gray-100'>
         <Footer />
       </div>
 
-    </div>
+    </div >
   );
 }
 
