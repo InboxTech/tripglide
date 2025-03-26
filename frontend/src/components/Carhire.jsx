@@ -194,7 +194,7 @@ export default function CarHire() {
                 Return car to a different location
               </label>
 
-              <button
+              <button 
                 onClick={handleSearch}
                 type="submit"
                 className={`ml-auto px-6 py-3 font-semibold rounded-lg transition ${
@@ -214,12 +214,12 @@ export default function CarHire() {
 
       {/* Features Section */}
       <div className="bg-white">
-        <div className="container mx-auto max-w-7xl px-8 pt-5">
+        <div className="container mx-auto max-w-7xl px-8 pt-5"> 
           <nav className="text-sm">
             <a href="/" className="text-blue-600 hover:underline">Home</a>
             <span className="mx-2 text-gray-400">›</span>
             <span className="text-gray-600">Car hire</span>
-          </nav>
+          </nav>  
         </div>
         <div className="container mx-auto max-w-7xl">
           <FeaturesSection features={carFeatures} />
