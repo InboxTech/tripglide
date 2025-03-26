@@ -34,16 +34,15 @@ def get_data():
         data = cursor.fetchall()
 
         # Fetch unique cars
-        cursor.execute("SELECT DISTINCT cartype FROM cars")
-        car_type = [row["cartype"] for row in cursor.fetchall()]
+        cursor.execute("SELECT DISTINCT cartype, model FROM cars")
+        car_type_model = cursor.fetchall()
+        #car_type_model = [{"cartype": row["cartype"], "model": row["model"]} for row in cursor.fetchall()]
         
-        cursor.execute("SELECT DISTINCT model FROM cars")
-        car_model = [row["model"] for row in cursor.fetchall()]
+        # cursor.execute("SELECT DISTINCT model FROM cars")
+        # car_model = [row["model"] for row in cursor.fetchall()]
 
         return jsonify({
-            "car_type": car_type if car_type else [],
-            "car_model": car_model if car_model else [],
-        })
+    "car_data": car_type_model if car_type_model else []})
     except Exception as e:
         return jsonify({"error": str(e)})
     finally:
@@ -65,6 +64,118 @@ def get_cities():
 
         return jsonify({
             "car_city": car_city if car_city else [],
+        })
+    except Exception as e:
+        return jsonify({"error": str(e)})
+    finally:
+        cursor.close()
+        connection.close()
+
+
+# ✅ API: Fetch unique departure & arrival airports
+@app.route('/fuel', methods=['GET'])
+def get_fuel():
+    connection = get_db_connection()
+    if connection is None:
+        return jsonify({"error": "Database connection failed"}), 500
+
+    cursor = connection.cursor(dictionary=True)
+    try:
+        # Fetch unique cars
+        cursor.execute("SELECT DISTINCT fuel_policy FROM cars")
+        car_fuel = [row["fuel_policy"] for row in cursor.fetchall()]
+
+        return jsonify({
+            "car_fuel": car_fuel if car_fuel else [],
+        })
+    except Exception as e:
+        return jsonify({"error": str(e)})
+    finally:
+        cursor.close()
+        connection.close()
+
+# ✅ API: Fetch unique departure & arrival airports
+@app.route('/transmission', methods=['GET'])
+def get_transmission():
+    connection = get_db_connection()
+    if connection is None:
+        return jsonify({"error": "Database connection failed"}), 500
+
+    cursor = connection.cursor(dictionary=True)
+    try:
+        # Fetch unique cars
+        cursor.execute("SELECT DISTINCT transmission FROM cars")
+        car_trans = [row["transmission"] for row in cursor.fetchall()]
+
+        return jsonify({
+            "car_trans": car_trans if car_trans else [],
+        })
+    except Exception as e:
+        return jsonify({"error": str(e)})
+    finally:
+        cursor.close()
+        connection.close()
+
+# ✅ API: Fetch unique price
+@app.route('/price', methods=['GET'])
+def get_price():
+    connection = get_db_connection()
+    if connection is None:
+        return jsonify({"error": "Database connection failed"}), 500
+
+    cursor = connection.cursor(dictionary=True)
+    try:
+        # Fetch unique cars
+        cursor.execute("SELECT DISTINCT price_per_hour_inr FROM cars")
+        car_price = [row["price_per_hour_inr"] for row in cursor.fetchall()]
+
+        return jsonify({
+            "car_price": car_price if car_price else [],
+        })
+    except Exception as e:
+        return jsonify({"error": str(e)})
+    finally:
+        cursor.close()
+        connection.close()        
+
+
+# ✅ API: Fetch unique departure & arrival airports
+@app.route('/agency', methods=['GET'])
+def get_agency():
+    connection = get_db_connection()
+    if connection is None:
+        return jsonify({"error": "Database connection failed"}), 500
+
+    cursor = connection.cursor(dictionary=True)
+    try:
+        # Fetch unique cars
+        cursor.execute("SELECT DISTINCT agency FROM cars")
+        car_agency = [row["agency"] for row in cursor.fetchall()]
+
+        return jsonify({
+            "car_agency": car_agency if car_agency else [],
+        })
+    except Exception as e:
+        return jsonify({"error": str(e)})
+    finally:
+        cursor.close()
+        connection.close() 
+
+# ✅ API: Fetch unique departure & arrival airports
+@app.route('/address', methods=['GET'])
+def get_address():
+    connection = get_db_connection()
+    if connection is None:
+        return jsonify({"error": "Database connection failed"}), 500
+
+    cursor = connection.cursor(dictionary=True)
+    try:
+        # Fetch unique cars
+        cursor.execute("SELECT DISTINCT address FROM locations")
+        car_address = [row["address"] for row in cursor.fetchall()]
+
+        return jsonify({
+            "car_address": car_address if car_address else [],
         })
     except Exception as e:
         return jsonify({"error": str(e)})

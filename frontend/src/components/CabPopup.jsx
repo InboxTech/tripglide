@@ -1,10 +1,5 @@
-<<<<<<< HEAD
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-=======
-import React, {useState, useEffect} from 'react';
-import axios from 'axios';
->>>>>>> 6d0f971257b21d6b386f7d584644346ee80ab84f
 
 export default function CabPopup({
   isOpen,
@@ -31,14 +26,8 @@ export default function CabPopup({
 
   const today = new Date().toISOString().split("T")[0];
   const currentTime = new Date().toTimeString().slice(0, 5);
-<<<<<<< HEAD
   const [availableLocations, setAvailableLocations] = useState([]);
  
-=======
-
-  const [availableLocations, setAvailableLocations] = useState([]);
-  
->>>>>>> 6d0f971257b21d6b386f7d584644346ee80ab84f
   const handlePickupDateChange = (e) => {
     const newPickupDate = e.target.value;
     setPickupDate(newPickupDate);
@@ -107,11 +96,7 @@ export default function CabPopup({
                 Pick-up location
               </label>
               <input
-<<<<<<< HEAD
                 list="pickup-locations"
-=======
-              list='pickup-locations'
->>>>>>> 6d0f971257b21d6b386f7d584644346ee80ab84f
                 type="text"
                 placeholder="City, airport or station"
                 className="w-full p-3 rounded-lg bg-white text-black"

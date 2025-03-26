@@ -17,6 +17,7 @@ export default function CarHire() {
   const [dropoffTime, setDropoffTime] = useState("");
   const [pickupLocation, setPickupLocation] = useState("");
   const [availableLocations, setAvailableLocations] = useState([]); // Stores fetched locations
+  const [ availableCars,setAvailableCars] = useState([]);
 
   // Get today's date
   const today = new Date().toISOString().split("T")[0];
@@ -33,6 +34,18 @@ export default function CarHire() {
         console.error("Error fetching locations:", error);
       });
   }, []);
+
+   // Fetch available cities from Flask API when component loads
+  // useEffect(() => {
+  //   axios
+  //     .get("http://localhost:5001/car") // Flask API endpoint
+  //     .then((response) => {
+  //       setAvailableCars(response.data.car_type || []); // Set available locations
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching cars:", error);
+  //     });
+  // }, []);
 
   // Update current time based on selected date
   useEffect(() => {
@@ -239,20 +252,6 @@ export default function CarHire() {
           <PopularCarDeals />
         </div>
       </div>
-
-      {/* Swiper Section */}
-      <section className="bg-white">
-        <TravelDeals />
-      </section>
-
-      {/* Popular Car Deals */}
-      <div className="bg-gray-100">
-        <div className="container mx-auto max-w-7xl px-8 py-12">
-          <PopularCarDeals />
-        </div>
-      </div>
-      
-
 
       {/* Car Hire Deals Section */}
       <section className="bg-gray-100 py-12 px-6 md:px-12">
