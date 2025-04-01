@@ -1,5 +1,4 @@
-import React from "react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "./Header";
 import TravelDeals from "./TravelDeals";
 import Footer from "./Footer";
@@ -11,13 +10,16 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export default function CarHire() {
+  // State for form inputs
   const [pickupDate, setPickupDate] = useState("");
   const [dropoffDate, setDropoffDate] = useState("");
   const [pickupTime, setPickupTime] = useState("");
   const [dropoffTime, setDropoffTime] = useState("");
   const [pickupLocation, setPickupLocation] = useState("");
-  const [availableLocations, setAvailableLocations] = useState([]);
+  const [availableLocations, setAvailableLocations] = useState([]); // Stores fetched locations
+  const [ availableCars,setAvailableCars] = useState([]);
 
+  // Get today's date
   const today = new Date().toISOString().split("T")[0];
   const [currentTime, setCurrentTime] = useState("");
 
@@ -33,6 +35,19 @@ export default function CarHire() {
       });
   }, []);
 
+   // Fetch available cities from Flask API when component loads
+  // useEffect(() => {
+  //   axios
+  //     .get("http://localhost:5001/car") // Flask API endpoint
+  //     .then((response) => {
+  //       setAvailableCars(response.data.car_type || []); // Set available locations
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching cars:", error);
+  //     });
+  // }, []);
+
+  // Update current time based on selected date
   useEffect(() => {
     const now = new Date();
     setCurrentTime(
@@ -40,6 +55,7 @@ export default function CarHire() {
     );
   }, [pickupDate]);
 
+  // Handle changes to pickup date
   const handlePickupDateChange = (event) => {
     setPickupDate(event.target.value);
     setPickupTime(""); // Reset pickup time when date changes
@@ -49,43 +65,45 @@ export default function CarHire() {
     }
   };
 
+  // Handle changes to dropoff date
   const handleDropoffDateChange = (event) => {
     setDropoffDate(event.target.value);
     setDropoffTime(""); // Reset drop-off time when date changes
   };
 
+  // Check if form is complete before enabling Search button
   const isFormComplete =
     pickupLocation && pickupDate && pickupTime && dropoffDate && dropoffTime;
 
-    const carFeatures = [
-      {
-        icon: <FaCar />,
-        text: "Search for cheap car rental in seconds – anywhere in the world",
-      },
-      {
-        icon: <FaCalendarAlt />,
-        text: "Compare deals from trusted car hire providers in one place",
-      },
-      {
-        icon: <FaTag />,
-        text: "Rent a car with a flexible booking policy or free cancellation",
-      },
-    ];
+  const carFeatures = [
+    {
+      icon: <FaCar />,
+      text: "Search for cheap car rental in seconds – anywhere in the world",
+    },
+    {
+      icon: <FaCalendarAlt />,
+      text: "Compare deals from trusted car hire providers in one place",
+    },
+    {
+      icon: <FaTag />,
+      text: "Rent a car with a flexible booking policy or free cancellation",
+    },
+  ];
 
-    const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
-    const handleSearch = (e) => {
-      e.preventDefault(); 
-      navigate("/cabs", {
-        state: { pickupLocation, pickupDate, dropoffDate, pickupTime, dropoffTime },
-      });
-    };
+  // Handle search button click and navigate to /cabs
+  const handleSearch = (e) => {
+    e.preventDefault();
+    navigate("/cabs", {
+      state: { pickupLocation, pickupDate, dropoffDate, pickupTime, dropoffTime },
+    });
+  };
 
   return (
     <section className="w-full">
       {/* Header */}
       {/* <Header /> */}
-
 
       {/* Background Image */}
       <div className="absolute inset-0 hidden lg:block -z-10">
@@ -105,19 +123,19 @@ export default function CarHire() {
         {/* Search Form */}
         <div className="bg-[#001533] p-6 rounded-2xl shadow-lg">
           <form className="grid gap-4 md:grid-cols-2 lg:grid-cols-5 items-center">
-            
             {/* Pickup Location */}
             <div className="lg:col-span-1">
               <label className="block text-white font-semibold mb-1">
                 Pick-up location
               </label>
               <input
-              list="pickup-locations"
+                list="pickup-locations"
                 type="text"
                 placeholder="City, airport or station"
                 className="w-full p-3 rounded-lg bg-white text-black"
                 value={pickupLocation}
                 onChange={(e) => setPickupLocation(e.target.value)}
+                required
               />
               <datalist id="pickup-locations">
                 {availableLocations.map((location, index) => (
@@ -131,23 +149,22 @@ export default function CarHire() {
               <label className="block text-white font-semibold mb-1">
                 Pick-up date
               </label>
-              <input type="date" 
-              className="w-full p-3 rounded-lg bg-white text-black" 
-              min={today}
-              value={pickupDate}
-              onChange={handlePickupDateChange}
+              <input
+                type="date"
+                className="w-full p-3 rounded-lg bg-white text-black"
+                min={today}
+                value={pickupDate}
+                onChange={handlePickupDateChange}
               />
             </div>
 
             {/* Pickup Time */}
             <div>
-              <label className="block text-white font-semibold mb-1">
-                Time
-              </label>
-              <input 
-              type="time" 
-              className="w-full p-3 rounded-lg bg-white text-black" 
-              value={pickupTime}
+              <label className="block text-white font-semibold mb-1">Time</label>
+              <input
+                type="time"
+                className="w-full p-3 rounded-lg bg-white text-black"
+                value={pickupTime}
                 onChange={(e) => setPickupTime(e.target.value)}
                 min={pickupDate === today ? currentTime : "00:00"}
                 disabled={!pickupDate}
@@ -159,30 +176,30 @@ export default function CarHire() {
               <label className="block text-white font-semibold mb-1">
                 Drop-off date
               </label>
-              <input type="date" 
-              className="w-full p-3 rounded-lg bg-white text-black" 
-              min={pickupDate || today}
-              value={dropoffDate}
-              onChange={handleDropoffDateChange}
-              disabled={!pickupDate}
+              <input
+                type="date"
+                className="w-full p-3 rounded-lg bg-white text-black"
+                min={pickupDate || today}
+                value={dropoffDate}
+                onChange={handleDropoffDateChange}
+                disabled={!pickupDate}
               />
             </div>
 
             {/* Drop-off Time */}
             <div>
-              <label className="block text-white font-semibold mb-1">
-                Time
-              </label>
-              <input type="time" 
-              className="w-full p-3 rounded-lg bg-white text-black" 
-              value={dropoffTime}
+              <label className="block text-white font-semibold mb-1">Time</label>
+              <input
+                type="time"
+                className="w-full p-3 rounded-lg bg-white text-black"
+                value={dropoffTime}
                 onChange={(e) => setDropoffTime(e.target.value)}
                 min={dropoffDate === pickupDate ? pickupTime : "00:00"}
                 disabled={!dropoffDate}
               />
             </div>
 
-            {/* Options */}
+            {/* Options & Search Button */}
             <div className="lg:col-span-5 flex flex-wrap gap-4 items-center mt-4">
               <label className="flex items-center text-white">
                 <input type="checkbox" className="mr-2" defaultChecked />
@@ -216,6 +233,9 @@ export default function CarHire() {
       <div className="bg-white">
         <div className="container mx-auto max-w-7xl px-8 pt-5"> 
           <nav className="text-sm">
+            <a href="/" className="text-blue-600 hover:underline">
+              Home
+            </a>
             <a href="/" className="text-blue-600 hover:underline">Home</a>
             <span className="mx-2 text-gray-400">›</span>
             <span className="text-gray-600">Car hire</span>
@@ -232,8 +252,6 @@ export default function CarHire() {
           <PopularCarDeals />
         </div>
       </div>
-      
-
 
       {/* Car Hire Deals Section */}
       <section className="bg-gray-100 py-12 px-6 md:px-12">
@@ -298,12 +316,11 @@ export default function CarHire() {
 
       {/* Car Hire FAQ */}
       <div className="bg-white">
-      <CarHireFAQ />
+        <CarHireFAQ />
       </div>
 
-       {/* Footer */}
-       <Footer />
+      {/* Footer */}
+      <Footer />
     </section>
   );
 }
-

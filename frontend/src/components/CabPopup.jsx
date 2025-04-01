@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 export default function CabPopup({
   isOpen,
@@ -26,9 +26,8 @@ export default function CabPopup({
 
   const today = new Date().toISOString().split("T")[0];
   const currentTime = new Date().toTimeString().slice(0, 5);
-
   const [availableLocations, setAvailableLocations] = useState([]);
-  
+ 
   const handlePickupDateChange = (e) => {
     const newPickupDate = e.target.value;
     setPickupDate(newPickupDate);
@@ -54,6 +53,19 @@ export default function CabPopup({
         console.error("Error fetching locations:", error);
       });
   }, []);
+  
+
+    // Fetch available cities from Flask API when component loads
+    useEffect(() => {
+      axios
+        .get("http://localhost:5001/location") // Flask API endpoint
+        .then((response) => {
+          setAvailableLocations(response.data.car_city || []); // Set available locations
+        })
+        .catch((error) => {
+          console.error("Error fetching locations:", error);
+        });
+    }, []);
   
   const isFormComplete = 
     pickupLocation && 
@@ -84,7 +96,7 @@ export default function CabPopup({
                 Pick-up location
               </label>
               <input
-              list='pickup-locations'
+                list="pickup-locations"
                 type="text"
                 placeholder="City, airport or station"
                 className="w-full p-3 rounded-lg bg-white text-black"
