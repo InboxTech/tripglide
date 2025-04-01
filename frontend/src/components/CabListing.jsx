@@ -589,12 +589,8 @@ const CabListing = () => {
     filters.carAgency.length,
     filters.transmission !== "all" ? 1 : 0,
     filters.passengers > 1 ? 1 : 0,
-    (filters.priceRange[0] !== 3000 || filters.priceRange[1] !== 15000) ? 1 : 0,
-  ].reduce((sum, count) => sum + count, 0);
-
-  // Price range slider min and max values
-  const minPrice = 3000;
-  const maxPrice = 15000;
+  ]
+    
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -671,65 +667,7 @@ const CabListing = () => {
               )}
             </div>
 
-            {/* Price Range Filter */}
-            <div className="mb-4 sm:mb-6">
-              <h4 className="font-semibold mb-2 text-gray-800 text-sm sm:text-base">Price Range</h4>
-              <div className="relative">
-                <input
-                  type="range"
-                  min={minPrice}
-                  max={maxPrice}
-                  value={filters.priceRange[0]}
-                  onChange={(e) => {
-                    const newMin = parseInt(e.target.value);
-                    if (newMin <= filters.priceRange[1]) {
-                      setFilters((prev) => ({
-                        ...prev,
-                        priceRange: [newMin, prev.priceRange[1]],
-                      }));
-                    }
-                  }}
-                  className="absolute w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-                  style={{
-                    zIndex: 2,
-                    background: `linear-gradient(to right, #3b82f6 ${(filters.priceRange[0] - minPrice) / (maxPrice - minPrice) * 100}%, #e5e7eb ${(filters.priceRange[0] - minPrice) / (maxPrice - minPrice) * 100}%)`,
-                  }}
-                />
-                <input
-                  type="range"
-                  min={minPrice}
-                  max={maxPrice}
-                  value={filters.priceRange[1]}
-                  onChange={(e) => {
-                    const newMax = parseInt(e.target.value);
-                    if (newMax >= filters.priceRange[0]) {
-                      setFilters((prev) => ({
-                        ...prev,
-                        priceRange: [prev.priceRange[0], newMax],
-                      }));
-                    }
-                  }}
-                  className="absolute w-full h-2 bg-transparent rounded-lg appearance-none cursor-pointer"
-                  style={{
-                    zIndex: 1,
-                    background: `linear-gradient(to right, transparent ${(filters.priceRange[1] - minPrice) / (maxPrice - minPrice) * 100}%, #e5e7eb ${(filters.priceRange[1] - minPrice) / (maxPrice - minPrice) * 100}%)`,
-                  }}
-                />
-                <div className="relative h-2 bg-gray-200 rounded-lg">
-                  <div
-                    className="absolute h-2 bg-blue-600 rounded-lg"
-                    style={{
-                      left: `${(filters.priceRange[0] - minPrice) / (maxPrice - minPrice) * 100}%`,
-                      width: `${(filters.priceRange[1] - filters.priceRange[0]) / (maxPrice - minPrice) * 100}%`,
-                    }}
-                  />
-                </div>
-              </div>
-              <div className="flex justify-between mt-2 text-gray-600 text-xs sm:text-sm">
-                <span>₹{filters.priceRange[0].toLocaleString()}</span>
-                <span>₹{filters.priceRange[1].toLocaleString()}</span>
-              </div>
-            </div>
+            
 
             {/* Number of Passengers */}
             <div className="mb-4 sm:mb-6">
