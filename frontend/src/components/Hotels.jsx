@@ -281,10 +281,10 @@ export default function Hotels() {
   };
 
   return (
-    <section className="relative w-full">
+    <section className="w-full">
 
       {/* Background Image */}
-      <div className="relative inset-0 hidden lg:block -z-10">
+      <div className="absolute inset-0 lg:block -z-10">
         <img
           src="/images/Heroimg.jpg"
           alt="Hotel background"
@@ -295,7 +295,7 @@ export default function Hotels() {
       {/* Hero Content */}
       <div className="relative max-w-7xl mx-auto px-6 py-16 lg:py-24 mt-16">
         <h1 className="text-4xl lg:text-6xl font-bold text-white mb-8">
-          Find the best hotel deals
+          <b>Find the best hotel deals</b>
         </h1>
 
         {/* Search Form */}
