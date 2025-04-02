@@ -22,7 +22,7 @@ const FlightCards = ({
   const [visibleFlights, setVisibleFlights] = useState(6);
   const location = useLocation();
   const navigate = useNavigate();
-  const searchParams = location.state || {}; // Get searchParams from location
+  const searchParams = location.state || {};
 
   const toggleFlightDetails = (flightId) => {
     setExpandedFlightId(expandedFlightId === flightId ? null : flightId);
@@ -95,7 +95,10 @@ const FlightCards = ({
                     )}
                   </div>
                   <button
-                    onClick={() => toggleFavorite(flight.id)}
+                    onClick={() => {
+                      console.log("Toggling favorite for flight:", flight.id, "Current isFavorite:", flight.isFavorite); // Debug
+                      toggleFavorite(flight.id);
+                    }}
                     className="text-gray-400 hover:text-red-500 cursor-pointer transition-colors"
                   >
                     <FaHeart
@@ -105,7 +108,7 @@ const FlightCards = ({
                   </button>
                 </div>
 
-                {/* Main Flight Info */}
+                {/* Main Flight Info (Outbound) */}
                 {tripType === "multicity" && flight.multiCityFlights ? (
                   flight.multiCityFlights.map((leg, index) => (
                     <div
@@ -160,7 +163,7 @@ const FlightCards = ({
                         </div>
                         {index === flight.multiCityFlights.length - 1 && (
                           <div className="text-right">
-                            <p className="text-2xl cursor-pointer font-bold text-blue-600">
+                            <p className="text-2xl font-bold text-blue-600">
                               ₹{flight.price.toLocaleString()}
                             </p>
                             <button
@@ -241,7 +244,7 @@ const FlightCards = ({
                     <div className="flex flex-col md:flex-row gap-6">
                       <div className="md:w-1/5 flex items-center space-x-3">
                         <img
-                          src={flight.returnFlight.logo}
+                          src={flight.returnFlight.logo || flight.logo} // Fallback to outbound logo if missing
                           alt={flight.returnFlight.airline}
                           className="h-8 w-8 object-contain"
                         />
@@ -256,7 +259,7 @@ const FlightCards = ({
                       <div className="md:w-2/5 flex items-center justify-between">
                         <div className="text-center">
                           <p className="text-lg font-bold">
-                            {flight.returnFlight.departureTime}
+                            {flight.returnFlight.departureTime || "N/A"}
                           </p>
                           <p className="text-sm">
                             {flight.returnFlight.departure || "N/A"}
@@ -264,7 +267,7 @@ const FlightCards = ({
                         </div>
                         <div className="flex flex-col items-center justify-center px-4">
                           <div className="text-xs text-gray-500">
-                            {flight.returnFlight.duration}
+                            {flight.returnFlight.duration || flight.duration} {/* Fallback */}
                           </div>
                           <div className="w-24 md:w-32 h-px bg-gray-300 relative my-2">
                             {flight.returnFlight.stops > 0 && (
@@ -279,7 +282,7 @@ const FlightCards = ({
                         </div>
                         <div className="text-center">
                           <p className="text-lg font-bold">
-                            {flight.returnFlight.arrivalTime}
+                            {flight.returnFlight.arrivalTime || "N/A"}
                           </p>
                           <p className="text-sm">
                             {flight.returnFlight.arrival || "N/A"}
@@ -291,7 +294,7 @@ const FlightCards = ({
                           <p className="text-sm text-gray-500">{flight.cabinClass}</p>
                           {flight.returnFlight.stops > 0 && (
                             <p className="text-xs text-gray-500">
-                              via {flight.returnFlight.stopCities.join(", ")}
+                              via {flight.returnFlight.stopCities?.join(", ") || "N/A"}
                             </p>
                           )}
                         </div>
@@ -336,8 +339,7 @@ const FlightCards = ({
                                       {leg.departureDate || "N/A"}
                                     </p>
                                     <p className="text-sm text-gray-500">
-                                      {leg.airline} • {leg.airlineCode}
-                                      {leg.flightNumber}
+                                      {leg.airline} • {leg.airlineCode}{leg.flightNumber}
                                     </p>
                                   </div>
                                   <div className="text-right">
@@ -349,8 +351,7 @@ const FlightCards = ({
                                 {leg.stops > 0 && (
                                   <div className="bg-gray-200 p-2 rounded-lg mb-4">
                                     <p className="text-sm text-gray-600">
-                                      Layover in {leg.stopCities.join(", ") || "N/A"} • Approx. 2h
-                                      30m
+                                      Layover in {leg.stopCities.join(", ") || "N/A"} • Approx. 2h 30m
                                     </p>
                                   </div>
                                 )}
@@ -363,8 +364,7 @@ const FlightCards = ({
                                       {leg.departureDate || "N/A"}
                                     </p>
                                     <p className="text-sm text-gray-500">
-                                      {leg.airline} • {leg.airlineCode}
-                                      {leg.flightNumber}
+                                      {leg.airline} • {leg.airlineCode}{leg.flightNumber}
                                     </p>
                                   </div>
                                 </div>
@@ -386,15 +386,13 @@ const FlightCards = ({
                                 <div className="flex justify-between mb-4">
                                   <div>
                                     <p className="font-medium">
-                                      {flight.departureTime || "N/A"} •{" "}
-                                      {flight.departure || "N/A"}
+                                      {flight.departureTime || "N/A"} • {flight.departure || "N/A"}
                                     </p>
                                     <p className="text-sm text-gray-500">
                                       {flight.departureDate || "N/A"}
                                     </p>
                                     <p className="text-sm text-gray-500">
-                                      {flight.airline} • {flight.airlineCode}
-                                      {flight.flightNumber}
+                                      {flight.airline} • {flight.airlineCode}{flight.flightNumber}
                                     </p>
                                   </div>
                                   <div className="text-right">
@@ -406,8 +404,7 @@ const FlightCards = ({
                                 {flight.stops > 0 && (
                                   <div className="bg-gray-200 p-2 rounded-lg mb-4">
                                     <p className="text-sm text-gray-600">
-                                      Layover in {flight.stopCities.join(", ") || "N/A"} • Approx.
-                                      2h 30m
+                                      Layover in {flight.stopCities.join(", ") || "N/A"} • Approx. 2h 30m
                                     </p>
                                   </div>
                                 )}
@@ -420,8 +417,7 @@ const FlightCards = ({
                                       {flight.departureDate || "N/A"}
                                     </p>
                                     <p className="text-sm text-gray-500">
-                                      {flight.airline} • {flight.airlineCode}
-                                      {flight.flightNumber}
+                                      {flight.airline} • {flight.airlineCode}{flight.flightNumber}
                                     </p>
                                   </div>
                                 </div>
@@ -449,8 +445,7 @@ const FlightCards = ({
                                       </p>
                                       <p className="text-sm text-gray-500">
                                         {flight.returnFlight.airline} •{" "}
-                                        {flight.returnFlight.airlineCode}
-                                        {flight.returnFlight.flightNumber}
+                                        {flight.returnFlight.airlineCode}{flight.returnFlight.flightNumber}
                                       </p>
                                     </div>
                                     <div className="text-right">
@@ -462,9 +457,7 @@ const FlightCards = ({
                                   {flight.returnFlight.stops > 0 && (
                                     <div className="bg-gray-200 p-2 rounded-lg mb-4">
                                       <p className="text-sm text-gray-600">
-                                        Layover in{" "}
-                                        {flight.returnFlight.stopCities.join(", ") || "N/A"} •
-                                        Approx. 2h 30m
+                                        Layover in {flight.returnFlight.stopCities?.join(", ") || "N/A"} • Approx. 2h 30m
                                       </p>
                                     </div>
                                   )}
@@ -479,8 +472,7 @@ const FlightCards = ({
                                       </p>
                                       <p className="text-sm text-gray-500">
                                         {flight.returnFlight.airline} •{" "}
-                                        {flight.returnFlight.airlineCode}
-                                        {flight.returnFlight.flightNumber}
+                                        {flight.returnFlight.airlineCode}{flight.returnFlight.flightNumber}
                                       </p>
                                     </div>
                                   </div>
@@ -531,8 +523,7 @@ const FlightCards = ({
                                 <div className="flex items-center gap-2">
                                   <FaCalendarAlt className="text-blue-600" />
                                   <p className="text-sm">
-                                    Return Date:{" "}
-                                    {flight.returnFlight?.departureDate || returnDate || "N/A"}
+                                    Return Date: {flight.returnFlight?.departureDate || returnDate || "N/A"}
                                   </p>
                                 </div>
                               )}
