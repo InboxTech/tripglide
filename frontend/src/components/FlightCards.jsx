@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   FaHeart,
   FaExchangeAlt,
@@ -19,6 +20,9 @@ const FlightCards = ({
   toggleFavorite,
 }) => {
   const [visibleFlights, setVisibleFlights] = useState(6);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const searchParams = location.state || {}; // Get searchParams from location
 
   const toggleFlightDetails = (flightId) => {
     setExpandedFlightId(expandedFlightId === flightId ? null : flightId);
@@ -28,6 +32,10 @@ const FlightCards = ({
     setVisibleFlights(filteredFlights.length);
   };
 
+  const handleSelectFlight = (flight) => {
+    navigate("/flight-cart", { state: { selectedFlight: flight, searchParams } });
+  };
+
   return (
     <div className="flex-1">
       {/* Sort Options */}
@@ -35,7 +43,7 @@ const FlightCards = ({
         {["best", "cheapest", "fastest"].map((filter) => (
           <button
             key={filter}
-            className={`px-4 py-2 rounded-lg ${
+            className={`px-4 py-2 cursor-pointer rounded-lg ${
               selectedFilter === filter
                 ? "bg-blue-600 text-white"
                 : "bg-gray-100 hover:bg-gray-200"
@@ -155,7 +163,10 @@ const FlightCards = ({
                             <p className="text-2xl cursor-pointer font-bold text-blue-600">
                               ₹{flight.price.toLocaleString()}
                             </p>
-                            <button className="mt-2 bg-blue-600 text-white cursor-pointer px-6 py-2 rounded-lg hover:bg-blue-700 transition">
+                            <button
+                              onClick={() => handleSelectFlight(flight)}
+                              className="mt-2 bg-blue-600 text-white cursor-pointer px-6 py-2 rounded-lg hover:bg-blue-700 transition"
+                            >
                               Select
                             </button>
                           </div>
@@ -213,7 +224,10 @@ const FlightCards = ({
                         <p className="text-2xl font-bold text-blue-600">
                           ₹{flight.price.toLocaleString()}
                         </p>
-                        <button className="mt-2 bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">
+                        <button
+                          onClick={() => handleSelectFlight(flight)}
+                          className="mt-2 bg-blue-600 text-white cursor-pointer px-6 py-2 rounded-lg hover:bg-blue-700 transition"
+                        >
                           Select
                         </button>
                       </div>
@@ -289,7 +303,7 @@ const FlightCards = ({
                 {/* Flight Details Toggle */}
                 <div className="mt-4 pt-4 border-t border-gray-200">
                   <button
-                    className="text-blue-600 text-sm flex items-center"
+                    className="text-blue-600 text-sm cursor-pointer flex items-center"
                     onClick={() => toggleFlightDetails(flight.id)}
                   >
                     <FaExchangeAlt className="mr-2" />

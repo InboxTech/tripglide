@@ -133,7 +133,7 @@ export default function Header({ user, handleLogout }) {
                   <Link to="/regional-settings" className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 transition">
                     <FaFlag /> Regional settings
                   </Link>
-                  <Link to="/" className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 transition">
+                  <Link to="/hotels" className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 transition">
                     <FaSearchLocation className="text-[#0c828b]" /> Explore everywhere
                   </Link>
                   <Link to="/help" className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 transition">

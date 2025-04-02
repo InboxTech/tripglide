@@ -21,6 +21,7 @@ import FlightFilters from "./components/FlightFilters";
 import FlightCards from "./components/FlightCards";
 import FlightSearchFormPopup from "./components/FlightSearchFormPopup";
 import FlightData from "./components/FlightData";
+import FlightCart from "./components/FlightCart";
 
 function App() {
   // Initialize user state from localStorage
@@ -115,6 +116,7 @@ function App() {
           />
           <Route path="/carhire" element={<CarHire />} />
           {/* Replace FlightCardList with FlightData */}
+          <Route path="/flight-cart" element={<FlightCart />} />
           <Route path="/search-results" element={<FlightData />} />
           <Route path="/" element={<SearchSection />} />
           <Route path="/features" element={<FeaturesSection />} />

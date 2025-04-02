@@ -58,7 +58,7 @@ export default function Footer() {
               <h3 className="text-base font-bold text-gray-400 mb-2">
                 Discover
               </h3>
-              <a href="/" className="hover:underline">Explore</a>
+              <a href="/hotels" className="hover:underline">Explore</a>
               {/* <a href="https://inboxtechs.com/" target="_blank" className="hover:underline">Company</a> */}
               {/* <a href="#" className="hover:underline">Partners</a> */}
               <a href="/" className="hover:underline">Trips</a>

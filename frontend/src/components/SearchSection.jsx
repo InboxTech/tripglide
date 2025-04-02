@@ -759,9 +759,9 @@ export default function SearchSection() {
               <label className="flex items-center cursor-pointer">
                 <input type="checkbox" className="mr-2" /> Add nearby airports
               </label>
-              <label className="flex items-center cursor-pointer">
+              {/* <label className="flex items-center cursor-pointer">
                 <input type="checkbox" className="mr-2" /> Direct flights only
-              </label>
+              </label> */}
               <label className="flex items-center cursor-pointer">
                 <input type="checkbox" className="mr-2" /> Flexible Tickets
               </label>
