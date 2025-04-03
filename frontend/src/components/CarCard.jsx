@@ -4,6 +4,7 @@ import axios from "axios";
 
 const CarCard = () => {
   const [cars, setCars] = useState([]);
+  const [activeMake, setActiveMake] = useState("Ford");
 
   // Fetch data from backend
   useEffect(() => {
@@ -53,8 +54,33 @@ const CarCard = () => {
     console.log(`View deals for car ID: ${carId}`);
   };
 
+  // Filter cars by active make
+  const filteredCars = cars.filter(car => 
+    activeMake === "Ford" || car.carMake === activeMake
+  );
+
+  // Tabs array
+  const makes = ["Volkswagen", "Toyota", "Ford", "Honda", "Hyundai"];
+
   return (
     <>
+      {/* Tabs Section */}
+      <div className="flex flex-wrap gap-2 sm:gap-4 mb-4 sm:mb-6">
+        {makes.map(make => (
+          <button
+            key={make}
+            onClick={() => setActiveMake(make)}
+            className={`px-3 py-2 sm:px-4 sm:py-2 rounded-lg text-sm sm:text-base font-semibold transition-colors ${
+              activeMake === make
+                ? "bg-blue-600 text-white"
+                : "bg-gray-200 text-gray-800 hover:bg-gray-300"
+            }`}
+          >
+            {make}
+          </button>
+        ))}
+      </div>
+
       {cars.length > 0 ? (
         cars.map(car => (
           <div
