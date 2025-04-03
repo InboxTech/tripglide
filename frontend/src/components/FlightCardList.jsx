@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import Header from "./Header";
 import Footer from "./Footer";
-import { FaSearch, FaPlane, FaClock, FaExchangeAlt, FaFilter, FaStar, FaRegStar, FaPlaneDeparture, FaPlaneArrival, FaCalendarAlt } from "react-icons/fa";
+import { FaSearch, FaPlane, FaClock, FaExchangeAlt, FaFilter, FaStar, FaRegStar, FaPlaneDeparture, FaPlaneArrival, FaCalendarAlt, FaHeart } from "react-icons/fa";
 import SearchFormPopup from "./SearchFormPopUp";
 
 const FlightCardList = () => {
@@ -11,7 +11,7 @@ const FlightCardList = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   
   // State for search form
-  const [tripType, setTripType] = useState(searchParams.tripType || "return");
+  const [tripType, setTripType] = useState(searchParams.tripType || "multicity");
   const [from, setFrom] = useState(searchParams.from || "");
   const [to, setTo] = useState(searchParams.to || "");
   const [departDate, setDepartDate] = useState(searchParams.departDate || "");
@@ -19,19 +19,18 @@ const FlightCardList = () => {
   const [cabinClass, setCabinClass] = useState(searchParams.cabinClass || "Economy");
   const [multiCityFlights, setMultiCityFlights] = useState(
     searchParams.multiCityFlights || [
-      { id: 1, from: "", to: "", depart: "" },
-      { id: 2, from: "", to: "", depart: "" }
+      { id: 1, from: "New Delhi", to: "London", depart: "2025-04-15" },
+      { id: 2, from: "London", to: "Dubai", depart: "2025-04-18" }
     ]
   );
   
   // Mock airports data
-  const departureAirports = ["New Delhi", "Mumbai", "Bengaluru", "Chennai"];
-  const arrivalAirports = ["London", "New York", "Dubai", "Singapore"];
+  const departureAirports = ["New Delhi", "Mumbai", "Bengaluru", "Chennai", "London", "Dubai"];
+  const arrivalAirports = ["London", "New York", "Dubai", "Singapore", "New Delhi", "Mumbai"];
 
-  // Mock flight data
-  const [allFlights, setAllFlights] = useState([
+  // Mock flight data for generating additional legs dynamically
+  const mockFlightData = [
     {
-      id: 1,
       airline: "Air India",
       airlineCode: "AI",
       flightNumber: "AI302",
@@ -40,34 +39,20 @@ const FlightCardList = () => {
       duration: "3h 10m",
       stops: 0,
       stopCities: [],
-      price: 42999,
-      departure: from || "New Delhi",
-      arrival: to || "London",
-      departureDate: departDate || "2025-04-15",
-      returnDate: returnDate || "2025-04-22",
-      cabinClass: cabinClass || "Economy",
-      logo: "https://i.pinimg.com/736x/dd/f1/ce/ddf1ceee59fd228201084a162cbfb48c.jpg"
+      logo: "https://i.pinimg.com/736x/dd/f1/ce/ddf1ceee59fd228201084a162cbfb48c.jpg",
     },
     {
-      id: 2,
       airline: "Emirates",
       airlineCode: "EK",
       flightNumber: "EK517",
       departureTime: "09:40",
-      arrivalTime: "15:30",
-      duration: "5h 50m",
-      stops: 1,
-      stopCities: ["Dubai"],
-      price: 38750,
-      departure: from || "Mumbai",
-      arrival: to || "London",
-      departureDate: departDate || "2025-04-15",
-      returnDate: returnDate || "2025-04-22",
-      cabinClass: cabinClass || "Economy",
-      logo: "https://i.pinimg.com/474x/4e/28/37/4e28374b3286209b1a7da455983a8f51.jpg"
+      arrivalTime: "12:30",
+      duration: "2h 50m",
+      stops: 0,
+      stopCities: [],
+      logo: "https://i.pinimg.com/474x/4e/28/37/4e28374b3286209b1a7da455983a8f51.jpg",
     },
     {
-      id: 3,
       airline: "Vistara",
       airlineCode: "UK",
       flightNumber: "UK121",
@@ -76,34 +61,20 @@ const FlightCardList = () => {
       duration: "5h 35m",
       stops: 0,
       stopCities: [],
-      price: 51200,
-      departure: from || "New Delhi",
-      arrival: to || "London",
-      departureDate: departDate || "2025-04-15",
-      returnDate: returnDate || "2025-04-22",
-      cabinClass: cabinClass || "Economy",
-      logo: "https://i.pinimg.com/736x/2f/da/8f/2fda8fe96633703535e7f47fd663c290.jpg"
+      logo: "https://i.pinimg.com/736x/2f/da/8f/2fda8fe96633703535e7f47fd663c290.jpg",
     },
     {
-      id: 4,
-      airline: "Lufthansa",
-      airlineCode: "LH",
-      flightNumber: "LH761",
-      departureTime: "13:25",
-      arrivalTime: "22:15",
-      duration: "8h 50m",
+      airline: "Qatar Airways",
+      airlineCode: "QR",
+      flightNumber: "QR507",
+      departureTime: "03:55",
+      arrivalTime: "09:40",
+      duration: "5h 45m",
       stops: 1,
-      stopCities: ["Frankfurt"],
-      price: 45600,
-      departure: from || "Mumbai",
-      arrival: to || "London",
-      departureDate: departDate || "2025-04-15",
-      returnDate: returnDate || "2025-04-22",
-      cabinClass: cabinClass || "Economy",
-      logo: "https://i.pinimg.com/474x/ba/2d/6b/ba2d6bce884e16fdcac6b29de17eca17.jpg"
+      stopCities: ["Doha"],
+      logo: "https://i.pinimg.com/474x/49/b6/4a/49b64a7c09c9732c2ed8e54eb25a136f.jpg",
     },
     {
-      id: 5,
       airline: "British Airways",
       airlineCode: "BA",
       flightNumber: "BA142",
@@ -112,67 +83,285 @@ const FlightCardList = () => {
       duration: "5h 20m",
       stops: 0,
       stopCities: [],
-      price: 49900,
-      departure: from || "New Delhi",
-      arrival: to || "London",
-      departureDate: departDate || "2025-04-15",
-      returnDate: returnDate || "2025-04-22",
-      cabinClass: cabinClass || "Economy",
-      logo: "https://i.pinimg.com/474x/1a/d0/30/1ad0301a1e8e2cfc8a465d40dfc119d8.jpg"
+      logo: "https://i.pinimg.com/474x/1a/d0/30/1ad0301a1e8e2cfc8a465d40dfc119d8.jpg",
     },
     {
-      id: 6,
-      airline: "Qatar Airways",
-      airlineCode: "QR",
-      flightNumber: "QR507",
-      departureTime: "03:55",
-      arrivalTime: "12:40",
-      duration: "8h 45m",
-      stops: 1,
-      stopCities: ["Doha"],
-      price: 41200,
-      departure: from || "Mumbai",
-      arrival: to || "London",
-      departureDate: departDate || "2025-04-15",
-      returnDate: returnDate || "2025-04-22",
-      cabinClass: cabinClass || "Economy",
-      logo: "https://i.pinimg.com/474x/49/b6/4a/49b64a7c09c9732c2ed8e54eb25a136f.jpg"
+      airline: "Lufthansa",
+      airlineCode: "LH",
+      flightNumber: "LH761",
+      departureTime: "13:25",
+      arrivalTime: "16:15",
+      duration: "2h 50m",
+      stops: 0,
+      stopCities: [],
+      logo: "https://i.pinimg.com/474x/ba/2d/6b/ba2d6bce884e16fdcac6b29de17eca17.jpg",
     },
     {
-      id: 7,
-      airline: "IndiGo",
-      airlineCode: "6E",
-      flightNumber: "6E11",
-      departureTime: "01:15",
-      arrivalTime: "09:45",
-      duration: "8h 30m",
-      stops: 1,
-      stopCities: ["Istanbul"],
-      price: 36500,
-      departure: from || "Delhi",
-      arrival: to || "London",
-      departureDate: departDate || "2025-04-15",
-      returnDate: returnDate || "2025-04-22",
-      cabinClass: cabinClass || "Economy",
-      logo: "https://i.pinimg.com/474x/56/f2/3c/56f23c6ea0edbf642fce2682664b51d6.jpg"
-    },
-    {
-      id: 8,
       airline: "Etihad Airways",
       airlineCode: "EY",
       flightNumber: "EY204",
       departureTime: "21:05",
-      arrivalTime: "06:45",
-      duration: "9h 40m",
+      arrivalTime: "23:45",
+      duration: "2h 40m",
+      stops: 0,
+      stopCities: [],
+      logo: "https://i.pinimg.com/474x/91/37/09/913709c8027990ce9831efa1dd44f07c.jpg",
+    }
+  ];
+
+  // Initial flight data with consistent structure for all trip types
+  const [allFlights, setAllFlights] = useState([
+    {
+      id: 1,
+      price: 42999,
+      departureDate: "2025-04-15",
+      cabinClass: "Economy",
+      isFavorite: false,
+      // For oneway/return
+      airline: "Air India",
+      airlineCode: "AI",
+      flightNumber: "AI302",
+      departureTime: "06:15",
+      arrivalTime: "09:25",
+      duration: "3h 10m",
+      stops: 0,
+      stopCities: [],
+      departure: "New Delhi",
+      arrival: "London",
+      logo: "https://i.pinimg.com/736x/dd/f1/ce/ddf1ceee59fd228201084a162cbfb48c.jpg",
+      returnFlight: {
+        airline: "Emirates",
+        airlineCode: "EK",
+        flightNumber: "EK517",
+        departureTime: "09:40",
+        arrivalTime: "12:30",
+        duration: "2h 50m",
+        stops: 0,
+        stopCities: [],
+        departure: "London",
+        arrival: "New Delhi",
+        logo: "https://i.pinimg.com/474x/4e/28/37/4e28374b3286209b1a7da455983a8f51.jpg",
+      },
+      // For multicity
+      multiCityFlights: [
+        {
+          airline: "Air India",
+          airlineCode: "AI",
+          flightNumber: "AI302",
+          departureTime: "06:15",
+          arrivalTime: "09:25",
+          duration: "3h 10m",
+          stops: 0,
+          stopCities: [],
+          departure: multiCityFlights[0]?.from || "New Delhi",
+          arrival: multiCityFlights[0]?.to || "London",
+          departureDate: multiCityFlights[0]?.depart || "2025-04-15",
+          logo: "https://i.pinimg.com/736x/dd/f1/ce/ddf1ceee59fd228201084a162cbfb48c.jpg",
+        },
+        {
+          airline: "Emirates",
+          airlineCode: "EK",
+          flightNumber: "EK517",
+          departureTime: "09:40",
+          arrivalTime: "12:30",
+          duration: "2h 50m",
+          stops: 0,
+          stopCities: [],
+          departure: multiCityFlights[1]?.from || "London",
+          arrival: multiCityFlights[1]?.to || "Dubai",
+          departureDate: multiCityFlights[1]?.depart || "2025-04-18",
+          logo: "https://i.pinimg.com/474x/4e/28/37/4e28374b3286209b1a7da455983a8f51.jpg",
+        }
+      ]
+    },
+    {
+      id: 2,
+      price: 38750,
+      departureDate: "2025-04-15",
+      cabinClass: "Economy",
+      isFavorite: false,
+      // For oneway/return
+      airline: "Vistara",
+      airlineCode: "UK",
+      flightNumber: "UK121",
+      departureTime: "02:10",
+      arrivalTime: "07:45",
+      duration: "5h 35m",
+      stops: 0,
+      stopCities: [],
+      departure: "New Delhi",
+      arrival: "London",
+      logo: "https://i.pinimg.com/736x/2f/da/8f/2fda8fe96633703535e7f47fd663c290.jpg",
+      returnFlight: {
+        airline: "Qatar Airways",
+        airlineCode: "QR",
+        flightNumber: "QR507",
+        departureTime: "03:55",
+        arrivalTime: "09:40",
+        duration: "5h 45m",
+        stops: 1,
+        stopCities: ["Doha"],
+        departure: "London",
+        arrival: "New Delhi",
+        logo: "https://i.pinimg.com/474x/49/b6/4a/49b64a7c09c9732c2ed8e54eb25a136f.jpg",
+      },
+      // For multicity
+      multiCityFlights: [
+        {
+          airline: "Vistara",
+          airlineCode: "UK",
+          flightNumber: "UK121",
+          departureTime: "02:10",
+          arrivalTime: "07:45",
+          duration: "5h 35m",
+          stops: 0,
+          stopCities: [],
+          departure: multiCityFlights[0]?.from || "New Delhi",
+          arrival: multiCityFlights[0]?.to || "London",
+          departureDate: multiCityFlights[0]?.depart || "2025-04-15",
+          logo: "https://i.pinimg.com/736x/2f/da/8f/2fda8fe96633703535e7f47fd663c290.jpg",
+        },
+        {
+          airline: "Qatar Airways",
+          airlineCode: "QR",
+          flightNumber: "QR507",
+          departureTime: "03:55",
+          arrivalTime: "09:40",
+          duration: "5h 45m",
+          stops: 1,
+          stopCities: ["Doha"],
+          departure: multiCityFlights[1]?.from || "London",
+          arrival: multiCityFlights[1]?.to || "Dubai",
+          departureDate: multiCityFlights[1]?.depart || "2025-04-18",
+          logo: "https://i.pinimg.com/474x/49/b6/4a/49b64a7c09c9732c2ed8e54eb25a136f.jpg",
+        }
+      ]
+    },
+    {
+      id: 3,
+      price: 51200,
+      departureDate: "2025-04-15",
+      cabinClass: "Economy",
+      isFavorite: false,
+      // For oneway/return
+      airline: "British Airways",
+      airlineCode: "BA",
+      flightNumber: "BA142",
+      departureTime: "11:05",
+      arrivalTime: "16:25",
+      duration: "5h 20m",
+      stops: 0,
+      stopCities: [],
+      departure: "New Delhi",
+      arrival: "London",
+      logo: "https://i.pinimg.com/474x/1a/d0/30/1ad0301a1e8e2cfc8a465d40dfc119d8.jpg",
+      returnFlight: {
+        airline: "Lufthansa",
+        airlineCode: "LH",
+        flightNumber: "LH761",
+        departureTime: "13:25",
+        arrivalTime: "16:15",
+        duration: "2h 50m",
+        stops: 0,
+        stopCities: [],
+        departure: "London",
+        arrival: "New Delhi",
+        logo: "https://i.pinimg.com/474x/ba/2d/6b/ba2d6bce884e16fdcac6b29de17eca17.jpg",
+      },
+      // For multicity
+      multiCityFlights: [
+        {
+          airline: "British Airways",
+          airlineCode: "BA",
+          flightNumber: "BA142",
+          departureTime: "11:05",
+          arrivalTime: "16:25",
+          duration: "5h 20m",
+          stops: 0,
+          stopCities: [],
+          departure: multiCityFlights[0]?.from || "New Delhi",
+          arrival: multiCityFlights[0]?.to || "London",
+          departureDate: multiCityFlights[0]?.depart || "2025-04-15",
+          logo: "https://i.pinimg.com/474x/1a/d0/30/1ad0301a1e8e2cfc8a465d40dfc119d8.jpg",
+        },
+        {
+          airline: "Lufthansa",
+          airlineCode: "LH",
+          flightNumber: "LH761",
+          departureTime: "13:25",
+          arrivalTime: "16:15",
+          duration: "2h 50m",
+          stops: 0,
+          stopCities: [],
+          departure: multiCityFlights[1]?.from || "London",
+          arrival: multiCityFlights[1]?.to || "Dubai",
+          departureDate: multiCityFlights[1]?.depart || "2025-04-18",
+          logo: "https://i.pinimg.com/474x/ba/2d/6b/ba2d6bce884e16fdcac6b29de17eca17.jpg",
+        }
+      ]
+    },
+    {
+      id: 4,
+      price: 45600,
+      departureDate: "2025-04-15",
+      cabinClass: "Economy",
+      isFavorite: false,
+      // For oneway/return
+      airline: "Lufthansa",
+      airlineCode: "LH",
+      flightNumber: "LH761",
+      departureTime: "13:25",
+      arrivalTime: "22:15",
+      duration: "8h 50m",
       stops: 1,
-      stopCities: ["Abu Dhabi"],
-      price: 39800,
-      departure: from || "Mumbai",
-      arrival: to || "London",
-      departureDate: departDate || "2025-04-15",
-      returnDate: returnDate || "2025-04-22",
-      cabinClass: cabinClass || "Economy",
-      logo: "https://i.pinimg.com/474x/91/37/09/913709c8027990ce9831efa1dd44f07c.jpg"
+      stopCities: ["Frankfurt"],
+      departure: "New Delhi",
+      arrival: "London",
+      logo: "https://i.pinimg.com/474x/ba/2d/6b/ba2d6bce884e16fdcac6b29de17eca17.jpg",
+      returnFlight: {
+        airline: "Etihad Airways",
+        airlineCode: "EY",
+        flightNumber: "EY204",
+        departureTime: "21:05",
+        arrivalTime: "23:45",
+        duration: "2h 40m",
+        stops: 0,
+        stopCities: [],
+        departure: "London",
+        arrival: "New Delhi",
+        logo: "https://i.pinimg.com/474x/91/37/09/913709c8027990ce9831efa1dd44f07c.jpg",
+      },
+      // For multicity
+      multiCityFlights: [
+        {
+          airline: "Lufthansa",
+          airlineCode: "LH",
+          flightNumber: "LH761",
+          departureTime: "13:25",
+          arrivalTime: "22:15",
+          duration: "8h 50m",
+          stops: 1,
+          stopCities: ["Frankfurt"],
+          departure: multiCityFlights[0]?.from || "New Delhi",
+          arrival: multiCityFlights[0]?.to || "London",
+          departureDate: multiCityFlights[0]?.depart || "2025-04-15",
+          logo: "https://i.pinimg.com/474x/ba/2d/6b/ba2d6bce884e16fdcac6b29de17eca17.jpg",
+        },
+        {
+          airline: "Etihad Airways",
+          airlineCode: "EY",
+          flightNumber: "EY204",
+          departureTime: "21:05",
+          arrivalTime: "23:45",
+          duration: "2h 40m",
+          stops: 0,
+          stopCities: [],
+          departure: multiCityFlights[1]?.from || "London",
+          arrival: multiCityFlights[1]?.to || "Dubai",
+          departureDate: multiCityFlights[1]?.depart || "2025-04-18",
+          logo: "https://i.pinimg.com/474x/91/37/09/913709c8027990ce9831efa1dd44f07c.jpg",
+        }
+      ]
     }
   ]);
 
@@ -184,39 +373,137 @@ const FlightCardList = () => {
   const [airlinesFilter, setAirlinesFilter] = useState([]);
   const [filteredFlights, setFilteredFlights] = useState([]);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [expandedFlightId, setExpandedFlightId] = useState(null); // State to track expanded flight details
+  const [expandedFlightId, setExpandedFlightId] = useState(null);
+
+  // Function to generate a new flight leg dynamically
+  const generateFlightLeg = (index, searchLeg) => {
+    const flightIndex = index % mockFlightData.length; // Cycle through mock data
+    const flightData = mockFlightData[flightIndex];
+    return {
+      ...flightData,
+      departure: searchLeg.from || "",
+      arrival: searchLeg.to || "",
+      departureDate: searchLeg.depart || "",
+    };
+  };
 
   // Update flights when search params change
   useEffect(() => {
-    console.log("Search params updated:", { from, to, departDate, returnDate, cabinClass });
+    console.log("Search params updated:", { tripType, multiCityFlights, cabinClass });
     
-    const updatedFlights = allFlights.map(flight => ({
-      ...flight,
-      departure: from || flight.departure,
-      arrival: to || flight.arrival,
-      departureDate: departDate || flight.departureDate,
-      returnDate: returnDate || flight.returnDate,
-      cabinClass: cabinClass || flight.cabinClass
-    }));
+    const updatedFlights = allFlights.map(flight => {
+      if (tripType === "multicity") {
+        // Ensure the number of legs matches the search form's multiCityFlights
+        const updatedMultiCityFlights = multiCityFlights.map((searchLeg, index) => {
+          const existingLeg = flight.multiCityFlights[index];
+          if (existingLeg) {
+            return {
+              ...existingLeg,
+              departure: searchLeg.from || existingLeg.departure,
+              arrival: searchLeg.to || existingLeg.arrival,
+              departureDate: searchLeg.depart || existingLeg.departureDate,
+            };
+          } else {
+            // Generate a new leg if it doesn't exist
+            return generateFlightLeg(index, searchLeg);
+          }
+        });
+
+        return {
+          ...flight,
+          multiCityFlights: updatedMultiCityFlights,
+          departureDate: multiCityFlights[0]?.depart || flight.departureDate,
+          cabinClass: cabinClass || flight.cabinClass,
+        };
+      } else if (tripType === "return") {
+        return {
+          ...flight,
+          departure: from || flight.departure,
+          arrival: to || flight.arrival,
+          departureDate: departDate || flight.departureDate,
+          returnDate: returnDate || flight.returnDate,
+          cabinClass: cabinClass || flight.cabinClass,
+          airline: flight.airline || flight.returnFlight?.airline,
+          airlineCode: flight.airlineCode || flight.returnFlight?.airlineCode,
+          flightNumber: flight.flightNumber || flight.returnFlight?.flightNumber,
+          departureTime: flight.departureTime || flight.returnFlight?.departureTime,
+          arrivalTime: flight.arrivalTime || flight.returnFlight?.arrivalTime,
+          duration: flight.duration || flight.returnFlight?.duration,
+          stops: flight.stops || flight.returnFlight?.stops || 0,
+          stopCities: flight.stopCities || flight.returnFlight?.stopCities || [],
+          logo: flight.logo || flight.returnFlight?.logo,
+          returnFlight: {
+            ...flight.returnFlight,
+            departure: to || flight.returnFlight.departure,
+            arrival: from || flight.returnFlight.arrival,
+            departureDate: returnDate || flight.returnFlight.departureDate,
+          }
+        };
+      } else {
+        return {
+          ...flight,
+          departure: from || flight.departure,
+          arrival: to || flight.arrival,
+          departureDate: departDate || flight.departureDate,
+          cabinClass: cabinClass || flight.cabinClass,
+          airline: flight.airline || mockFlightData[0].airline,
+          airlineCode: flight.airlineCode || mockFlightData[0].airlineCode,
+          flightNumber: flight.flightNumber || mockFlightData[0].flightNumber,
+          departureTime: flight.departureTime || mockFlightData[0].departureTime,
+          arrivalTime: flight.arrivalTime || mockFlightData[0].arrivalTime,
+          duration: flight.duration || mockFlightData[0].duration,
+          stops: flight.stops || mockFlightData[0].stops || 0,
+          stopCities: flight.stopCities || mockFlightData[0].stopCities || [],
+          logo: flight.logo || mockFlightData[0].logo,
+        };
+      }
+    });
     
     setAllFlights(updatedFlights);
-  }, [from, to, departDate, returnDate, cabinClass]);
+  }, [from, to, departDate, returnDate, cabinClass, tripType, multiCityFlights]);
 
   // Apply filters to flights
   useEffect(() => {
     let results = [...allFlights];
     
-    // Filter by departure and arrival cities
-    if (from && to) {
-      results = results.filter(flight => 
-        flight.departure.toLowerCase() === from.toLowerCase() && 
-        flight.arrival.toLowerCase() === to.toLowerCase()
-      );
-    }
+    if (tripType === "multicity") {
+      // Filter by multi-city legs
+      results = results.filter(flight => {
+        // Ensure the number of legs matches
+        if (flight.multiCityFlights.length !== multiCityFlights.length) {
+          return false; // Skip flights with mismatched leg counts
+        }
 
-    // Filter by departure date
-    if (departDate) {
-      results = results.filter(flight => flight.departureDate === departDate);
+        return flight.multiCityFlights.every((leg, index) => {
+          const searchLeg = multiCityFlights[index];
+          if (!searchLeg) return true; // Skip if no corresponding search leg
+
+          // Defensive checks for undefined departure/arrival
+          const legDeparture = leg.departure || "";
+          const legArrival = leg.arrival || "";
+          const searchFrom = searchLeg.from || "";
+          const searchTo = searchLeg.to || "";
+
+          return (
+            (!searchFrom || legDeparture.toLowerCase() === searchFrom.toLowerCase()) &&
+            (!searchTo || legArrival.toLowerCase() === searchTo.toLowerCase()) &&
+            (!searchLeg.depart || leg.departureDate === searchLeg.depart)
+          );
+        });
+      });
+    } else if (tripType === "return" || tripType === "oneway") {
+      // Filter by departure and arrival cities
+      if (from && to) {
+        results = results.filter(flight => 
+          (flight.departure || "").toLowerCase() === from.toLowerCase() && 
+          (flight.arrival || "").toLowerCase() === to.toLowerCase()
+        );
+      }
+
+      // Filter by departure date
+      if (departDate) {
+        results = results.filter(flight => flight.departureDate === departDate);
+      }
     }
 
     // Filter by cabin class
@@ -231,32 +518,51 @@ const FlightCardList = () => {
     
     // Stops filter
     if (stopFilter === "direct") {
-      results = results.filter(flight => flight.stops === 0);
+      results = results.filter(flight => 
+        tripType === "multicity" 
+          ? flight.multiCityFlights.every(leg => leg.stops === 0)
+          : flight.stops === 0
+      );
     } else if (stopFilter === "1stop") {
-      results = results.filter(flight => flight.stops === 1);
+      results = results.filter(flight => 
+        tripType === "multicity" 
+          ? flight.multiCityFlights.every(leg => leg.stops <= 1)
+          : flight.stops === 1
+      );
     }
     
     // Time filter
     if (timeFilter === "morning") {
       results = results.filter(flight => {
-        const hour = parseInt(flight.departureTime.split(':')[0]);
+        const firstLeg = tripType === "multicity" ? flight.multiCityFlights[0] : flight;
+        const departureTime = firstLeg?.departureTime || "00:00";
+        const hour = parseInt(departureTime.split(':')[0]);
         return hour >= 5 && hour < 12;
       });
     } else if (timeFilter === "afternoon") {
       results = results.filter(flight => {
-        const hour = parseInt(flight.departureTime.split(':')[0]);
+        const firstLeg = tripType === "multicity" ? flight.multiCityFlights[0] : flight;
+        const departureTime = firstLeg?.departureTime || "00:00";
+        const hour = parseInt(departureTime.split(':')[0]);
         return hour >= 12 && hour < 18;
       });
     } else if (timeFilter === "evening") {
       results = results.filter(flight => {
-        const hour = parseInt(flight.departureTime.split(':')[0]);
+        const firstLeg = tripType === "multicity" ? flight.multiCityFlights[0] : flight;
+        const departureTime = firstLeg?.departureTime || "00:00";
+        const hour = parseInt(departureTime.split(':')[0]);
         return hour >= 18 || hour < 5;
       });
     }
     
     // Airlines filter
     if (airlinesFilter.length > 0) {
-      results = results.filter(flight => airlinesFilter.includes(flight.airline));
+      results = results.filter(flight => {
+        if (tripType === "multicity") {
+          return flight.multiCityFlights.some(leg => airlinesFilter.includes(leg.airline));
+        }
+        return airlinesFilter.includes(flight.airline);
+      });
     }
     
     // Sort based on selected filter
@@ -264,20 +570,50 @@ const FlightCardList = () => {
       results.sort((a, b) => a.price - b.price);
     } else if (selectedFilter === "fastest") {
       results.sort((a, b) => {
-        const durationA = parseInt(a.duration.split('h')[0]) * 60 + parseInt(a.duration.split('h')[1].split('m')[0]);
-        const durationB = parseInt(b.duration.split('h')[0]) * 60 + parseInt(b.duration.split('h')[1].split('m')[0]);
-        return durationA - durationB;
+        const totalDurationA = tripType === "multicity"
+          ? a.multiCityFlights.reduce((sum, leg) => {
+              const [hours, mins] = leg.duration.split('h').map(part => parseInt(part));
+              return sum + hours * 60 + mins;
+            }, 0)
+          : parseInt(a.duration?.split('h')[0] || 0) * 60 + parseInt(a.duration?.split('h')[1]?.split('m')[0] || 0);
+        const totalDurationB = tripType === "multicity"
+          ? b.multiCityFlights.reduce((sum, leg) => {
+              const [hours, mins] = leg.duration.split('h').map(part => parseInt(part));
+              return sum + hours * 60 + mins;
+            }, 0)
+          : parseInt(b.duration?.split('h')[0] || 0) * 60 + parseInt(b.duration?.split('h')[1]?.split('m')[0] || 0);
+        return totalDurationA - totalDurationB;
       });
     } else if (selectedFilter === "best") {
       results.sort((a, b) => {
-        const scoreA = a.price / 10000 + parseInt(a.duration.split('h')[0]) + a.stops * 2;
-        const scoreB = b.price / 10000 + parseInt(b.duration.split('h')[0]) + b.stops * 2;
+        const totalDurationA = tripType === "multicity"
+          ? a.multiCityFlights.reduce((sum, leg) => {
+              const [hours, mins] = leg.duration.split('h').map(part => parseInt(part));
+              return sum + hours * 60 + mins;
+            }, 0)
+          : parseInt(a.duration?.split('h')[0] || 0) * 60 + parseInt(a.duration?.split('h')[1]?.split('m')[0] || 0);
+        const totalStopsA = tripType === "multicity"
+          ? a.multiCityFlights.reduce((sum, leg) => sum + leg.stops, 0)
+          : a.stops || 0;
+        const scoreA = a.price / 10000 + totalDurationA / 60 + totalStopsA * 2;
+
+        const totalDurationB = tripType === "multicity"
+          ? b.multiCityFlights.reduce((sum, leg) => {
+              const [hours, mins] = leg.duration.split('h').map(part => parseInt(part));
+              return sum + hours * 60 + mins;
+            }, 0)
+          : parseInt(b.duration?.split('h')[0] || 0) * 60 + parseInt(b.duration?.split('h')[1]?.split('m')[0] || 0);
+        const totalStopsB = tripType === "multicity"
+          ? b.multiCityFlights.reduce((sum, leg) => sum + leg.stops, 0)
+          : b.stops || 0;
+        const scoreB = b.price / 10000 + totalDurationB / 60 + totalStopsB * 2;
+
         return scoreA - scoreB;
       });
     }
     
     setFilteredFlights(results);
-  }, [allFlights, selectedFilter, priceRange, stopFilter, timeFilter, airlinesFilter, from, to, departDate, cabinClass]);
+  }, [allFlights, selectedFilter, priceRange, stopFilter, timeFilter, airlinesFilter, tripType, multiCityFlights, from, to, departDate, cabinClass]);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -290,7 +626,13 @@ const FlightCardList = () => {
   };
 
   // Airline list for filter
-  const airlines = [...new Set(allFlights.map(flight => flight.airline))];
+  const airlines = [...new Set(
+    allFlights.flatMap(flight => 
+      tripType === "multicity" 
+        ? flight.multiCityFlights.map(leg => leg.airline) 
+        : flight.airline
+    )
+  )];
 
   // Search Summary
   let searchSummary = "";
@@ -314,6 +656,14 @@ const FlightCardList = () => {
 
   const toggleFlightDetails = (flightId) => {
     setExpandedFlightId(expandedFlightId === flightId ? null : flightId);
+  };
+
+  const toggleFavorite = (flightId) => {
+    setAllFlights(prevFlights => 
+      prevFlights.map(flight => 
+        flight.id === flightId ? { ...flight, isFavorite: !flight.isFavorite } : flight
+      )
+    );
   };
 
   return (
@@ -355,7 +705,9 @@ const FlightCardList = () => {
 
       <div className="container mx-auto max-w-7xl px-4 py-8">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold">Flight search results</h2>
+          <h2 className="text-2xl font-bold">
+            Flight search results ({filteredFlights.length})
+          </h2>
           <button 
             className="flex items-center md:hidden bg-blue-600 text-white px-4 py-2 rounded-lg"
             onClick={() => setIsFilterOpen(!isFilterOpen)}
@@ -523,70 +875,209 @@ const FlightCardList = () => {
               </button>
             </div>
             
-            {/* Results Count */}
-            <p className="mb-4">{filteredFlights.length} flights found</p>
-            
             {/* Flight Cards */}
             <div className="space-y-4 cursor-pointer">
               {filteredFlights.length > 0 ? (
                 filteredFlights.map((flight) => (
                   <div key={flight.id} className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow">
                     <div className="p-6">
-                      {/* Main Flight Info */}
-                      <div className="flex flex-col md:flex-row gap-6">
-                        {/* Airline Info */}
-                        <div className="md:w-1/5 flex items-center space-x-3">
-                          <img src={flight.logo} alt={flight.airline} className="h-8 w-8 object-contain" />
-                          <div>
-                            <p className="font-medium">{flight.airline}</p>
-                            <p className="text-sm text-gray-500">{flight.airlineCode}{flight.flightNumber}</p>
-                          </div>
+                      {/* Flight Header with Heart Icon */}
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center space-x-3">
+                          {tripType === "multicity" ? (
+                            flight.multiCityFlights.map((leg, index) => (
+                              <span key={index} className="text-sm text-gray-500">
+                                {leg.airline} {leg.airlineCode}{leg.flightNumber}{index < flight.multiCityFlights.length - 1 ? " | " : ""}
+                              </span>
+                            ))
+                          ) : (
+                            <>
+                              <h3 className="text-lg font-semibold text-gray-800">{flight.airline}</h3>
+                              <span className="text-sm text-gray-500">{flight.airlineCode}{flight.flightNumber}</span>
+                              {tripType === "return" && returnDate && flight.returnFlight && (
+                                <span className="text-sm text-gray-500">
+                                  | {flight.returnFlight.airline} {flight.returnFlight.airlineCode}{flight.returnFlight.flightNumber}
+                                </span>
+                              )}
+                            </>
+                          )}
                         </div>
-                        
-                        {/* Flight Times */}
-                        <div className="md:w-2/5 flex items-center justify-between">
-                          <div className="text-center">
-                            <p className="text-lg font-bold">{flight.departureTime}</p>
-                            <p className="text-sm">{flight.departure}</p>
-                          </div>
-                          
-                          <div className="flex flex-col items-center justify-center px-4">
-                            <div className="text-xs text-gray-500">{flight.duration}</div>
-                            <div className="w-24 md:w-32 h-px bg-gray-300 relative my-2">
-                              {flight.stops > 0 && (
-                                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-2 h-2 bg-gray-400 rounded-full"></div>
+                        <button 
+                          onClick={() => toggleFavorite(flight.id)}
+                          className="text-gray-400 hover:text-red-500 transition-colors"
+                        >
+                          <FaHeart className={flight.isFavorite ? 'text-red-500' : ''} size={20} />
+                        </button>
+                      </div>
+
+                      {/* Main Flight Info */}
+                      {tripType === "multicity" ? (
+                        flight.multiCityFlights.map((leg, index) => (
+                          <div key={index} className={`flex flex-col md:flex-row gap-6 ${index > 0 ? "mt-4 pt-4 border-t border-gray-200" : ""}`}>
+                            {/* Leg Info */}
+                            <div className="md:w-1/5 flex items-center space-x-3">
+                              <img src={leg.logo} alt={leg.airline} className="h-8 w-8 object-contain" />
+                              <div>
+                                <p className="font-medium">{leg.airline}</p>
+                                <p className="text-sm text-gray-500">{leg.airlineCode}{leg.flightNumber}</p>
+                              </div>
+                            </div>
+                            
+                            {/* Leg Times */}
+                            <div className="md:w-2/5 flex items-center justify-between">
+                              <div className="text-center">
+                                <p className="text-lg font-bold">{leg.departureTime}</p>
+                                <p className="text-sm">{leg.departure || "N/A"}</p>
+                              </div>
+                              
+                              <div className="flex flex-col items-center justify-center px-4">
+                                <div className="text-xs text-gray-500">{leg.duration}</div>
+                                <div className="w-24 md:w-32 h-px bg-gray-300 relative my-2">
+                                  {leg.stops > 0 && (
+                                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-2 h-2 bg-gray-400 rounded-full"></div>
+                                  )}
+                                </div>
+                                <div className="text-xs text-gray-500">
+                                  {leg.stops === 0 ? "Direct" : `${leg.stops} stop`}
+                                </div>
+                              </div>
+                              
+                              <div className="text-center">
+                                <p className="text-lg font-bold">{leg.arrivalTime}</p>
+                                <p className="text-sm">{leg.arrival || "N/A"}</p>
+                              </div>
+                            </div>
+                            
+                            {/* Cabin & Stops */}
+                            <div className="md:w-2/5 flex flex-col-reverse md:flex-row items-center justify-between">
+                              <div>
+                                <p className="text-sm text-gray-500">{flight.cabinClass}</p>
+                                {leg.stops > 0 && (
+                                  <p className="text-xs text-gray-500">
+                                    via {leg.stopCities.join(", ")}
+                                  </p>
+                                )}
+                              </div>
+                              {index === flight.multiCityFlights.length - 1 && (
+                                <div className="text-right">
+                                  <p className="text-2xl font-bold text-blue-600">₹{flight.price.toLocaleString()}</p>
+                                  <button className="mt-2 bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 cursor-pointer transition">
+                                    Select
+                                  </button>
+                                </div>
                               )}
                             </div>
-                            <div className="text-xs text-gray-500">
-                              {flight.stops === 0 ? "Direct" : `${flight.stops} stop`}
+                          </div>
+                        ))
+                      ) : (
+                        <div className="flex flex-col md:flex-row gap-6">
+                          {/* Outbound Flight Info */}
+                          <div className="md:w-1/5 flex items-center space-x-3">
+                            <img src={flight.logo} alt={flight.airline} className="h-8 w-8 object-contain" />
+                            <div>
+                              <p className="font-medium">{flight.airline}</p>
+                              <p className="text-sm text-gray-500">{flight.airlineCode}{flight.flightNumber}</p>
                             </div>
                           </div>
                           
-                          <div className="text-center">
-                            <p className="text-lg font-bold">{flight.arrivalTime}</p>
-                            <p className="text-sm">{flight.arrival}</p>
-                          </div>
-                        </div>
-                        
-                        {/* Cabin & Price */}
-                        <div className="md:w-2/5 flex flex-col-reverse md:flex-row items-center justify-between">
-                          <div>
-                            <p className="text-sm text-gray-500">{flight.cabinClass}</p>
-                            {flight.stops > 0 && (
-                              <p className="text-xs text-gray-500">
-                                via {flight.stopCities.join(", ")}
-                              </p>
-                            )}
+                          {/* Outbound Flight Times */}
+                          <div className="md:w-2/5 flex items-center justify-between">
+                            <div className="text-center">
+                              <p className="text-lg font-bold">{flight.departureTime}</p>
+                              <p className="text-sm">{flight.departure || "N/A"}</p>
+                            </div>
+                            
+                            <div className="flex flex-col items-center justify-center px-4">
+                              <div className="text-xs text-gray-500">{flight.duration}</div>
+                              <div className="w-24 md:w-32 h-px bg-gray-300 relative my-2">
+                                {flight.stops > 0 && (
+                                  <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-2 h-2 bg-gray-400 rounded-full"></div>
+                                )}
+                              </div>
+                              <div className="text-xs text-gray-500">
+                                {flight.stops === 0 ? "Direct" : `${flight.stops} stop`}
+                              </div>
+                            </div>
+                            
+                            <div className="text-center">
+                              <p className="text-lg font-bold">{flight.arrivalTime}</p>
+                              <p className="text-sm">{flight.arrival || "N/A"}</p>
+                            </div>
                           </div>
                           
-                          <div className="text-right">
-                            <p className="text-2xl font-bold text-blue-600">₹{flight.price.toLocaleString()}</p>
-                            <button className="mt-2 bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 cursor-pointer transition">
-                              Select
-                            </button>
+                          {/* Cabin & Price */}
+                          <div className="md:w-2/5 flex flex-col-reverse md:flex-row items-center justify-between">
+                            <div>
+                              <p className="text-sm text-gray-500">{flight.cabinClass}</p>
+                              {flight.stops > 0 && (
+                                <p className="text-xs text-gray-500">
+                                  via {flight.stopCities.join(", ")}
+                                </p>
+                              )}
+                            </div>
+                            
+                            <div className="text-right">
+                              <p className="text-2xl font-bold text-blue-600">₹{flight.price.toLocaleString()}</p>
+                              <button className="mt-2 bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 cursor-pointer transition">
+                                Select
+                              </button>
+                            </div>
                           </div>
                         </div>
-                      </div>
+                      )}
+
+                      {/* Return Flight Info (if applicable) */}
+                      {tripType === "return" && returnDate && flight.returnFlight && (
+                        <div className="mt-4 pt-4 border-t border-gray-200">
+                          <div className="flex flex-col md:flex-row gap-6">
+                            {/* Return Flight Info */}
+                            <div className="md:w-1/5 flex items-center space-x-3">
+                              <img src={flight.returnFlight.logo} alt={flight.returnFlight.airline} className="h-8 w-8 object-contain" />
+                              <div>
+                                <p className="font-medium">{flight.returnFlight.airline}</p>
+                                <p className="text-sm text-gray-500">{flight.returnFlight.airlineCode}{flight.returnFlight.flightNumber}</p>
+                              </div>
+                            </div>
+                            
+                            {/* Return Flight Times */}
+                            <div className="md:w-2/5 flex items-center justify-between">
+                              <div className="text-center">
+                                <p className="text-lg font-bold">{flight.returnFlight.departureTime}</p>
+                                <p className="text-sm">{flight.returnFlight.departure || "N/A"}</p>
+                              </div>
+                              
+                              <div className="flex flex-col items-center justify-center px-4">
+                                <div className="text-xs text-gray-500">{flight.returnFlight.duration}</div>
+                                <div className="w-24 md:w-32 h-px bg-gray-300 relative my-2">
+                                  {flight.returnFlight.stops > 0 && (
+                                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-2 h-2 bg-gray-400 rounded-full"></div>
+                                  )}
+                                </div>
+                                <div className="text-xs text-gray-500">
+                                  {flight.returnFlight.stops === 0 ? "Direct" : `${flight.returnFlight.stops} stop`}
+                                </div>
+                              </div>
+                              
+                              <div className="text-center">
+                                <p className="text-lg font-bold">{flight.returnFlight.arrivalTime}</p>
+                                <p className="text-sm">{flight.returnFlight.arrival || "N/A"}</p>
+                              </div>
+                            </div>
+                            
+                            {/* Cabin & Stops */}
+                            <div className="md:w-2/5 flex flex-col-reverse md:flex-row items-center justify-between">
+                              <div>
+                                <p className="text-sm text-gray-500">{flight.cabinClass}</p>
+                                {flight.returnFlight.stops > 0 && (
+                                  <p className="text-xs text-gray-500">
+                                    via {flight.returnFlight.stopCities.join(", ")}
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
                       
                       {/* Flight Details Toggle */}
                       <div className="mt-4 pt-4 border-t border-gray-200">
@@ -604,89 +1095,137 @@ const FlightCardList = () => {
                         <div className="mt-4 p-4 bg-gray-50 rounded-lg">
                           <h3 className="text-lg font-semibold mb-4">Flight Details</h3>
                           <div className="space-y-6">
-                            {/* Flight Itinerary */}
-                            <div>
-                              <h4 className="font-medium mb-2">Itinerary</h4>
-                              <div className="flex items-start gap-4">
-                                <div className="flex flex-col items-center">
-                                  <FaPlaneDeparture className="text-blue-600" />
-                                  <div className="w-px h-16 bg-gray-300 my-1"></div>
-                                  <FaPlaneArrival className="text-blue-600" />
-                                </div>
-                                <div className="flex-1">
-                                  {/* Departure Leg */}
-                                  <div className="flex justify-between mb-4">
-                                    <div>
-                                      <p className="font-medium">{flight.departureTime} • {flight.departure}</p>
-                                      <p className="text-sm text-gray-500">{flight.departureDate}</p>
-                                      <p className="text-sm text-gray-500">{flight.airline} • {flight.airlineCode}{flight.flightNumber}</p>
+                            {tripType === "multicity" ? (
+                              flight.multiCityFlights.map((leg, index) => (
+                                <div key={index}>
+                                  <h4 className="font-medium mb-2">Flight {index + 1}</h4>
+                                  <div className="flex items-start gap-4">
+                                    <div className="flex flex-col items-center">
+                                      <FaPlaneDeparture className="text-blue-600" />
+                                      <div className="w-px h-16 bg-gray-300 my-1"></div>
+                                      <FaPlaneArrival className="text-blue-600" />
                                     </div>
-                                    <div className="text-right">
-                                      <p className="text-sm text-gray-500">Duration: {flight.duration}</p>
-                                    </div>
-                                  </div>
-
-                                  {/* Layover (if any) */}
-                                  {flight.stops > 0 && (
-                                    <div className="bg-gray-200 p-2 rounded-lg mb-4">
-                                      <p className="text-sm text-gray-600">
-                                        Layover in {flight.stopCities.join(", ")} • Approx. 2h 30m
-                                      </p>
-                                    </div>
-                                  )}
-
-                                  {/* Arrival Leg */}
-                                  <div className="flex justify-between">
-                                    <div>
-                                      <p className="font-medium">{flight.arrivalTime} • {flight.arrival}</p>
-                                      <p className="text-sm text-gray-500">{flight.departureDate}</p>
-                                      <p className="text-sm text-gray-500">{flight.airline} • {flight.airlineCode}{flight.flightNumber}</p>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-
-                            {/* Return Flight (if applicable) */}
-                            {tripType === "return" && returnDate && (
-                              <div>
-                                <h4 className="font-medium mb-2">Return Flight</h4>
-                                <div className="flex items-start gap-4">
-                                  <div className="flex flex-col items-center">
-                                    <FaPlaneDeparture className="text-blue-600" />
-                                    <div className="w-px h-16 bg-gray-300 my-1"></div>
-                                    <FaPlaneArrival className="text-blue-600" />
-                                  </div>
-                                  <div className="flex-1">
-                                    <div className="flex justify-between mb-4">
-                                      <div>
-                                        <p className="font-medium">{flight.departureTime} • {flight.arrival}</p>
-                                        <p className="text-sm text-gray-500">{flight.returnDate}</p>
-                                        <p className="text-sm text-gray-500">{flight.airline} • {flight.airlineCode}{flight.flightNumber}</p>
+                                    <div className="flex-1">
+                                      {/* Departure Leg */}
+                                      <div className="flex justify-between mb-4">
+                                        <div>
+                                          <p className="font-medium">{leg.departureTime || "N/A"} • {leg.departure || "N/A"}</p>
+                                          <p className="text-sm text-gray-500">{leg.departureDate || "N/A"}</p>
+                                          <p className="text-sm text-gray-500">{leg.airline} • {leg.airlineCode}{leg.flightNumber}</p>
+                                        </div>
+                                        <div className="text-right">
+                                          <p className="text-sm text-gray-500">Duration: {leg.duration || "N/A"}</p>
+                                        </div>
                                       </div>
-                                      <div className="text-right">
-                                        <p className="text-sm text-gray-500">Duration: {flight.duration}</p>
-                                      </div>
-                                    </div>
 
-                                    {flight.stops > 0 && (
-                                      <div className="bg-gray-200 p-2 rounded-lg mb-4">
-                                        <p className="text-sm text-gray-600">
-                                          Layover in {flight.stopCities.join(", ")} • Approx. 2h 30m
-                                        </p>
-                                      </div>
-                                    )}
+                                      {/* Layover (if any) */}
+                                      {leg.stops > 0 && (
+                                        <div className="bg-gray-200 p-2 rounded-lg mb-4">
+                                          <p className="text-sm text-gray-600">
+                                            Layover in {leg.stopCities.join(", ") || "N/A"} • Approx. 2h 30m
+                                          </p>
+                                        </div>
+                                      )}
 
-                                    <div className="flex justify-between">
-                                      <div>
-                                        <p className="font-medium">{flight.arrivalTime} • {flight.departure}</p>
-                                        <p className="text-sm text-gray-500">{flight.returnDate}</p>
-                                        <p className="text-sm text-gray-500">{flight.airline} • {flight.airlineCode}{flight.flightNumber}</p>
+                                      {/* Arrival Leg */}
+                                      <div className="flex justify-between">
+                                        <div>
+                                          <p className="font-medium">{leg.arrivalTime || "N/A"} • {leg.arrival || "N/A"}</p>
+                                          <p className="text-sm text-gray-500">{leg.departureDate || "N/A"}</p>
+                                          <p className="text-sm text-gray-500">{leg.airline} • {leg.airlineCode}{leg.flightNumber}</p>
+                                        </div>
                                       </div>
                                     </div>
                                   </div>
                                 </div>
-                              </div>
+                              ))
+                            ) : (
+                              <>
+                                {/* Outbound Flight Itinerary */}
+                                <div>
+                                  <h4 className="font-medium mb-2">Outbound Flight</h4>
+                                  <div className="flex items-start gap-4">
+                                    <div className="flex flex-col items-center">
+                                      <FaPlaneDeparture className="text-blue-600" />
+                                      <div className="w-px h-16 bg-gray-300 my-1"></div>
+                                      <FaPlaneArrival className="text-blue-600" />
+                                    </div>
+                                    <div className="flex-1">
+                                      {/* Departure Leg */}
+                                      <div className="flex justify-between mb-4">
+                                        <div>
+                                          <p className="font-medium">{flight.departureTime || "N/A"} • {flight.departure || "N/A"}</p>
+                                          <p className="text-sm text-gray-500">{flight.departureDate || "N/A"}</p>
+                                          <p className="text-sm text-gray-500">{flight.airline} • {flight.airlineCode}{flight.flightNumber}</p>
+                                        </div>
+                                        <div className="text-right">
+                                          <p className="text-sm text-gray-500">Duration: {flight.duration || "N/A"}</p>
+                                        </div>
+                                      </div>
+
+                                      {/* Layover (if any) */}
+                                      {flight.stops > 0 && (
+                                        <div className="bg-gray-200 p-2 rounded-lg mb-4">
+                                          <p className="text-sm text-gray-600">
+                                            Layover in {flight.stopCities.join(", ") || "N/A"} • Approx. 2h 30m
+                                          </p>
+                                        </div>
+                                      )}
+
+                                      {/* Arrival Leg */}
+                                      <div className="flex justify-between">
+                                        <div>
+                                          <p className="font-medium">{flight.arrivalTime || "N/A"} • {flight.arrival || "N/A"}</p>
+                                          <p className="text-sm text-gray-500">{flight.departureDate || "N/A"}</p>
+                                          <p className="text-sm text-gray-500">{flight.airline} • {flight.airlineCode}{flight.flightNumber}</p>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+
+                                {/* Return Flight Itinerary (if applicable) */}
+                                {tripType === "return" && returnDate && flight.returnFlight && (
+                                  <div>
+                                    <h4 className="font-medium mb-2">Return Flight</h4>
+                                    <div className="flex items-start gap-4">
+                                      <div className="flex flex-col items-center">
+                                        <FaPlaneDeparture className="text-blue-600" />
+                                        <div className="w-px h-16 bg-gray-300 my-1"></div>
+                                        <FaPlaneArrival className="text-blue-600" />
+                                      </div>
+                                      <div className="flex-1">
+                                        <div className="flex justify-between mb-4">
+                                          <div>
+                                            <p className="font-medium">{flight.returnFlight.departureTime || "N/A"} • {flight.returnFlight.departure || "N/A"}</p>
+                                            <p className="text-sm text-gray-500">{flight.returnFlight.departureDate || returnDate || "N/A"}</p>
+                                            <p className="text-sm text-gray-500">{flight.returnFlight.airline} • {flight.returnFlight.airlineCode}{flight.returnFlight.flightNumber}</p>
+                                          </div>
+                                          <div className="text-right">
+                                            <p className="text-sm text-gray-500">Duration: {flight.returnFlight.duration || "N/A"}</p>
+                                          </div>
+                                        </div>
+
+                                        {flight.returnFlight.stops > 0 && (
+                                          <div className="bg-gray-200 p-2 rounded-lg mb-4">
+                                            <p className="text-sm text-gray-600">
+                                              Layover in {flight.returnFlight.stopCities.join(", ") || "N/A"} • Approx. 2h 30m
+                                            </p>
+                                          </div>
+                                        )}
+
+                                        <div className="flex justify-between">
+                                          <div>
+                                            <p className="font-medium">{flight.returnFlight.arrivalTime || "N/A"} • {flight.returnFlight.arrival || "N/A"}</p>
+                                            <p className="text-sm text-gray-500">{flight.returnFlight.departureDate || returnDate || "N/A"}</p>
+                                            <p className="text-sm text-gray-500">{flight.returnFlight.airline} • {flight.returnFlight.airlineCode}{flight.returnFlight.flightNumber}</p>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                )}
+                              </>
                             )}
 
                             {/* Price Breakdown */}
@@ -712,19 +1251,32 @@ const FlightCardList = () => {
                             <div>
                               <h4 className="font-medium mb-2">Additional Information</h4>
                               <div className="space-y-2">
-                                <div className="flex items-center gap-2">
-                                  <FaCalendarAlt className="text-blue-600" />
-                                  <p className="text-sm">
-                                    Departure Date: {flight.departureDate}
-                                  </p>
-                                </div>
-                                {tripType === "return" && returnDate && (
-                                  <div className="flex items-center gap-2">
-                                    <FaCalendarAlt className="text-blue-600" />
-                                    <p className="text-sm">
-                                      Return Date: {flight.returnDate}
-                                    </p>
-                                  </div>
+                                {tripType === "multicity" ? (
+                                  flight.multiCityFlights.map((leg, index) => (
+                                    <div key={index} className="flex items-center gap-2">
+                                      <FaCalendarAlt className="text-blue-600" />
+                                      <p className="text-sm">
+                                        Flight {index + 1} Departure Date: {leg.departureDate || "N/A"}
+                                      </p>
+                                    </div>
+                                  ))
+                                ) : (
+                                  <>
+                                    <div className="flex items-center gap-2">
+                                      <FaCalendarAlt className="text-blue-600" />
+                                      <p className="text-sm">
+                                        Departure Date: {flight.departureDate || "N/A"}
+                                      </p>
+                                    </div>
+                                    {tripType === "return" && returnDate && (
+                                      <div className="flex items-center gap-2">
+                                        <FaCalendarAlt className="text-blue-600" />
+                                        <p className="text-sm">
+                                          Return Date: {flight.returnFlight?.departureDate || returnDate || "N/A"}
+                                        </p>
+                                      </div>
+                                    )}
+                                  </>
                                 )}
                                 <div className="flex items-center gap-2">
                                   <FaPlane className="text-blue-600" />

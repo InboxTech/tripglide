@@ -1,3 +1,4 @@
+import React from "react";
 import { useState, useEffect, useRef } from "react";
 import { FaGlobe, FaUser, FaBars, FaHeart, FaPlane, FaHotel, FaCar, FaFlag, FaSearchLocation, FaQuestionCircle } from "react-icons/fa";
 import { useNavigate, useLocation, Link } from "react-router-dom";
@@ -26,7 +27,7 @@ export default function Header({ user, handleLogout }) {
     const path = location.pathname;
     if (path.includes("/hotels")) {
       setActiveTab("hotels");
-    } else if (path.includes("/carhire") || path.includes("/cabs")) {
+    } else if (path.includes("/carhire") || path.includes("/cabs") || path.includes("/car-confirmation")) {
       setActiveTab("carhire");
     } else {
       setActiveTab("flights");

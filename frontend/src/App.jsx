@@ -16,6 +16,7 @@ import RegionalSettings from "./components/RegionalSettings";
 import CountryFacts from "./components/CountryFacts";
 import Hotels from "./components/Hotels";
 import HotelSearch from "./components/HotelSearch";
+import CarConfirmation from "./components/CarConfirmation";
 
 function App() {
   // Initialize user state from localStorage
@@ -84,7 +85,7 @@ function App() {
   console.log("Current mockUsers:", mockUsers);
 
   return (
-    <GoogleOAuthProvider clientId="446079422792-q1q20crdehjvc4blhpkn91u2f30iqmee.apps.googleusercontent.com">
+    <GoogleOAuthProvider clientId="903553660853-d2uiue8osd3cjshdgidtd2hq3pge2sce.apps.googleusercontent.com">
       <Router>
         <Header user={user} handleLogout={handleLogout} />
         <Routes>
@@ -108,6 +109,7 @@ function App() {
           <Route path="/country-facts" element={<CountryFacts />} />
           <Route path="/hotels" element={<Hotels />} />
           <Route path="/hotel-search" element={<HotelSearch />} />
+          <Route path="/car-confirmation" element={<CarConfirmation />} />
         </Routes>
       </Router>
     </GoogleOAuthProvider>
