@@ -105,7 +105,7 @@ def get_data():
     
 
     # Create final query dynamically
-    base_query = "SELECT * FROM rentals"
+    base_query = "SELECT * FROM cars"
     if query_conditions:
         base_query += " WHERE " + " AND ".join(query_conditions)
 
