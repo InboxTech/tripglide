@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import TravelersCabinClass from "./TravelersCabinClass";
 
 const FlightSearchFormPopup = ({
@@ -17,19 +17,13 @@ const FlightSearchFormPopup = ({
   cabinClass,
   setCabinClass,
   handleSearch,
-  departureAirports,
-  arrivalAirports,
-  multiCityFlights: parentMultiCityFlights,
-  setMultiCityFlights: setParentMultiCityFlights,
+  multiCityFlights,
+  setMultiCityFlights,
 }) => {
-  const [multiCityFlights, setMultiCityFlights] = useState(parentMultiCityFlights);
-
-  const fromInputRef = useRef(null);
-  const toInputRef = useRef(null);
-  const multiCityRefs = useRef([]);
-
   const [showFromDropdown, setShowFromDropdown] = useState(false);
   const [showToDropdown, setShowToDropdown] = useState(false);
+  const [departureAirports, setDepartureAirports] = useState([]);
+  const [arrivalAirports, setArrivalAirports] = useState([]);
   const [filteredDepartureAirports, setFilteredDepartureAirports] = useState([]);
   const [filteredArrivalAirports, setFilteredArrivalAirports] = useState([]);
   const [multiCityDropdowns, setMultiCityDropdowns] = useState([]);
@@ -37,29 +31,33 @@ const FlightSearchFormPopup = ({
   const [toFocusIndex, setToFocusIndex] = useState(-1);
   const [multiCityFocusIndices, setMultiCityFocusIndices] = useState([]);
 
+  const fromInputRef = useRef(null);
+  const toInputRef = useRef(null);
+  const multiCityRefs = useRef([]);
+
   const today = new Date().toISOString().split("T")[0];
 
-  // Sync local state with parent state
+  // Fetch airport data from Flask API
   useEffect(() => {
-    setMultiCityFlights(parentMultiCityFlights);
-  }, [parentMultiCityFlights]);
+    const fetchAirports = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/get_flights");
+        const data = await response.json();
+        if (data.departure_airport && data.arrival_airport) {
+          setDepartureAirports(data.departure_airport);
+          setArrivalAirports(data.arrival_airport);
+          setFilteredDepartureAirports(data.departure_airport);
+          setFilteredArrivalAirports(data.arrival_airport);
+        } else {
+          console.error("No airports found in API response");
+        }
+      } catch (error) {
+        console.error("Error fetching airports:", error);
+      }
+    };
+    fetchAirports();
+  }, []);
 
-  // Initialize multi-city dropdowns
-  useEffect(() => {
-    if (multiCityFlights.length > 0) {
-      setMultiCityDropdowns(
-        multiCityFlights.map(() => ({
-          showFrom: false,
-          showTo: false,
-          filteredFrom: [],
-          filteredTo: [],
-        }))
-      );
-      setMultiCityFocusIndices(multiCityFlights.map(() => ({ from: -1, to: -1 })));
-    }
-  }, [multiCityFlights.length]);
-
-  // Filter departure and arrival airports
   useEffect(() => {
     setFilteredDepartureAirports(
       departureAirports.filter(
@@ -81,81 +79,52 @@ const FlightSearchFormPopup = ({
   }, [to, from, arrivalAirports]);
 
   useEffect(() => {
-    if (multiCityDropdowns.length > 0) {
-      const updatedDropdowns = multiCityFlights.map((flight, index) => {
-        return {
-          ...multiCityDropdowns[index],
-          filteredFrom: departureAirports.filter(
-            (airport) =>
-              airport.toLowerCase().includes(flight.from.toLowerCase()) &&
-              airport !== flight.to
+    if (multiCityFlights.length > 0) {
+      setMultiCityDropdowns(
+        multiCityFlights.map((flight) => ({
+          showFrom: false,
+          showTo: false,
+          filteredFrom: departureAirports.filter((a) =>
+            a.toLowerCase().includes(flight.from.toLowerCase()) && a !== flight.to
           ),
-          filteredTo: arrivalAirports.filter(
-            (airport) =>
-              airport.toLowerCase().includes(flight.to.toLowerCase()) &&
-              airport !== flight.from
+          filteredTo: arrivalAirports.filter((a) =>
+            a.toLowerCase().includes(flight.to.toLowerCase()) && a !== flight.from
           ),
-        };
-      });
-      setMultiCityDropdowns(updatedDropdowns);
+        }))
+      );
+      setMultiCityFocusIndices(multiCityFlights.map(() => ({ from: -1, to: -1 })));
+    } else {
+      setMultiCityDropdowns([]);
+      setMultiCityFocusIndices([]);
     }
   }, [multiCityFlights, departureAirports, arrivalAirports]);
 
-  // Debounced state update for multi-city flights
-  const debounce = (func, delay) => {
-    let timeout;
-    return (...args) => {
-      clearTimeout(timeout);
-      timeout = setTimeout(() => func(...args), delay);
-    };
-  };
-
-  const updateMultiCityFlights = useCallback(
-    debounce((newFlights) => {
-      setMultiCityFlights(newFlights);
-      setParentMultiCityFlights(newFlights);
-    }, 300),
-    [setParentMultiCityFlights]
-  );
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    handleSearch(e);
+    if (tripType === "multicity") {
+      handleSearch(e, multiCityFlights);
+    } else {
+      handleSearch(e);
+    }
     onClose();
   };
 
   const swapLocations = () => {
-    setFrom((prevFrom) => {
-      setTo(prevFrom);
-      return to;
-    });
+    setFrom(to);
+    setTo(from);
   };
 
   const addMultiCityFlight = () => {
     if (multiCityFlights.length < 6) {
-      const newFlights = [
+      setMultiCityFlights([
         ...multiCityFlights,
         { id: Date.now(), from: "", to: "", depart: "" },
-      ];
-      updateMultiCityFlights(newFlights);
+      ]);
     }
   };
 
   const removeMultiCityFlight = (id) => {
-    const newFlights = multiCityFlights.filter((flight) => flight.id !== id);
-    updateMultiCityFlights(newFlights);
-  };
-
-  const handleMultiCityFromChange = (index, value) => {
-    const updatedFlights = [...multiCityFlights];
-    updatedFlights[index].from = value;
-    updateMultiCityFlights(updatedFlights);
-  };
-
-  const handleMultiCityToChange = (index, value) => {
-    const updatedFlights = [...multiCityFlights];
-    updatedFlights[index].to = value;
-    updateMultiCityFlights(updatedFlights);
+    setMultiCityFlights(multiCityFlights.filter((flight) => flight.id !== id));
   };
 
   const handleFromSelect = (airport) => {
@@ -173,50 +142,27 @@ const FlightSearchFormPopup = ({
   const handleMultiCityFromSelect = (airport, index) => {
     const updatedFlights = [...multiCityFlights];
     updatedFlights[index].from = airport;
-    updateMultiCityFlights(updatedFlights);
+    setMultiCityFlights(updatedFlights);
     const updatedDropdowns = [...multiCityDropdowns];
     updatedDropdowns[index].showFrom = false;
     setMultiCityDropdowns(updatedDropdowns);
-    const updatedFocus = [...multiCityFocusIndices];
-    updatedFocus[index].from = -1;
-    setMultiCityFocusIndices(updatedFocus);
   };
 
   const handleMultiCityToSelect = (airport, index) => {
     const updatedFlights = [...multiCityFlights];
     updatedFlights[index].to = airport;
-    updateMultiCityFlights(updatedFlights);
+    setMultiCityFlights(updatedFlights);
     const updatedDropdowns = [...multiCityDropdowns];
     updatedDropdowns[index].showTo = false;
     setMultiCityDropdowns(updatedDropdowns);
-    const updatedFocus = [...multiCityFocusIndices];
-    updatedFocus[index].to = -1;
-    setMultiCityFocusIndices(updatedFocus);
   };
 
   const toggleMultiCityDropdown = (index, type) => {
-    const updatedDropdowns = [...multiCityDropdowns];
-    if (type === "from") {
-      updatedDropdowns[index].showFrom = !updatedDropdowns[index].showFrom;
-      updatedDropdowns.forEach((dropdown, i) => {
-        if (i !== index) {
-          dropdown.showFrom = false;
-          dropdown.showTo = false;
-        } else {
-          dropdown.showTo = false;
-        }
-      });
-    } else {
-      updatedDropdowns[index].showTo = !updatedDropdowns[index].showTo;
-      updatedDropdowns.forEach((dropdown, i) => {
-        if (i !== index) {
-          dropdown.showFrom = false;
-          dropdown.showTo = false;
-        } else {
-          dropdown.showFrom = false;
-        }
-      });
-    }
+    const updatedDropdowns = multiCityDropdowns.map((dropdown, i) => ({
+      ...dropdown,
+      showFrom: i === index && type === "from" ? !dropdown.showFrom : false,
+      showTo: i === index && type === "to" ? !dropdown.showTo : false,
+    }));
     setMultiCityDropdowns(updatedDropdowns);
     setShowFromDropdown(false);
     setShowToDropdown(false);
@@ -255,13 +201,13 @@ const FlightSearchFormPopup = ({
   };
 
   const handleMultiCityKeyDown = (e, index, type) => {
-    const dropdown = multiCityDropdowns[index];
-    const focusIndices = multiCityFocusIndices[index];
+    const dropdown = multiCityDropdowns[index] || {};
+    const focusIndices = multiCityFocusIndices[index] || { from: -1, to: -1 };
     const filteredList = type === "from" ? dropdown.filteredFrom : dropdown.filteredTo;
     const isDropdownOpen = type === "from" ? dropdown.showFrom : dropdown.showTo;
     const focusIndex = type === "from" ? focusIndices.from : focusIndices.to;
 
-    if (!isDropdownOpen) return;
+    if (!isDropdownOpen || !filteredList) return;
 
     if (e.key === "ArrowDown") {
       e.preventDefault();
@@ -302,20 +248,12 @@ const FlightSearchFormPopup = ({
         setShowToDropdown(false);
       }
       if (multiCityRefs.current.length > 0) {
-        let closeAll = true;
-        multiCityRefs.current.forEach((refs, index) => {
-          if (!refs) return;
-          if (refs.fromRef && refs.fromRef.contains(event.target)) closeAll = false;
-          if (refs.toRef && refs.toRef.contains(event.target)) closeAll = false;
-        });
-        if (closeAll) {
-          const updatedDropdowns = [...multiCityDropdowns];
-          updatedDropdowns.forEach((dropdown) => {
-            dropdown.showFrom = false;
-            dropdown.showTo = false;
-          });
-          setMultiCityDropdowns(updatedDropdowns);
-        }
+        const updatedDropdowns = multiCityDropdowns.map((dropdown) => ({
+          ...dropdown,
+          showFrom: false,
+          showTo: false,
+        }));
+        setMultiCityDropdowns(updatedDropdowns);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -329,7 +267,7 @@ const FlightSearchFormPopup = ({
       <div className="bg-[#001533] p-6 rounded-2xl shadow-lg w-full max-w-4xl relative">
         <button
           onClick={onClose}
-          className="absolute cursor-pointer top-4 right-4 text-white text-2xl"
+          className="absolute top-4 right-4 text-white text-2xl"
         >
           ✕
         </button>
@@ -376,52 +314,45 @@ const FlightSearchFormPopup = ({
               >
                 <div
                   className="flex-1 min-w-[100px] relative"
-                  ref={(el) => {
-                    if (!multiCityRefs.current[index])
-                      multiCityRefs.current[index] = {};
-                    multiCityRefs.current[index].fromRef = el;
-                  }}
+                  ref={(el) =>
+                    (multiCityRefs.current[index] = {
+                      ...multiCityRefs.current[index],
+                      fromRef: el,
+                    })
+                  }
                 >
-                  <label className="block text-white font-semibold mb-1">
-                    From
-                  </label>
+                  <label className="block text-white font-semibold mb-1">From</label>
                   <input
                     value={flight.from}
                     onChange={(e) => {
-                      handleMultiCityFromChange(index, e.target.value);
+                      const updatedFlights = [...multiCityFlights];
+                      updatedFlights[index].from = e.target.value;
+                      setMultiCityFlights(updatedFlights);
                       if (!multiCityDropdowns[index]?.showFrom)
                         toggleMultiCityDropdown(index, "from");
                     }}
                     onClick={() => toggleMultiCityDropdown(index, "from")}
                     onKeyDown={(e) => handleMultiCityKeyDown(e, index, "from")}
                     className="w-full p-3 rounded-lg bg-white text-black"
-                    placeholder="Select or type departure airport"
+                    placeholder="Select departure airport"
                     required
                   />
                   {multiCityDropdowns[index]?.showFrom && (
                     <div className="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
                       {multiCityDropdowns[index]?.filteredFrom.length > 0 ? (
-                        multiCityDropdowns[index].filteredFrom.map(
-                          (airport, idx) => (
-                            <div
-                              key={idx}
-                              className={`p-2 hover:bg-blue-100 cursor-pointer ${
-                                multiCityFocusIndices[index]?.from === idx
-                                  ? "bg-blue-200"
-                                  : ""
-                              }`}
-                              onClick={() =>
-                                handleMultiCityFromSelect(airport, index)
-                              }
-                            >
-                              {airport}
-                            </div>
-                          )
-                        )
+                        multiCityDropdowns[index].filteredFrom.map((airport, idx) => (
+                          <div
+                            key={idx}
+                            className={`p-2 hover:bg-blue-100 cursor-pointer ${
+                              multiCityFocusIndices[index]?.from === idx ? "bg-blue-200" : ""
+                            }`}
+                            onClick={() => handleMultiCityFromSelect(airport, index)}
+                          >
+                            {airport}
+                          </div>
+                        ))
                       ) : (
-                        <div className="p-2 text-gray-500">
-                          No airports found
-                        </div>
+                        <div className="p-2 text-gray-500">No airports found</div>
                       )}
                     </div>
                   )}
@@ -429,52 +360,45 @@ const FlightSearchFormPopup = ({
 
                 <div
                   className="flex-1 min-w-[100px] relative"
-                  ref={(el) => {
-                    if (!multiCityRefs.current[index])
-                      multiCityRefs.current[index] = {};
-                    multiCityRefs.current[index].toRef = el;
-                  }}
+                  ref={(el) =>
+                    (multiCityRefs.current[index] = {
+                      ...multiCityRefs.current[index],
+                      toRef: el,
+                    })
+                  }
                 >
-                  <label className="block text-white font-semibold mb-1">
-                    To
-                  </label>
+                  <label className="block text-white font-semibold mb-1">To</label>
                   <input
                     value={flight.to}
                     onChange={(e) => {
-                      handleMultiCityToChange(index, e.target.value);
+                      const updatedFlights = [...multiCityFlights];
+                      updatedFlights[index].to = e.target.value;
+                      setMultiCityFlights(updatedFlights);
                       if (!multiCityDropdowns[index]?.showTo)
                         toggleMultiCityDropdown(index, "to");
                     }}
                     onClick={() => toggleMultiCityDropdown(index, "to")}
                     onKeyDown={(e) => handleMultiCityKeyDown(e, index, "to")}
                     className="w-full p-3 rounded-lg bg-white text-black"
-                    placeholder="Select or type arrival airport"
+                    placeholder="Select arrival airport"
                     required
                   />
                   {multiCityDropdowns[index]?.showTo && (
                     <div className="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
                       {multiCityDropdowns[index]?.filteredTo.length > 0 ? (
-                        multiCityDropdowns[index].filteredTo.map(
-                          (airport, idx) => (
-                            <div
-                              key={idx}
-                              className={`p-2 hover:bg-blue-100 cursor-pointer ${
-                                multiCityFocusIndices[index]?.to === idx
-                                  ? "bg-blue-200"
-                                  : ""
-                              }`}
-                              onClick={() =>
-                                handleMultiCityToSelect(airport, index)
-                              }
-                            >
-                              {airport}
-                            </div>
-                          )
-                        )
+                        multiCityDropdowns[index].filteredTo.map((airport, idx) => (
+                          <div
+                            key={idx}
+                            className={`p-2 hover:bg-blue-100 cursor-pointer ${
+                              multiCityFocusIndices[index]?.to === idx ? "bg-blue-200" : ""
+                            }`}
+                            onClick={() => handleMultiCityToSelect(airport, index)}
+                          >
+                            {airport}
+                          </div>
+                        ))
                       ) : (
-                        <div className="p-2 text-gray-500">
-                          No airports found
-                        </div>
+                        <div className="p-2 text-gray-500">No airports found</div>
                       )}
                     </div>
                   )}
@@ -482,17 +406,13 @@ const FlightSearchFormPopup = ({
 
                 <input
                   type="date"
-                  min={
-                    index === 0
-                      ? today
-                      : multiCityFlights[index - 1].depart || today
-                  }
+                  min={index === 0 ? today : multiCityFlights[index - 1].depart || today}
                   value={flight.depart}
                   required
                   onChange={(e) => {
                     const updatedFlights = [...multiCityFlights];
                     updatedFlights[index].depart = e.target.value;
-                    updateMultiCityFlights(updatedFlights);
+                    setMultiCityFlights(updatedFlights);
                   }}
                   className="w-full md:w-1/4 p-3 mt-7 rounded-lg bg-white text-black cursor-pointer"
                 />
@@ -500,9 +420,9 @@ const FlightSearchFormPopup = ({
                 <button
                   type="button"
                   onClick={() => removeMultiCityFlight(flight.id)}
-                  disabled={multiCityFlights.length <= 2}
+                  disabled={multiCityFlights.length <= 1}
                   className={`text-white px-4 py-2 mt-7 rounded-lg transition ${
-                    multiCityFlights.length <= 2
+                    multiCityFlights.length <= 1
                       ? "bg-gray-400 cursor-not-allowed"
                       : "bg-red-500 hover:bg-red-700 cursor-pointer"
                   }`}
@@ -527,7 +447,6 @@ const FlightSearchFormPopup = ({
                 <TravelersCabinClass
                   selectedCabinClass={cabinClass}
                   setSelectedCabinClass={setCabinClass}
-                  className="multi-city-travelers"
                 />
               </div>
               <button
@@ -554,7 +473,7 @@ const FlightSearchFormPopup = ({
                 value={from}
                 onChange={(e) => {
                   setFrom(e.target.value);
-                  if (!showFromDropdown) setShowFromDropdown(true);
+                  setShowFromDropdown(true);
                 }}
                 onClick={() => {
                   setShowFromDropdown(true);
@@ -562,7 +481,7 @@ const FlightSearchFormPopup = ({
                 }}
                 onKeyDown={handleFromKeyDown}
                 className="w-full p-3 rounded-lg bg-white text-black"
-                placeholder="Select or type departure airport"
+                placeholder="Select departure airport"
                 required
               />
               {showFromDropdown && (
@@ -602,7 +521,7 @@ const FlightSearchFormPopup = ({
                 value={to}
                 onChange={(e) => {
                   setTo(e.target.value);
-                  if (!showToDropdown) setShowToDropdown(true);
+                  setShowToDropdown(true);
                 }}
                 onClick={() => {
                   setShowToDropdown(true);
@@ -610,7 +529,7 @@ const FlightSearchFormPopup = ({
                 }}
                 onKeyDown={handleToKeyDown}
                 className="w-full p-3 rounded-lg bg-white text-black"
-                placeholder="Select or type arrival airport"
+                placeholder="Select arrival airport"
                 required
               />
               {showToDropdown && (
@@ -635,9 +554,7 @@ const FlightSearchFormPopup = ({
             </div>
 
             <div className="flex-1 min-w-[100px]">
-              <label className="block text-white font-semibold mb-1">
-                Depart
-              </label>
+              <label className="block text-white font-semibold mb-1">Depart</label>
               <input
                 type="date"
                 min={today}
@@ -653,9 +570,7 @@ const FlightSearchFormPopup = ({
 
             {tripType !== "oneway" && (
               <div className="flex-1 min-w-[100px]">
-                <label className="block text-white font-semibold mb-1">
-                  Return
-                </label>
+                <label className="block text-white font-semibold mb-1">Return</label>
                 <input
                   type="date"
                   min={departDate || today}
@@ -698,9 +613,9 @@ const FlightSearchFormPopup = ({
             <label className="flex items-center cursor-pointer">
               <input type="checkbox" className="mr-2" /> Add nearby airports
             </label>
-            {/* <label className="flex items-center cursor-pointer">
+            <label className="flex items-center cursor-pointer">
               <input type="checkbox" className="mr-2" /> Direct flights only
-            </label> */}
+            </label>
             <label className="flex items-center cursor-pointer">
               <input type="checkbox" className="mr-2" /> Flexible Tickets
             </label>
