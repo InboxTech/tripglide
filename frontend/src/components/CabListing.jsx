@@ -26,6 +26,7 @@ const CabListing = () => {
   const [cars, setCars] = useState([]); 
   const [filteredCars, setFilteredCars] = useState([]); 
   const [isFilterOpen, setIsFilterOpen] = useState(false); 
+  const [ loading , setLoading ] = useState([]); 
   const [expandedCarId, setExpandedCarId] = useState(null); 
 
   useEffect(() => {
@@ -517,6 +518,7 @@ const CabListing = () => {
     setFilteredCars(cars); // Reset filtered cars to the full list
   };
 
+  
   // Filter logic
   useEffect(() => {
     let results = [...cars];
@@ -565,8 +567,34 @@ const CabListing = () => {
       [category]: checked
         ? [...prevFilters[category], value]
         : prevFilters[category].filter((item) => item !== value),
-    }));
+    }));  
+    // setFilters((prev) => {
+    //   const updated = prev[category].includes(value)
+    //     ? prev[category].filter((item) => item !== value) // Remove if unchecked
+    //     : [...prev[category], value]; // Add if checked
+  
+    //     return { ...prev, [category]: updated }; 
+    //   });
   };
+  
+//  useEffect(() => {
+//   fetch("http://127.0.0.1:5001/")
+//     .then((response) => response.json())
+//     .then((data) => {
+//       console.log("Fetched data:", data);  // Debugging log
+//       setCars(data);
+//       setLoading(false);
+//     })
+//     .catch((error) => {
+//       console.error("Error fetching data:", error);
+//       setLoading(false);
+//     });
+// }, []);
+
+//   // const toggleDeals = (carId) => {
+//   //   setExpandedCarId(expandedCarId === carId ? null : carId);
+//   // };
+
 
   const carAgencies = [...new Set(cars.map(car => car.carAgency))];
 
@@ -658,7 +686,7 @@ const CabListing = () => {
         {/* Filters and Car Listings */}
         <div className="flex flex-col md:flex-row gap-4 sm:gap-6">
           {/* Sidebar for Filters */}
-          <div className={`${isFilterOpen ? 'block' : 'hidden'} md:block bg-white rounded-xl shadow-md p-4 sm:p-6 md:w-1/4 md:sticky md:top-20 h-auto md:h-[70vh] overflow-y-auto scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-gray-200`}>
+          <div className={`${isFilterOpen ? 'block' : 'hidden'} md:block bg-white rounded-xl shadow-md p-4 sm:p-6 md:w-1/4 md:sticky md:top-20 h-auto md:h-[85vh] overflow-y-auto scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-gray-200`}>
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-base sm:text-lg font-bold text-gray-800">Filters</h3>
               {activeFilterCount > 0 && (
@@ -666,7 +694,7 @@ const CabListing = () => {
                   onClick={clearFilters}
                   className="flex items-center text-blue-600 hover:text-blue-800 text-sm"
                 >
-                  <FaTimes className="mr-1" /> Clear All
+                  <FaTimes className="mr-1" /> Reset All
                 </button>
               )}
             </div>
@@ -764,9 +792,9 @@ const CabListing = () => {
 
             {/* Fuel Type */}
             <div className="mb-4 sm:mb-6">
-              <h4 className="font-semibold mb-2 text-gray-800 text-sm sm:text-base">Fuel Type</h4>
+              <h4 className="font-semibold mb-2 text-gray-800 text-sm sm:text-base">Fuel Policies</h4>
               <div className="space-y-2">
-                {["Petrol", "Diesel", "CNG", "Electric", "Hybrid"].map((fuel) => (
+                {["Full-to-Full", "Full-to-Empty", "Same-to-Same"].map((fuel) => (
                   <label key={fuel} className="flex items-center cursor-pointer text-gray-800">
                     <input
                       type="checkbox"

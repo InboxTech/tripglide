@@ -26,14 +26,16 @@ export default function CarHire() {
   // Fetch available cities from Flask API when component loads
   useEffect(() => {
     axios
-      .get("http://localhost:5001/location") // Flask API endpoint
+      .get("http://localhost:5001/locations")
       .then((response) => {
-        setAvailableLocations(response.data.car_city || []); // Set available locations
+        // console.log("Data:", response.data);
+        setAvailableLocations(response.data.locations || []);
       })
       .catch((error) => {
-        console.error("Error fetching locations:", error);
+        console.error("Error:", error);
       });
   }, []);
+  
 
    // Fetch available cities from Flask API when component loads
   // useEffect(() => {
@@ -100,6 +102,8 @@ export default function CarHire() {
     });
   };
 
+  // console.log(availableLocations); // Check if locations are being set correctly
+
   return (
     <section className="w-full">
       {/* Header */}
@@ -138,9 +142,10 @@ export default function CarHire() {
                 required
               />
               <datalist id="pickup-locations">
-                {availableLocations.map((location, index) => (
-                  <option key={index} value={location} />
-                ))}
+              {availableLocations.map((location, index) => {
+  console.log("Location:", location);
+  return <option key={index} value={location} />;
+})}
               </datalist>
             </div>
 
