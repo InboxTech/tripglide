@@ -161,7 +161,7 @@ const CarCard = () => { // Removed unused `filteredCars` prop
         const response = await axios.get("http://localhost:5001"); // Your backend API endpoint
         const fetchedCars = response.data.map(car => ({
           id: car.id,
-          make: car.make, // Changed from `carMake` to `make` to match your mapping
+          make: car.make, 
           model: car.model,
           type: car.type,
           rating: car.rating,
@@ -205,7 +205,8 @@ const CarCard = () => { // Removed unused `filteredCars` prop
 
   // Filter cars by active make
   const carsFilteredByMake = cars.filter(car => 
-    car.make.toLowerCase() === activeMake.toLowerCase() // Case-insensitive match
+    car.make.toLowerCase() === activeMake.toLowerCase()
+     // Case-insensitive match
   );
 
   // Tabs array
