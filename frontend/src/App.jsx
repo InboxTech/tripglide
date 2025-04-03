@@ -16,9 +16,6 @@ import CountryFacts from "./components/CountryFacts";
 import Hotels from "./components/Hotels";
 import HotelSearch from "./components/HotelSearch";
 import Favorite from "./components/Favorite";
-import FlightFilters from "./components/FlightFilters";
-import FlightCards from "./components/FlightCards";
-import FlightSearchFormPopup from "./components/FlightSearchFormPopup";
 import FlightData from "./components/FlightData";
 import FlightCart from "./components/FlightCart";
 
@@ -28,7 +25,7 @@ const initialFlightData = [
     price: 4500,
     departureDate: "2025-04-15",
     cabinClass: "Economy",
-    isFavorite: false, // Default false, toggled by user
+    isFavorite: false,
     airline: "IndiGo",
     airlineCode: "6E",
     flightNumber: "231",
@@ -313,13 +310,12 @@ function App() {
   const [returnDate, setReturnDate] = useState("");
 
   useEffect(() => {
-    console.log("App.jsx - allFlights updated:", allFlights); // Debug
     if (user) {
       localStorage.setItem("user", JSON.stringify(user));
     } else {
       localStorage.removeItem("user");
     }
-  }, [user, allFlights]);
+  }, [user]);
 
   useEffect(() => {
     localStorage.setItem("mockUsers", JSON.stringify(mockUsers));

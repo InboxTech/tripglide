@@ -23,9 +23,58 @@ const FlightData = ({
   const [to, setTo] = useState(initialSearchParams.to || "");
   const [departDate, setDepartDate] = useState(initialSearchParams.departDate || "");
   const [cabinClass, setCabinClass] = useState(initialSearchParams.cabinClass || "Economy");
-  const [filteredFlights, setFilteredFlights] = useState(allFlights);
+  const [filteredFlights, setFilteredFlights] = useState([]);
   const [selectedFilter, setSelectedFilter] = useState("best");
   const [expandedFlightId, setExpandedFlightId] = useState(null);
+  const [favorites, setFavorites] = useState({});
+  const [multiCityFlights, setMultiCityFlights] = useState(initialSearchParams.multiCityFlights || []);
+
+  // Filter states (initialized with defaults from old FlightData)
+  const [priceRange, setPriceRange] = useState([3000, 6000]);
+  const [stopFilter, setStopFilter] = useState("direct");
+  const [timeFilter, setTimeFilter] = useState("all");
+  const [airlinesFilter, setAirlinesFilter] = useState([]);
+
+  useEffect(() => {
+    let enrichedFlights = allFlights.map((flight) => ({
+      ...flight,
+      departure: from || flight.departure,
+      arrival: to || flight.arrival,
+      departureDate: departDate || flight.departureDate,
+      returnFlight: tripType === "return" && from && to
+        ? flight.returnFlight || {
+            ...flight,
+            departure: to,
+            arrival: from,
+            departureDate: returnDate || flight.departureDate,
+            departureTime: "14:00",
+            arrivalTime: "16:15",
+            duration: flight.duration,
+            stops: flight.stops,
+            stopCities: flight.stopCities,
+          }
+        : undefined,
+      isFavorite: !!favorites[`${flight.id}-${tripType}`],
+    }));
+
+    if (tripType === "multicity" && multiCityFlights.length > 0) {
+      enrichedFlights = multiCityFlights.map((flight, index) => ({
+        ...allFlights[index % allFlights.length],
+        departure: flight.from,
+        arrival: flight.to,
+        departureDate: flight.depart,
+        multiCityFlights: multiCityFlights.map(f => ({
+          ...allFlights[index % allFlights.length],
+          departure: f.from,
+          arrival: f.to,
+          departureDate: f.depart,
+        })),
+        isFavorite: !!favorites[`${allFlights[index % allFlights.length].id}-${tripType}`],
+      }));
+    }
+
+    setFilteredFlights(enrichedFlights);
+  }, [allFlights, tripType, from, to, departDate, returnDate, favorites, multiCityFlights]);
 
   useEffect(() => {
     if (location.state) {
@@ -35,103 +84,146 @@ const FlightData = ({
       setDepartDate(location.state.departDate || "");
       setReturnDate(location.state.returnDate || "");
       setCabinClass(location.state.cabinClass || "Economy");
+      setMultiCityFlights(location.state.multiCityFlights || []);
     }
   }, [location.state, setTripType, setReturnDate]);
 
+  // Apply filters (copied from old FlightData)
   useEffect(() => {
     let results = [...allFlights];
-    if (tripType === "return" && from && to) {
-      results = results.map((flight) => ({
-        ...flight, // Preserve existing properties like isFavorite
-        departure: from,
-        arrival: to,
-        departureDate: departDate || flight.departureDate,
-        returnFlight: flight.returnFlight || { // Only add if not already present
-          ...flight,
-          departure: to,
-          arrival: from,
-          departureDate: returnDate || flight.departureDate,
-          departureTime: "14:00",
-          arrivalTime: "16:15",
-          duration: flight.duration, // Ensure consistency
-          stops: flight.stops,
-          stopCities: flight.stopCities,
-        },
-      }));
-    } else if (tripType === "oneway" && from && to) {
-      results = results.map((flight) => ({
-        ...flight,
-        departure: from,
-        arrival: to,
-        departureDate: departDate || flight.departureDate,
-      }));
-    }
-    setFilteredFlights(results);
-  }, [tripType, from, to, departDate, returnDate, allFlights]);
 
-  const handleSearch = (e) => {
+    if (cabinClass) {
+      results = results.filter((flight) => flight.cabinClass === cabinClass);
+    }
+
+    results = results.filter(
+      (flight) => flight.price >= priceRange[0] && flight.price <= priceRange[1]
+    );
+
+    if (stopFilter === "direct") {
+      results = results.filter((flight) => flight.stops === 0);
+    }
+
+    if (timeFilter === "morning") {
+      results = results.filter((flight) => {
+        const hour = parseInt(flight.departureTime.split(":")[0]);
+        return hour >= 5 && hour < 12;
+      });
+    } else if (timeFilter === "afternoon") {
+      results = results.filter((flight) => {
+        const hour = parseInt(flight.departureTime.split(":")[0]);
+        return hour >= 12 && hour < 18;
+      });
+    } else if (timeFilter === "evening") {
+      results = results.filter((flight) => {
+        const hour = parseInt(flight.departureTime.split(":")[0]);
+        return hour >= 18 || hour < 5;
+      });
+    }
+
+    if (airlinesFilter.length > 0) {
+      results = results.filter((flight) => airlinesFilter.includes(flight.airline));
+    }
+
+    if (selectedFilter === "cheapest") {
+      results.sort((a, b) => a.price - b.price);
+    } else if (selectedFilter === "fastest") {
+      results.sort((a, b) => {
+        const durationA = parseInt(a.duration.split("h")[0]) * 60 + (parseInt(a.duration.split("h")[1]) || 0);
+        const durationB = parseInt(b.duration.split("h")[0]) * 60 + (parseInt(b.duration.split("h")[1]) || 0);
+        return durationA - durationB;
+      });
+    } else if (selectedFilter === "best") {
+      results.sort((a, b) => {
+        const scoreA = a.price / 1000 + parseInt(a.duration.split("h")[0]);
+        const scoreB = b.price / 1000 + parseInt(b.duration.split("h")[0]);
+        return scoreA - scoreB;
+      });
+    }
+
+    setFilteredFlights(results);
+  }, [
+    allFlights,
+    selectedFilter,
+    priceRange,
+    stopFilter,
+    timeFilter,
+    airlinesFilter,
+    cabinClass,
+  ]);
+
+  const handleSearch = (e, multiCityData) => {
     e.preventDefault();
-    let results = [...allFlights];
-    if (tripType === "return" && from && to) {
-      results = results.map((flight) => ({
-        ...flight,
-        departure: from,
-        arrival: to,
-        departureDate: departDate || flight.departureDate,
-        returnFlight: flight.returnFlight || {
-          ...flight,
-          departure: to,
-          arrival: from,
-          departureDate: returnDate || flight.departureDate,
-          departureTime: "14:00",
-          arrivalTime: "16:15",
-          duration: flight.duration,
-          stops: flight.stops,
-          stopCities: flight.stopCities,
-        },
+    let enrichedFlights = [];
+    if (tripType === "multicity" && multiCityData) {
+      enrichedFlights = multiCityData.map((flight, index) => ({
+        ...allFlights[index % allFlights.length],
+        departure: flight.from,
+        arrival: flight.to,
+        departureDate: flight.depart,
+        multiCityFlights: multiCityData.map(f => ({
+          ...allFlights[index % allFlights.length],
+          departure: f.from,
+          arrival: f.to,
+          departureDate: f.depart,
+        })),
+        isFavorite: !!favorites[`${allFlights[index % allFlights.length].id}-${tripType}`],
       }));
-    } else if (tripType === "oneway" && from && to) {
-      results = results.map((flight) => ({
+      setMultiCityFlights(multiCityData);
+    } else {
+      enrichedFlights = allFlights.map((flight) => ({
         ...flight,
         departure: from,
         arrival: to,
         departureDate: departDate || flight.departureDate,
+        returnFlight: tripType === "return" && from && to
+          ? flight.returnFlight || {
+              ...flight,
+              departure: to,
+              arrival: from,
+              departureDate: returnDate || flight.departureDate,
+              departureTime: "14:00",
+              arrivalTime: "16:15",
+              duration: flight.duration,
+              stops: flight.stops,
+              stopCities: flight.stopCities,
+            }
+          : undefined,
+        isFavorite: !!favorites[`${flight.id}-${tripType}`],
       }));
     }
-    setAllFlights(results); // Update allFlights with returnFlight
-    setFilteredFlights(results);
-    navigate("/search-results", { state: { tripType, from, to, departDate, returnDate, cabinClass } });
+    setAllFlights(enrichedFlights);
+    setFilteredFlights(enrichedFlights);
+    navigate("/search-results", { 
+      state: { 
+        tripType, 
+        from, 
+        to, 
+        departDate, 
+        returnDate, 
+        cabinClass,
+        multiCityFlights: tripType === "multicity" ? multiCityData : undefined 
+      } 
+    });
   };
 
   const toggleFavorite = (flightId) => {
-    const updatedFlights = allFlights.map((flight) =>
-      flight.id === flightId
-        ? {
-            ...flight,
-            isFavorite: !flight.isFavorite,
-            returnFlight: flight.returnFlight || (tripType === "return" && from && to
-              ? {
-                  ...flight,
-                  departure: to,
-                  arrival: from,
-                  departureDate: returnDate || flight.departureDate,
-                  departureTime: "14:00",
-                  arrivalTime: "16:15",
-                  duration: flight.duration,
-                  stops: flight.stops,
-                  stopCities: flight.stopCities,
-                }
-              : undefined),
-          }
-        : flight
+    const key = `${flightId}-${tripType}`;
+    setFavorites((prev) => ({
+      ...prev,
+      [key]: !prev[key],
+    }));
+    const updatedFlights = allFlights.map(flight => 
+      flight.id === flightId ? { ...flight, isFavorite: !favorites[key] } : flight
     );
-    console.log("FlightData.jsx - Before update - allFlights:", allFlights);
-    console.log("FlightData.jsx - Updated flights:", updatedFlights);
     setAllFlights(updatedFlights);
-    setFilteredFlights(updatedFlights); // Sync immediately
+    setFilteredFlights(updatedFlights);
   };
 
-  // Rest of the component (FlightFilters, FlightCards, etc.) remains unchanged
+  const uniqueAirports = [...new Set(allFlights.map(flight => flight.departure).concat(allFlights.map(flight => flight.arrival)))];
+
+  const uniqueAirlines = [...new Set(allFlights.map(flight => flight.airline))];
+
   return (
     <div className="bg-blue-50 min-h-screen">
       <div className="flex bg-[#06152B] justify-center py-6 px-4">
@@ -163,10 +255,10 @@ const FlightData = ({
         setReturnDate={setReturnDate}
         setCabinClass={setCabinClass}
         handleSearch={handleSearch}
-        departureAirports={["Delhi", "Mumbai"]} // Simplified for demo
-        arrivalAirports={["Delhi", "Mumbai"]}
-        multiCityFlights={[]}
-        setMultiCityFlights={() => {}}
+        departureAirports={uniqueAirports}
+        arrivalAirports={uniqueAirports}
+        multiCityFlights={multiCityFlights}
+        setMultiCityFlights={setMultiCityFlights}
       />
 
       <div className="container mx-auto max-w-7xl px-4 py-8">
@@ -182,15 +274,15 @@ const FlightData = ({
 
         <div className="flex flex-col md:flex-row gap-6">
           <FlightFilters
-            priceRange={[3000, 6000]}
-            setPriceRange={() => {}}
-            stopFilter="direct"
-            setStopFilter={() => {}}
-            timeFilter="all"
-            setTimeFilter={() => {}}
-            airlinesFilter={[]}
-            setAirlinesFilter={() => {}}
-            airlines={["IndiGo", "Air India"]}
+            priceRange={priceRange}
+            setPriceRange={setPriceRange}
+            stopFilter={stopFilter}
+            setStopFilter={setStopFilter}
+            timeFilter={timeFilter}
+            setTimeFilter={setTimeFilter}
+            airlinesFilter={airlinesFilter}
+            setAirlinesFilter={setAirlinesFilter}
+            airlines={uniqueAirlines}
             isFilterOpen={isFilterOpen}
             setIsFilterOpen={setIsFilterOpen}
           />

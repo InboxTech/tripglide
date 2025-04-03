@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import { FaGlobe, FaUser, FaBars, FaHeart, FaPlane, FaHotel, FaCar, FaFlag, FaSearchLocation, FaQuestionCircle } from "react-icons/fa";
 import { useNavigate, useLocation, Link } from "react-router-dom";
+import { FaGlobe, FaUser, FaBars, FaHeart, FaPlane, FaHotel, FaCar, FaFlag, FaSearchLocation, FaQuestionCircle } from "react-icons/fa";
 import logo from "../assets/image/logo2.png";
 
 export default function Header({ user, handleLogout, allFlights, tripType, returnDate }) {
@@ -47,8 +47,8 @@ export default function Header({ user, handleLogout, allFlights, tripType, retur
   };
 
   const handleFavoritesClick = () => {
-    console.log("Header.jsx - Navigating to favorites with allFlights:", allFlights); // Debug
-    navigate("/favorites", { state: { allFlights, tripType, returnDate } });
+    const favoriteFlights = allFlights.filter(flight => flight.isFavorite);
+    navigate("/favorites", { state: { allFlights: favoriteFlights, tripType, returnDate } });
   };
 
   return (
