@@ -9,13 +9,16 @@ const CarCard = () => {
   useEffect(() => {
     const fetchCars = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/cars"); // Replace with your backend API endpoint
+        const response = await axios.get("http://localhost:5001"); // Replace with your backend API endpoint
         const fetchedCars = response.data.map(car => ({
           id: car.id,
           model: car.model,
           type: car.type,
+          seats : car.seats,
           rating: car.rating,
-          passengers: car.passengers,
+          agency: car.agency,
+          fuelpolicy : car.fuelpolicy,
+          price : car.price,
           transmission: car.transmission,
           image: getImageUrl(car.type), // Assign image based on type
           isFavorite: false, // Default value
