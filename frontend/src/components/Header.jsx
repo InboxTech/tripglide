@@ -27,7 +27,7 @@ export default function Header({ user, handleLogout }) {
     const path = location.pathname;
     if (path.includes("/hotels")) {
       setActiveTab("hotels");
-    } else if (path.includes("/carhire") || path.includes("/cabs")) {
+    } else if (path.includes("/carhire") || path.includes("/cabs") || path.includes("/car-confirmation")) {
       setActiveTab("carhire");
     } else {
       setActiveTab("flights");

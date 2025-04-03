@@ -16,6 +16,7 @@ import RegionalSettings from "./components/RegionalSettings";
 import CountryFacts from "./components/CountryFacts";
 import Hotels from "./components/Hotels";
 import HotelSearch from "./components/HotelSearch";
+import CarConfirmation from "./components/CarConfirmation";
 
 function App() {
   // Initialize user state from localStorage
@@ -108,6 +109,7 @@ function App() {
           <Route path="/country-facts" element={<CountryFacts />} />
           <Route path="/hotels" element={<Hotels />} />
           <Route path="/hotel-search" element={<HotelSearch />} />
+          <Route path="/car-confirmation" element={<CarConfirmation />} />
         </Routes>
       </Router>
     </GoogleOAuthProvider>

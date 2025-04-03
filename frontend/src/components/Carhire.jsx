@@ -102,8 +102,6 @@ export default function CarHire() {
 
   return (
     <section className="w-full">
-      {/* Header */}
-      {/* <Header /> */}
 
       {/* Background Image */}
       <div className="absolute inset-0 hidden lg:block -z-10">

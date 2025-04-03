@@ -14,7 +14,7 @@ def get_db_connection():
         host='localhost',
         user='root',  # Update with your MySQL username
         password='',  # Update with your MySQL password
-        port="3307",  # Update the port if different
+        # port="3307",  # Update the port if different
         database='main'  # Update with your actual database name
     )
     except mysql.connector.Error as e:
