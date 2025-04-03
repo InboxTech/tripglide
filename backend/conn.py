@@ -58,13 +58,16 @@ try:
     # ✅ Insert data in chunks to avoid packet size issues
     chunk_size = 500  # Adjust chunk size based on system performance
     for i in range(0, len(data_to_insert), chunk_size):
-        cursor.executemany(insert_query, data_to_insert[i:i+chunk_size])
+        cursor.executemany(insert_query, data_to_insert[i:i + chunk_size])
         conn.commit()
 
     print("✅ Data successfully inserted into `future_car_data` table.")
 
 except mysql.connector.Error as err:
     print(f"❌ DatabaseError: {err}")
+
+except Exception as e:
+    print(f"⚠️ Error: {e}")
 
 finally:
     # ✅ Close the connection
