@@ -1,24 +1,25 @@
+import React from "react";
 import { FaInstagram, FaTwitter, FaMedium } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
 export default function Footer() {
   return (
-    <footer className="bg-[#06152B] text-white px-4 sm:px-6 py-10">
-      <div className="max-w-7xl mx-auto">
+    <footer className="bg-[#06152B] text-white px-6 py-8">
+      <div className="max-w-7xl container mx-auto">
         {/* Top Section */}
-        <div className="flex flex-col md:flex-row justify-between items-center md:items-start gap-10">
+        <div className="flex flex-col md:flex-row justify-between items-center md:items-start gap-6">
           {/* About Us */}
-          <div className="bg-[#06214a] text-white px-6 py-4 rounded-lg w-full md:w-1/3 text-center md:text-left">
-            <h2 className="text-lg font-semibold font-serif">About Us</h2>
-            <p className="mt-3 text-sm leading-relaxed">
-              Tripglide is a travel website project designed to help<br className="hidden sm:inline" />
-              users find the best flights, hotels, and car hire deals.<br className="hidden sm:inline" />
-              Our goal is to make travel seamless and affordable.
-            </p>
-          </div>
+          <div className="bg-[#06214a] text-white px-6 py-3 rounded-lg w-full md:w-auto">
+          <h2 className="text-lg font-semibold font-serif text-center md:text-left">About Us</h2>
+          <p className="mt-2 font-normal text-sm text-center md:text-left max-w-xl md:max-w-lg leading-relaxed">
+            Tripglide is a travel website project designed to help<br className="hidden sm:inline" /> 
+            users find the best flights, hotels, and car hire deals.<br className="hidden sm:inline" /> 
+            Our goal is to make travel seamless and affordable.
+          </p>
+        </div>
 
           {/* Links Section */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-8 w-full md:w-2/3 text-center md:text-left">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-6 w-full md:w-auto text-center md:text-left">
             {/* Column 1 */}
             <div className="flex flex-col gap-2">
               <h3 className="text-base font-bold text-gray-400 mb-2">
@@ -32,10 +33,10 @@ export default function Footer() {
                 <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="hover:text-[#E4405F] transition duration-300">
                   <FaInstagram size={20} />
                 </a>
-                <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="hover:text-[#1DA1F2] transition">
+                <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="hover:text-[#1DA1F2] transition duration-300">
                   <FaTwitter size={20} />
                 </a>
-                <a href="https://medium.com" target="_blank" rel="noopener noreferrer" className="hover:text-gray-300 transition">
+                <a href="https://medium.com" target="_blank" rel="noopener noreferrer" className="hover:text-gray-700 transition duration-300">
                   <FaMedium size={20} />
                 </a>
               </div>
@@ -66,7 +67,7 @@ export default function Footer() {
         </div>
 
         {/* Bottom Section */}
-        <div className="text-center mt-10 border-t border-gray-700 pt-5 text-sm">
+        <div className="text-center mt-8 border-t border-gray-600 pt-4">
           © Tripglide Ltd 2025
         </div>
       </div>

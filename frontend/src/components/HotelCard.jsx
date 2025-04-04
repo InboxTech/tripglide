@@ -1,190 +1,195 @@
-import React from "react";
+import React, { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
-    BadgeCheck,
-    Star,
-    Wifi,
-    Coffee,
-    Leaf,
-    BedDouble,
-    Wine,
-} from "lucide-react";
+  FaStar,
+  FaCoffee,
+  FaWifi,
+  FaSwimmingPool,
+  FaWineGlass,
+  FaDumbbell,
+  FaSpa,
+  FaShuttleVan,
+  FaUtensils,
+  FaParking,
+  FaTv,
+  FaConciergeBell,
+  FaSnowflake,
+  FaHotTub,
+  FaPaw,
+  FaChild,
+  FaSmokingBan,
+  FaWheelchair,
+  FaBusinessTime,
+  FaTshirt,
+} from 'react-icons/fa';
+import HotelFilter from './HotelFilter';
 
-const HotelCard = () => {
-    const hotels = [
-        {
-            id: "hotel123",
-            name: "The Golden Crown Hotel & Spa Colva Goa",
-            location: "Colva, Goa",
-            rating: 3.9,
-            reviews: 1479,
-            image: "/images/Hotel/Card/the-golden-palms-hotel.jpg",
-            isFeatured: true,
-            tags: ["Women Friendly", "Couple Friendly"],
-            ecoFriendly: true,
-            amenities: ["Free Breakfast", "Free WiFi", "Swimming Pool", "Bar"],
-            discountedPrice: 3383,
-            taxes: 595,
-        },
-        {
-            id: "hotel124",
-            name: "Marina Bay Resort",
-            location: "Candolim, Goa",
-            rating: 4.2,
-            reviews: 980,
-            image: "/images/Hotel/Card/Marina Bay Resort.jpg",
-            isFeatured: false,
-            tags: ["Couple Friendly"],
-            ecoFriendly: false,
-            amenities: ["Free WiFi", "Swimming Pool"],
-            discountedPrice: 4120,
-            taxes: 650,
-        },
-        {
-            id: "hotel125",
-            name: "Palm Paradise Resort",
-            location: "Baga, Goa",
-            rating: 4.5,
-            reviews: 2305,
-            image: "/images/Hotel/Card/Palm Paradise Resort.jpg",
-            isFeatured: true,
-            tags: ["Women Friendly"],
-            ecoFriendly: true,
-            amenities: ["Free Breakfast", "Bar", "Swimming Pool"],
-            discountedPrice: 5200,
-            taxes: 780,
-        },
-    ];
+const HotelCard = ({ location, checkInDate, checkOutDate, adults, children, rooms }) => {
+  const [hotels, setHotels] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-    // Dynamically generate star icons
-    const renderStars = (rating) => {
-        const stars = [];
-        const starCount = Math.ceil(rating);
-        for (let i = 0; i < starCount; i++) {
-            stars.push(
-                <Star key={i} className="w-4 h-4 fill-yellow-500 text-yellow-500" />
-            );
-        }
-        return stars;
-    };
+  const amenityIcons = {
+    "Wi-Fi": <FaWifi className="w-4 h-4 text-green-600" />,
+    "Swimming Pool": <FaSwimmingPool className="w-4 h-4 text-green-600" />,
+    "Bar": <FaWineGlass className="w-4 h-4 text-green-600" />,
+    "Gym": <FaDumbbell className="w-4 h-4 text-green-600" />,
+    "Spa": <FaSpa className="w-4 h-4 text-green-600" />,
+    "Airport Shuttle": <FaShuttleVan className="w-4 h-4 text-green-600" />,
+    "Restaurant": <FaUtensils className="w-4 h-4 text-green-600" />,
+    "Free Breakfast": <FaCoffee className="w-4 h-4 text-green-600" />,
+    "Parking": <FaParking className="w-4 h-4 text-green-600" />,
+    "Television": <FaTv className="w-4 h-4 text-green-600" />,
+    "Concierge": <FaConciergeBell className="w-4 h-4 text-green-600" />,
+    "Air Conditioning": <FaSnowflake className="w-4 h-4 text-green-600" />,
+    "Hot Tub": <FaHotTub className="w-4 h-4 text-green-600" />,
+    "Pet Friendly": <FaPaw className="w-4 h-4 text-green-600" />,
+    "Kids Activities": <FaChild className="w-4 h-4 text-green-600" />,
+    "Non-Smoking": <FaSmokingBan className="w-4 h-4 text-green-600" />,
+    "Wheelchair Accessible": <FaWheelchair className="w-4 h-4 text-green-600" />,
+    "Business Center": <FaBusinessTime className="w-4 h-4 text-green-600" />,
+    "Laundry": <FaTshirt className="w-4 h-4 text-green-600" />,
+  };
 
-    return (
-        <div className="flex flex-col gap-4">
-            {hotels.map((hotel) => (
-                <div
-                    key={hotel.id}
-                    className="rounded-xl shadow-sm flex flex-col md:flex-row bg-white overflow-hidden relative max-w-[1150px] w-full mx-auto"
-                >
-                    {/* Hotel Image */}
-                    <div className="flex flex-col md:flex-row w-full">
-                        <div className="w-full md:w-[30%] relative">
-                            <img
-                                src={hotel.image}
-                                alt={hotel.name}
-                                className="w-full h-[220px] md:h-[250px] object-cover"
-                            />
-                        </div>
+  const fetchHotels = useCallback(async (filters = {}) => {
+    setLoading(true);
+    try {
+      const queryParams = new URLSearchParams();
+      if (location) queryParams.append('arrival', location);
 
-                        {/* Divider */}
-                        <div className="hidden md:block w-px bg-gray-300"></div>
+      const bedroomTypes = filters.bedroomType?.length > 0 && !filters.bedroomType.includes('all')
+        ? filters.bedroomType
+        : ['Deluxe'];
+      bedroomTypes.forEach((type) => queryParams.append('bedroomtype', type));
 
-                        {/* Hotel Details */}
-                        <div className="flex-1 flex flex-col md:flex-row">
-                            {/* Left Details */}
-                            <div className="flex-1 p-4 ">
-                                {/* Name + Stars */}
-                                <div className="flex items-center gap-2 mb-1">
-                                    <h3 className="text-lg font-semibold">{hotel.name}</h3>
-                                </div>
-                                <div className="flex items-center">{renderStars(hotel.rating)}</div>
+      if (filters.price?.length > 0 && !filters.price.includes('all')) {
+        filters.price.forEach((price) => {
+          switch (price) {
+            case 'below2000': queryParams.append('totalpricepernight', '0-2000'); break;
+            case '2000to5000': queryParams.append('totalpricepernight', '2000-5000'); break;
+            case '5000to10000': queryParams.append('totalpricepernight', '5000-10000'); break;
+            case 'above10000': queryParams.append('totalpricepernight', '10000+'); break;
+            default: break;
+          }
+        });
+      }
 
-                                {/* Location */}
-                                <div className="mt-2">
-                                    <p className="text-sm text-gray-500 mb-2">{hotel.location}</p>
+      if (filters.rating?.length > 0 && !filters.rating.includes('all')) {
+        filters.rating.forEach((rating) => queryParams.append('rating', rating));
+      }
 
-                                    {/* Tags */}
-                                    <div className="flex gap-2 mt-1 flex-wrap mb-3">
-                                        {hotel.tags.map((tag, idx) => (
-                                            <span
-                                                key={idx}
-                                                className="text-xs bg-pink-100 text-pink-700 px-2 py-1 rounded"
-                                            >
-                                                {tag.toUpperCase()}
-                                            </span>
-                                        ))}
-                                        {hotel.ecoFriendly && (
-                                            <span className="flex items-center gap-1 text-xs bg-green-100 text-green-700 px-2 py-1 rounded">
-                                                <Leaf className="w-3 h-3" /> ECO+
-                                            </span>
-                                        )}
-                                    </div>
+      if (filters.amenities?.length > 0) {
+        filters.amenities.forEach((amenity) => queryParams.append('amenities', amenity));
+      }
 
-                                    {/* Amenities */}
-                                    <div className="grid grid-cols-2 gap-2 text-sm text-gray-700">
-                                        {hotel.amenities.includes("Free Breakfast") && (
-                                            <div className="flex items-center gap-1">
-                                                <Coffee className="w-4 h-4 text-green-600" /> Free Breakfast
-                                            </div>
-                                        )}
-                                        {hotel.amenities.includes("Free WiFi") && (
-                                            <div className="flex items-center gap-1">
-                                                <Wifi className="w-4 h-4 text-green-600" /> Free WiFi
-                                            </div>
-                                        )}
-                                        {hotel.amenities.includes("Swimming Pool") && (
-                                            <div className="flex items-center gap-1">
-                                                <BedDouble className="w-4 h-4 text-green-600" /> Swimming Pool
-                                            </div>
-                                        )}
-                                        {hotel.amenities.includes("Bar") && (
-                                            <div className="flex items-center gap-1">
-                                                <Wine className="w-4 h-4 text-green-600" /> Bar
-                                            </div>
-                                        )}
-                                    </div>
-                                </div>
-                            </div>
+      const response = await fetch(`http://localhost:5001/all?${queryParams.toString()}`);
+      const data = await response.json();
+      setHotels(data.all || []);
+    } catch (error) {
+      console.error('Error fetching hotels:', error);
+      setHotels([]);
+    } finally {
+      setLoading(false);
+    }
+  }, [location]);
 
-                            {/* Right Side - Rating, Pricing, Button */}
-                            <div className="flex flex-col justify-between items-center p-3 md:w-56 border-t md:border-t-0 md:border-l md:border-gray-300  md:h-[250px]">
-                                <div className="flex flex-col items-center">
-                                    <div className="flex items-center gap-1 text-yellow-800 px-2 py-1 rounded text-sm mb-1">
-                                        Very Good
-                                        <span className="font-bold ml-1 bg-yellow-400 text-white px-1 rounded text-xs">
-                                            {hotel.rating}
-                                        </span>
-                                    </div>
+  useEffect(() => {
+    fetchHotels();
+  }, [location, fetchHotels]);
 
-                                    <div className="text-xs text-gray-600 mb-4">
-                                        {hotel.reviews.toLocaleString()} review
-                                    </div>
+  const handleFilterChange = useCallback((filters) => {
+    fetchHotels(filters);
+  }, [fetchHotels]);
 
-                                </div>
+  const renderStars = (rating) => {
+    const starCount = Math.ceil(parseFloat(rating));
+    return Array.from({ length: starCount }).map((_, i) => (
+      <FaStar key={i} className="text-yellow-500 w-4 h-4" aria-hidden="true" />
+    ));
+  };
 
-                                {/* Price */}
-                                <div className="flex flex-col items-center justify-center w-full">
-                                    <div className="text-center mb-3">
-                                        <div className="text-2xl font-bold text-gray-800 mb-1">
-                                            ₹{hotel.discountedPrice} <span className="text-sm font-normal text-gray-600">/ night</span>
-                                        </div>
-                                        <div className="text-xs text-gray-700 font-semibold">
-                                            +₹{hotel.taxes} taxes & fees
-                                        </div>
+  const handleChooseRoom = (hotel, arrival) => {
+    // Navigate to HotelDetails and pass search parameters
+    navigate(`/hotel-details/${encodeURIComponent(hotel)}/${encodeURIComponent(arrival)}`, {
+      state: {
+        checkInDate,
+        checkOutDate,
+        adults,
+        children,
+        rooms,
+      },
+    });
+  };
 
-
-                                    </div>
-
-                                    {/* Button */}
-                                    <button className="bg-red-600 text-white text-sm  py-2 rounded hover:bg-red-700 w-full">
-                                        Choose Room
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            ))}
+  return (
+    <div className="container mx-auto px-4">
+      <div className="flex flex-col md:flex-row gap-4">
+        <div className="w-full md:w-1/4">
+          <HotelFilter onFilterChange={handleFilterChange} />
         </div>
-    );
+
+        <div className="w-full md:w-3/4 flex flex-col gap-4">
+          <h3 className="text-xl font-semibold mb-4">Available Hotels in {location || 'Any Location'}</h3>
+          {loading ? (
+            <div className="text-center text-gray-500 py-8">Loading hotels...</div>
+          ) : hotels.length === 0 ? (
+            <div className="text-center text-gray-500 py-8">No hotels found for this location.</div>
+          ) : (
+            hotels.map((hotel) => (
+              <div key={hotel.hotel + hotel.arrival} className="rounded-xl shadow-sm flex flex-col md:flex-row bg-white overflow-hidden w-full">
+                <div className="w-full md:w-[30%]">
+                  <img
+                    src="/images/Hotel/placeholder.jpg"
+                    alt={hotel.hotel}
+                    className="w-full h-56 md:h-full object-cover"
+                    loading="lazy"
+                  />
+                </div>
+
+                <div className="flex-1 p-4">
+                  <h3 className="text-lg font-semibold">{hotel.hotel}</h3>
+                  <div className="flex items-center gap-1" aria-label={`Rating: ${hotel.rating} out of 5`}>
+                    {renderStars(hotel.rating)}
+                  </div>
+                  <p className="text-sm text-gray-500 mb-2">{hotel.arrival}</p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm text-gray-700">
+                    {hotel.amenities && hotel.amenities.split(',').map((amenity) => (
+                      <div key={amenity} className="flex items-center gap-1">
+                        {amenityIcons[amenity.trim()] || <span className="w-4 h-4" />}
+                        {amenity.trim()}
+                      </div>
+                    ))}
+                  </div>
+                  <p className="text-sm text-gray-700 mt-2">Bedroom Type: {hotel.bedroomtype}</p>
+                </div>
+
+                <div className="flex flex-col justify-between items-center p-3 md:w-56 border-t md:border-t-0 md:border-l border-gray-300">
+                  <div className="text-center mb-3">
+                    <div className="text-2xl font-bold text-gray-800 mb-1">
+                      ₹{parseFloat(hotel.totalpricepernight).toLocaleString()} <span className="text-sm font-normal text-gray-600">/ night</span>
+                    </div>
+                    <div className="text-xs text-gray-700 font-semibold">
+                      +₹{parseFloat(hotel.totalcost - hotel.totalpricepernight).toLocaleString()} taxes & fees
+                    </div>
+                  </div>
+
+                  <button
+                    className="bg-red-600 text-white text-sm py-2 px-4 rounded hover:bg-red-700 w-full focus:outline-none focus:ring-2 focus:ring-red-500"
+                    aria-label={`Choose room at ${hotel.hotel}`}
+                    onClick={() => handleChooseRoom(hotel.hotel, hotel.arrival)}
+                  >
+                    Choose Room
+                  </button>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      </div>
+    </div>
+  );
 };
 
-export default HotelCard;
+export default HotelCard
+
+

@@ -72,17 +72,25 @@ export default function CarHire() {
       },
     ];
 
+    const navigate = useNavigate(); 
+
+    const handleSearch = (e) => {
+      e.preventDefault(); 
+      navigate("/cabs", {
+        state: { pickupLocation, pickupDate, dropoffDate, pickupTime, dropoffTime },
+      });
+    };
 
   return (
-    <section className="relative w-full">
+    <section className="w-full">
       {/* Header */}
-      <Header />
+      {/* <Header /> */}
 
 
-      {/* Background Image - Hidden on Small Screens */}
+      {/* Background Image */}
       <div className="absolute inset-0 hidden lg:block -z-10">
         <img
-          src="/public/images/carbg.jpg"
+          src="/images/carbg.jpg"
           alt="Car rental background"
           className="w-full h-full object-cover object-center fixed"
         />
@@ -215,6 +223,13 @@ export default function CarHire() {
         </div>
         <div className="container mx-auto max-w-7xl">
           <FeaturesSection features={carFeatures} />
+        </div>
+      </div>
+
+      {/* Popular Car Deals */}
+      <div className="bg-gray-100">
+        <div className="container mx-auto max-w-7xl px-8 py-12">
+          <PopularCarDeals />
         </div>
       </div>
       

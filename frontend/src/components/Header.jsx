@@ -1,7 +1,8 @@
+import React from "react";
 import { useState, useEffect, useRef } from "react";
 import { FaGlobe, FaUser, FaBars, FaHeart, FaPlane, FaHotel, FaCar, FaFlag, FaSearchLocation, FaQuestionCircle } from "react-icons/fa";
 import { useNavigate, useLocation, Link } from "react-router-dom";
-import logo from "../assets/image/logo2.png";
+// import logo from "../assets/image/logo2.png";
 
 export default function Header({ user, handleLogout }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -24,7 +25,7 @@ export default function Header({ user, handleLogout }) {
 
   useEffect(() => {
     const path = location.pathname;
-    if (path.includes("/hotels")) {
+    if (path.includes("/hotels") || path.includes("/hotel-search") || path.includes("/hotel-details")) {
       setActiveTab("hotels");
     } else if (path.includes("/carhire") || path.includes("/cabs")) {
       setActiveTab("carhire");
@@ -63,7 +64,7 @@ export default function Header({ user, handleLogout }) {
       <div className="container mx-auto max-w-7xl flex flex-wrap items-center justify-between p-4 md:p-6">
         <div className="flex items-center gap-3 flex-shrink-0">
           <Link to="/" className="flex items-center gap-3 cursor-pointer hover:text-blue-300">
-            <img src={logo} alt="Tripglide Logo" className="h-8 md:h-10 w-auto" />
+            {/* <img src={logo} alt="Tripglide Logo" className="h-8 md:h-10 w-auto" /> */}
             <span className="text-lg md:text-2xl font-bold font-serif">Tripglide</span>
           </Link>
         </div>

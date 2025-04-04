@@ -1,14 +1,16 @@
-import { useState, useEffect } from "react";
+import React from "react";
+import { useState, useEffect, useRef } from "react";
 import Header from "./Header";
 import Footer from "./Footer";
 import TravelersCabinClass from "./TravelersCabinClass"; 
 import TravelDeals from "./TravelDeals";
-import FAQSection from "./FAQSecton";
+import FAQSection from "./FAQSection";
 import FlightCardList from "./FlightCardList";
 import { useLocation, useNavigate } from "react-router-dom";
 import { FaPlane, FaCalendarAlt, FaTag } from "react-icons/fa";
 import FeaturesSection from "./FeaturesSection";
-import FlightDealsCards from "../FlightDealsCards";
+import FlightDealsCards from "./FlightDealsCards";
+import axios from "axios";
 
 export default function SearchSection() {
     const [tripType, setTripType] = useState("return");
@@ -16,6 +18,7 @@ export default function SearchSection() {
     const [to, setTo] = useState(""); 
     const [departDate, setDepartDate] = useState("");
     const [returnDate, setReturnDate] = useState("");
+    const [cabinClass, setCabinClass] = useState("Economy");
     const [multiCityFlights, setMultiCityFlights] = useState([
         { id: 1, from: "", to: "", depart: "" },
         { id: 2, from: "", to: "", depart: "" }
