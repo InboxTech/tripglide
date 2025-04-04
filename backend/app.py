@@ -1,10 +1,18 @@
 # Import necessary api's in one api
 from flask import Flask, jsonify,request
 import mysql.connector
+from dotenv import load_dotenv
+import os
 from flask_cors import CORS
 
+load_dotenv()
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all domains
+
+# Access environment variables
+stripe_key = os.getenv("sk_test_51RA1PaAGhuxmwIzwXzYwMTfttf8AeMgBoHagWerfMXYHkITFhxL2gZlskFnv5uufbtLaXervlD2CRfDnG57KMSEK00VE1xcXDW")
+db_url = os.getenv("http://127.0.0.1:5001")
+debug_mode = os.getenv("DEBUG") == "True"
 
 # MySQL connection function
 def get_db_connection():
@@ -63,6 +71,7 @@ def get_data():
     location = request.args.get('location')
     no_of_passengers = request.args.get('no_of_passenger')
     car_type = request.args.get('cartype')
+    make = request.args.get('make')
     model = request.args.get('model')
     fuel_policy = request.args.get('fuel_policy')
     transmission = request.args.get('transmission')
@@ -84,6 +93,9 @@ def get_data():
     if car_type:
         query_conditions.append("cartype = %s")
         query_params.append(car_type)
+    if make:
+        query_conditions.append("make = %s")
+        query_params.append(make)
     if model:
         query_conditions.append("model = %s")
         query_params.append(model)
@@ -122,6 +134,7 @@ def get_data():
                 "location": row["City"],  # Corrected
                 "no_of_passengers": row["Seats"],
                 "cartype": row.get("CarType", "N/A"),  # Corrected
+                "make": row["Make"],
                 "model": row["Model"],  # Corrected
                 "fuel_policy": row["Fuel_Policy"],  # Corrected
                 "transmission": row["Transmission"],  # Corrected
@@ -134,10 +147,11 @@ def get_data():
             })
             
     return jsonify(formatted_response)
+    return f"Stripe Key: {pk_test_51RA1PaAGhuxmwIzwuekZ7LyLuwOFMdNXMGBGdVj7tO603Bz6Rq0lzHf51iuXuc6wJHCQIguaKycDVvzfhOx6gCxM00JF5p3CdX}, DB URL: {http://127.0.0.1:5001/}, Debug: {debug_mode}"
 
 # Run the Flask app and print data in the console
 if __name__ == '__main__':
-    app.run(debug=True, port=5001)
+    app.run(debug=debug_mode, port=5001)
 
 
 

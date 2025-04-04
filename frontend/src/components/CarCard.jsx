@@ -13,6 +13,7 @@ const CarCard = () => {
         const response = await axios.get("http://localhost:5001"); // Replace with your backend API endpoint
         const fetchedCars = response.data.map(car => ({
           id: car.id,
+          make: car.make,
           model: car.model,
           type: car.type,
           seats : car.seats,
@@ -145,3 +146,5 @@ const CarCard = () => {
 };
 
 export default CarCard;
+
+
