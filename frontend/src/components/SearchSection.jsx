@@ -81,9 +81,6 @@ export default function SearchSection() {
           airport.toLowerCase().includes(from.toLowerCase()) && airport !== to
       )
     );
-<<<<<<< HEAD
-}
-=======
     setFromFocusIndex(-1); // Reset focus when filtered list changes
   }, [from, to, departureAirports]);
 
@@ -884,4 +881,3 @@ export default function SearchSection() {
     </section>
   );
 }
->>>>>>> 247de551da55923f0b61567aa2d5ae57ba6b09fd
