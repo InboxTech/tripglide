@@ -6,7 +6,7 @@ import os
 from flask_cors import CORS
 
 load_dotenv()
-app = Flask(__name__)
+app = Flask(_name_)
 CORS(app) # Enable CORS for all domains
 
 # MySQL connection function
@@ -16,8 +16,8 @@ def get_db_connection():
         host='localhost',
         user='root',  # Update with your MySQL username
         password='',  # Update with your MySQL password
-        # port="3307",  # Update the port if different
-        database='main'  # Update with your actual database name
+        port="3307",  # Update the port if different
+        database='tripglide'  # Update with your actual database name
     )
     except mysql.connector.Error as e:
         print(f"Error connecting to MySQL: {e}")
@@ -159,7 +159,7 @@ def get_address():
         connection.close()
 
 # Run the Flask app and print data in the console
-if __name__ == '__main__':
+if _name_ == '_main_':
     # Run the Flask app to serve data via API
     app.run(debug=True, port=5001)
 
@@ -172,7 +172,7 @@ if __name__ == '__main__':
 # from flask_cors import CORS
 # from datetime import timedelta
 
-# app = Flask(__name__)
+# app = Flask(_name_)
 # CORS(app) # Enable CORS for all domains
 
 # # MySQL connection function
@@ -265,7 +265,7 @@ if __name__ == '__main__':
 #         return jsonify({"success": False, "error": str(e)}), 500
 
 # # Run the Flask app and print data in the console
-# if __name__ == '__main__':
+# if _name_ == '_main_':
 #     # Run the Flask app to serve data via API
 #     app.run(debug=True, port=5001)
 
@@ -278,7 +278,7 @@ if __name__ == '__main__':
 # from flask_cors import CORS
 # from datetime import timedelta
 
-# app = Flask(__name__)
+# app = Flask(_name_)
 # CORS(app)  # Enable CORS for all domains
 
 # # MySQL connection function
@@ -348,7 +348,7 @@ if __name__ == '__main__':
 #     return jsonify(locations)
 
 # # Run the Flask app and print data in the console
-# if __name__ == '__main__':
+# if _name_ == '_main_':
 #     print("Fetching Cars Data...\n")
 #     fetch_cars_data()
 
@@ -368,7 +368,7 @@ if __name__ == '__main__':
 # from flask_cors import CORS
 # from datetime import timedelta
 
-# app = Flask(__name__)
+# app = Flask(_name_)
 # CORS(app)  # Enable CORS for all domains
 
 # # MySQL connection function
@@ -407,11 +407,5 @@ if __name__ == '__main__':
 #     connection.close()
 #     return jsonify(cars)
 
-# if __name__ == '__main__':
+# if _name_ == '_main_':
 #     app.run(debug=True, port=5001)
-
-
-
-
-
-
