@@ -273,6 +273,7 @@ const CabListing = () => {
           {/* Car Listings */}
           {/* <main className="w-full md:w-3/4">
             {filteredCars.length > 0 ? (
+<<<<<<< HEAD
               filteredCars.map(car => {
                 const visibleDeals = getFilteredDeals(car);
                 return (
@@ -287,6 +288,64 @@ const CabListing = () => {
                         </h3>
                         <span className="text-xs sm:text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
                           {car.type}
+=======
+              filteredCars.map((car) => (
+                <div key={car.id} className="bg-white p-4 sm:p-6 rounded-2xl mb-4 sm:mb-6 shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-100">
+                  {/* Car Header */}
+                  <div className="flex items-center justify-between mb-3 sm:mb-4">
+                    <div className="flex items-center space-x-2 sm:space-x-3">
+                      <h3 className="text-lg sm:text-xl font-semibold text-gray-800 truncate">{car.carMake} {car.model}</h3>
+                      <span className="text-xs sm:text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded-full">{car.type}</span>
+                    </div>
+                    <button 
+                      onClick={() => toggleFavorite(car.id)}
+                      className="text-gray-400 hover:text-red-500 cursor-pointer transition-colors"
+                    >
+                      <FaHeart className={car.isFavorite ? 'text-red-500' : ''} size={20} />
+                    </button>
+                  </div>
+
+                  {/* Car Image and Details */}
+                  <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-3 sm:mb-4">
+                    <div className="sm:w-1/3">
+                      <img 
+                        src={car.image} 
+                        alt={`${car.carMake} ${car.model}`} 
+                        className="w-full h-32 sm:h-40 object-contain rounded-lg bg-gray-50 p-2"
+                      />
+                    </div>
+                    <div className="sm:w-2/3 flex flex-col justify-between">
+                      <div className="grid grid-cols-2 gap-2 sm:gap-4">
+                        <div className="flex items-center space-x-2 text-gray-600">
+                          <FaUserFriends size={14} />
+                          <span className="text-xs sm:text-sm">{car.passengers} Passengers</span>
+                        </div>
+                        <div className="flex items-center space-x-2 text-gray-600">
+                          <FaSuitcase size={14} />
+                          <span className="text-xs sm:text-sm">{car.luggage} Luggage</span>
+                        </div>
+                        <div className="flex items-center space-x-2 text-gray-600">
+                          <FaSnowflake size={14} />
+                          <span className="text-xs sm:text-sm">Air Conditioning</span>
+                        </div>
+                        <div className="flex items-center space-x-2 text-gray-600">
+                          <FaCogs size={14} />
+                          <span className="text-xs sm:text-sm">{car.transmission}</span>
+                        </div>
+                        <div className="flex items-center space-x-2 text-gray-600">
+                          <FaMapMarkerAlt size={14} />
+                          <span className="text-xs sm:text-sm">{car.mileage}</span>
+                        </div>
+                        <div className="flex items-center space-x-2 text-gray-600">
+                          <FaStar size={14} className="text-yellow-400" />
+                          <span className="text-xs sm:text-sm">{car.rating}/10 ({car.reviews.toLocaleString()} reviews)</span>
+                        </div>
+                      </div>
+                      <div className="mt-3 sm:mt-4 flex items-center justify-between">
+                        <span className="text-lg sm:text-2xl font-bold text-gray-800">
+                          ₹{car.pricePerDay.toLocaleString()}
+                          <span className="text-xs sm:text-sm font-normal text-gray-500">/day</span>
+>>>>>>> 247de551da55923f0b61567aa2d5ae57ba6b09fd
                         </span>
                       </div>
                       <button onClick={() => toggleFavorite(car.id)} className="text-gray-400 hover:text-red-500 transition-colors">
