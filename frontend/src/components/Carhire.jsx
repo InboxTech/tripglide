@@ -23,9 +23,9 @@ export default function CarHire() {
   // Fetch locations
   useEffect(() => {
     axios
-      .get("http://localhost:5001/locations")
+      .get("http://localhost:5001/locations") // Flask API endpoint
       .then((response) => {
-        setAvailableLocations(response.data.locations || []);
+        setAvailableLocations(response.data.locations || []); // Set available locations
       })
       .catch((error) => {
         console.error("Error fetching locations:", error);
