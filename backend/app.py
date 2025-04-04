@@ -1,24 +1,29 @@
 # Import necessary api's in one api
 from flask import Flask, jsonify,request
 import mysql.connector
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 import os
 from flask_cors import CORS
 
-load_dotenv()
-app = Flask(_name_)
-CORS(app) # Enable CORS for all domains
+# load_dotenv()
+app = Flask(__name__)
+CORS(app)  # Enable CORS for all domains
+
+# Access environment variables
+# stripe_key = os.getenv("sk_test_51RA1PaAGhuxmwIzwXzYwMTfttf8AeMgBoHagWerfMXYHkITFhxL2gZlskFnv5uufbtLaXervlD2CRfDnG57KMSEK00VE1xcXDW")
+# db_url = os.getenv("http://127.0.0.1:5001")
+# debug_mode = os.getenv("DEBUG") == "True"
 
 # MySQL connection function
 def get_db_connection():
     try:
         return mysql.connector.connect(
-        host='localhost',
-        user='root',  # Update with your MySQL username
-        password='',  # Update with your MySQL password
-        port="3307",  # Update the port if different
-        database='tripglide'  # Update with your actual database name
-    )
+            host='localhost',
+            user='root',  # Update with your MySQL username
+            password='',  # Update with your MySQL password
+            port="3307",  # Update if different
+            database='tripglide'  # Update with your actual database name
+        )
     except mysql.connector.Error as e:
         print(f"Error connecting to MySQL: {e}")
         return None
@@ -121,49 +126,254 @@ def get_data():
     if error:
         return jsonify({"error": error}), 500
 
-    cursor = connection.cursor(dictionary=True)
-    try:
-        # Fetch unique cars
-        cursor.execute("SELECT DISTINCT agency FROM cars")
-        car_agency = [row["agency"] for row in cursor.fetchall()]
-
-        return jsonify({
-            "car_agency": car_agency if car_agency else [],
-        })
-    except Exception as e:
-        return jsonify({"error": str(e)})
-    finally:
-        cursor.close()
-        connection.close() 
-
-# ✅ API: Fetch unique departure & arrival airports
-@app.route('/address', methods=['GET'])
-def get_address():
-    connection = get_db_connection()
-    if connection is None:
-        return jsonify({"error": "Database connection failed"}), 500
-
-    cursor = connection.cursor(dictionary=True)
-    try:
-        # Fetch unique cars
-        cursor.execute("SELECT DISTINCT address FROM locations")
-        car_address = [row["address"] for row in cursor.fetchall()]
-
-        return jsonify({
-            "car_address": car_address if car_address else [],
-        })
-    except Exception as e:
-        return jsonify({"error": str(e)})
-    finally:
-        cursor.close()
-        connection.close()
+    # ✅ Format car data response
+    formatted_response = []
+    if car_data:
+        for row in car_data:
+            formatted_response.append({
+                "location": row["City"],  # Corrected
+                "no_of_passengers": row["Seats"],
+                "cartype": row.get("CarType", "N/A"),  # Corrected
+                "make": row["Make"],
+                "model": row["Model"],  # Corrected
+                "fuel_policy": row["Fuel_Policy"],  # Corrected
+                "transmission": row["Transmission"],  # Corrected
+                "price": row["Price_Per_Hour_INR"],
+                "agency": row["Agency"],  # Corrected
+                "price_per_hour": row["Price_Per_Hour_INR"],  # Corrected
+                "Car-ID": row.get("CarID", "N/A"),  # No address column, using LocationID if needed
+                "ratings": row.get("Ratings", "N/A"),
+                "ac": row.get("AC", "N/A")
+            })
+            
+    return jsonify(formatted_response)
+    # return f"Stripe Key: {pk_test_51RA1PaAGhuxmwIzwuekZ7LyLuwOFMdNXMGBGdVj7tO603Bz6Rq0lzHf51iuXuc6wJHCQIguaKycDVvzfhOx6gCxM00JF5p3CdX}, DB URL: {http://127.0.0.1:5001/}, Debug: {debug_mode}"
 
 # Run the Flask app and print data in the console
-if _name_ == '_main_':
-    # Run the Flask app to serve data via API
-    app.run(debug=True, port=5001)
+if __name__ == '__main__':
+    app.run(debug=debug_mode, port=5001)
 
 
+
+
+
+# #frontend conn
+# from flask import Flask, jsonify,request
+# import mysql.connector
+# from flask_cors import CORS
+# from datetime import timedelta
+
+# app = Flask(__name__)
+# CORS(app) # Enable CORS for all domains
+
+# # MySQL connection function
+# def get_db_connection():
+#     try:
+#         return mysql.connector.connect(
+#         host='localhost',
+#         user='root',  # Update with your MySQL username
+#         password='',  # Update with your MySQL password
+#         port="3307",  # Update the port if different
+#         database='tripglide'  # Update with your actual database name
+#     )
+#     except mysql.connector.Error as e:
+#         print(f"Error connecting to MySQL: {e}")
+#         return None
+        
+# # General function to fetch data
+# def fetch_data(query, params=None):
+#     connection = get_db_connection()
+#     if connection is None:
+#         return None, "Database connection failed"
+
+#     cursor = connection.cursor(dictionary=True)
+#     try:
+#         # Use parameterized query properly
+#         if params:
+#             cursor.execute(query, params)
+#         else:
+#             cursor.execute(query)
+
+#         data = cursor.fetchall()
+#         return data, None
+
+#     except Exception as e:
+#         return None, str(e)
+#     finally:
+#         cursor.close()
+#         connection.close()
+        
+# # API endpoint to fetch cars data(cartype,model)
+# @app.route('/', methods=['GET'])
+# def get_data():
+#     # Get location from query parameters
+#     location = request.args.get('location')
+
+#     # Debug log to check if location is received
+#     print(f"Received location: {location}")
+
+#     if not location:
+#         return jsonify({"error": "Location is required"}), 400
+
+#     # Fetch cars based on the selected location
+#     car_data, error = fetch_data("SELECT * FROM cars WHERE City= %s", (location,))
+#     # print(len(car_data))
+#     if error:
+#         return jsonify({"error": error}), 500
+
+#     # Fetch unique car types and models based on the selected location
+#     car_type_model, error = fetch_data("SELECT DISTINCT cartype, model FROM cars WHERE City = %s", (location,))
+#     # print(len(car_type_model))
+#     if error:
+#         return jsonify({"error": error}), 500
+
+#     # ✅ Modify the car_type_model list for a cleaner response
+#     formatted_car_type_model = []
+#     if car_type_model:
+#         for row in car_type_model:
+#             formatted_car_type_model.append({
+#                 "cartype": row["cartype"],
+#                 "model": row["model"]
+#             })
+#     return jsonify(formatted_car_type_model)       
+    
+
+# # ✅ API: Fetch locations
+# @app.route('/location', methods=['GET'])
+# def get_cities():
+#     connection = get_db_connection()
+#     if connection is None:
+#         return jsonify({"error": "Database connection failed"}), 500
+
+#     cursor = connection.cursor(dictionary=True)
+#     try:
+#         # Fetch unique cars
+#         cursor.execute("SELECT DISTINCT city FROM cars")
+#         car_city = [row["city"] for row in cursor.fetchall()]
+
+#         return jsonify({
+#             "car_city": car_city if car_city else [],
+#         })
+#     except Exception as e:
+#         return jsonify({"error": str(e)})
+#     finally:
+#         cursor.close()
+#         connection.close()
+
+# # ✅ API: Fetch fuel policies
+# @app.route('/fuel', methods=['GET'])
+# def get_fuel():
+#     connection = get_db_connection()
+#     if connection is None:
+#         return jsonify({"error": "Database connection failed"}), 500
+
+#     cursor = connection.cursor(dictionary=True)
+#     try:
+#         # Fetch unique cars
+#         cursor.execute("SELECT DISTINCT fuel_policy FROM cars")
+#         car_fuel = [row["fuel_policy"] for row in cursor.fetchall()]
+
+#         return jsonify({
+#             "car_fuel": car_fuel if car_fuel else [],
+#         })
+#     except Exception as e:
+#         return jsonify({"error": str(e)})
+#     finally:
+#         cursor.close()
+#         connection.close()
+
+# # ✅ API: Fetch transmission
+# @app.route('/transmission', methods=['GET'])
+# def get_transmission():
+#     connection = get_db_connection()
+#     if connection is None:
+#         return jsonify({"error": "Database connection failed"}), 500
+
+#     cursor = connection.cursor(dictionary=True)
+#     try:
+#         # Fetch unique cars
+#         cursor.execute("SELECT DISTINCT transmission FROM cars")
+#         car_trans = [row["transmission"] for row in cursor.fetchall()]
+
+#         return jsonify({
+#             "car_trans": car_trans if car_trans else [],
+#         })
+#     except Exception as e:
+#         return jsonify({"error": str(e)})
+#     finally:
+#         cursor.close()
+#         connection.close()
+
+# # ✅ API: Fetch unique price
+# @app.route('/price', methods=['GET'])
+# def get_price():
+#     connection = get_db_connection()
+#     if connection is None:
+#         return jsonify({"error": "Database connection failed"}), 500
+
+#     cursor = connection.cursor(dictionary=True)
+#     try:
+#         # Fetch unique cars
+#         cursor.execute("SELECT DISTINCT price_per_hour_inr FROM cars")
+#         car_price = [row["price_per_hour_inr"] for row in cursor.fetchall()]
+
+#         return jsonify({
+#             "car_price": car_price if car_price else [],
+#         })
+#     except Exception as e:
+#         return jsonify({"error": str(e)})
+#     finally:
+#         cursor.close()
+#         connection.close()        
+
+# # ✅ API: Fetch agency
+# @app.route('/agency', methods=['GET'])
+# def get_agency():
+#     connection = get_db_connection()
+#     if connection is None:
+#         return jsonify({"error": "Database connection failed"}), 500
+
+#     cursor = connection.cursor(dictionary=True)
+#     try:
+#         # Fetch unique cars
+#         cursor.execute("SELECT DISTINCT agency FROM cars")
+#         car_agency = [row["agency"] for row in cursor.fetchall()]
+
+#         return jsonify({
+#             "car_agency": car_agency if car_agency else [],
+#         })
+#     except Exception as e:
+#         return jsonify({"error": str(e)})
+#     finally:
+#         cursor.close()
+#         connection.close() 
+
+# # ✅ API: Fetch unique address from location table
+# @app.route('/address', methods=['GET'])
+# def get_address():
+#     connection = get_db_connection()
+#     if connection is None:
+#         return jsonify({"error": "Database connection failed"}), 500
+
+#     cursor = connection.cursor(dictionary=True)
+#     try:
+#         # Fetch unique cars
+#         cursor.execute("SELECT DISTINCT address FROM locations")
+#         car_address = [row["address"] for row in cursor.fetchall()]
+
+#         return jsonify({
+#             "car_address": car_address if car_address else [],
+#         })
+#     except Exception as e:
+#         return jsonify({"error": str(e)})
+#     finally:
+#         cursor.close()
+#         connection.close()
+
+# # Run the Flask app and print data in the console
+# if __name__ == '__main__':
+#     # Run the Flask app to serve data via API
+#     app.run(debug=True, port=5001)
 
 
 ##table database- fetch
@@ -172,7 +382,7 @@ if _name_ == '_main_':
 # from flask_cors import CORS
 # from datetime import timedelta
 
-# app = Flask(_name_)
+# app = Flask(__name__)
 # CORS(app) # Enable CORS for all domains
 
 # # MySQL connection function
@@ -265,7 +475,7 @@ if _name_ == '_main_':
 #         return jsonify({"success": False, "error": str(e)}), 500
 
 # # Run the Flask app and print data in the console
-# if _name_ == '_main_':
+# if __name__ == '__main__':
 #     # Run the Flask app to serve data via API
 #     app.run(debug=True, port=5001)
 
@@ -278,7 +488,7 @@ if _name_ == '_main_':
 # from flask_cors import CORS
 # from datetime import timedelta
 
-# app = Flask(_name_)
+# app = Flask(__name__)
 # CORS(app)  # Enable CORS for all domains
 
 # # MySQL connection function
@@ -348,7 +558,7 @@ if _name_ == '_main_':
 #     return jsonify(locations)
 
 # # Run the Flask app and print data in the console
-# if _name_ == '_main_':
+# if __name__ == '__main__':
 #     print("Fetching Cars Data...\n")
 #     fetch_cars_data()
 
@@ -368,7 +578,7 @@ if _name_ == '_main_':
 # from flask_cors import CORS
 # from datetime import timedelta
 
-# app = Flask(_name_)
+# app = Flask(__name__)
 # CORS(app)  # Enable CORS for all domains
 
 # # MySQL connection function
@@ -407,5 +617,11 @@ if _name_ == '_main_':
 #     connection.close()
 #     return jsonify(cars)
 
-# if _name_ == '_main_':
+# if __name__ == '__main__':
 #     app.run(debug=True, port=5001)
+
+
+
+
+
+
