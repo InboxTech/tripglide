@@ -45,9 +45,9 @@ export default function CabPopup({
   // Fetch available cities from Flask API when component loads
   useEffect(() => {
     axios
-      .get("http://localhost:5001/location") // Flask API endpoint
+      .get("http://localhost:5001/locations") // Fixed endpoint
       .then((response) => {
-        setAvailableLocations(response.data.car_city || []); // Set available locations
+        setAvailableLocations(response.data.locations || []);
       })
       .catch((error) => {
         console.error("Error fetching locations:", error);
