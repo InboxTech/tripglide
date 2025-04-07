@@ -1,3 +1,19 @@
+// import React from "react";
+
+// const CarConfirmation = ({ onCheckout }) => {
+//   return (
+//     <div>
+//       <h1>Car Confirmation</h1>
+//       <button onClick={onCheckout}>Proceed to Payment</button>
+//     </div>
+//   );
+// };
+
+// export default CarConfirmation;
+
+
+
+
 // // src/components/CarConfirmation.js
 // import React, { useState, useEffect } from "react";
 // import { useLocation, useNavigate } from "react-router-dom";
@@ -239,7 +255,7 @@
 
 
 import React, { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+ import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios"; // For future backend use
 import { FaUserFriends, FaSuitcase, FaCogs, FaMapMarkerAlt, FaStar } from "react-icons/fa";
 import Footer from "./Footer";
@@ -258,7 +274,7 @@ const CarConfirmation = () => {
   const [totalPrice, setTotalPrice] = useState(0);
   const [loading, setLoading] = useState(false);
 
-  console.log("Location state:", location.state);
+ console.log("Location state:", location.state);
 
   // Optional backend fetch (commented out)
   /*
@@ -377,36 +393,36 @@ const CarConfirmation = () => {
               </div>
               <div className="mt-6">
                 <h4 className="text-lg font-semibold text-gray-800 mb-3">Additional Options</h4>
-                <div className="space-y-3">
-                  <label className="flex items-center text-gray-800">
-                    <input type="checkbox" name="addDriver" checked={addOns.addDriver} onChange={handleAddOnChange} className="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500" />
-                    Additional Driver (₹2000)
-                  </label>
-                  <label className="flex items-center text-gray-800">
-                    <input type="checkbox" name="childSeat" checked={addOns.childSeat} onChange={handleAddOnChange} className="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500" />
-                    Child Seat (₹500)
-                  </label>
-                  <label className="flex items-center text-gray-800">
-                    <input type="checkbox" name="luggageCarrier" checked={addOns.luggageCarrier} onChange={handleAddOnChange} className="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500" />
-                    Luggage Carrier (₹1000)
-                  </label>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="mt-6 border-t pt-4">
-            <div className="flex justify-between items-center">
-              <h4 className="text-lg font-semibold text-gray-800">Total Price</h4>
-              <span className="text-2xl font-bold text-gray-800">₹{totalPrice.toLocaleString()}</span>
-            </div>
-            <button onClick={handleConfirmBooking} className="w-full mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
-              Confirm Booking
-            </button>
-          </div>
-        </div>
+//                 <div className="space-y-3">
+//                   <label className="flex items-center text-gray-800">
+//                     <input type="checkbox" name="addDriver" checked={addOns.addDriver} onChange={handleAddOnChange} className="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500" />
+//                     Additional Driver (₹2000)
+//                   </label>
+//                   <label className="flex items-center text-gray-800">
+//                     <input type="checkbox" name="childSeat" checked={addOns.childSeat} onChange={handleAddOnChange} className="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500" />
+//                     Child Seat (₹500)
+//                   </label>
+//                   <label className="flex items-center text-gray-800">
+//                     <input type="checkbox" name="luggageCarrier" checked={addOns.luggageCarrier} onChange={handleAddOnChange} className="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500" />
+//                     Luggage Carrier (₹1000)
+//                   </label>
+//                 </div>
+//               </div>
+//             </div>
+//           </div>
+//           <div className="mt-6 border-t pt-4">
+//             <div className="flex justify-between items-center">
+//               <h4 className="text-lg font-semibold text-gray-800">Total Price</h4>
+//               <span className="text-2xl font-bold text-gray-800">₹{totalPrice.toLocaleString()}</span>
+//             </div>
+//             <button onClick={handleConfirmBooking} className="w-full mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
+//               Confirm Booking
+//             </button>
+//           </div>
+         </div>
       </div>
       <Footer />
-    </div>
+   </div>
   );
 };
 

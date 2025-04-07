@@ -37,8 +37,8 @@ app.post("/create-checkout-session", async (req, res) => {
         },
       ],
       mode: "payment",
-      success_url: "http://localhost:5173/booking-confirmation", // Updated to port 5173
-      cancel_url: "http://localhost:5173/flight-cart", // Updated to port 5173
+      success_url: "http://localhost:5173/success", // Updated to port 5173
+      cancel_url: "http://localhost:5173/cancel", // Updated to port 5173
     });
 
     res.json({ sessionId: session.id });
@@ -48,4 +48,4 @@ app.post("/create-checkout-session", async (req, res) => {
   }
 });
 
-app.listen(5000, () => console.log("Server running on port 5000"));
+app.listen(5001, () => console.log("Server running on port 5001"));
