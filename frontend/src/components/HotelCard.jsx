@@ -128,6 +128,8 @@ const HotelCard = ({ location, checkInDate, checkOutDate, adults, children, room
     });
   };
 
+  
+
   // List of all possible amenities excluding "Wi-Fi", "TV", "Parking", "Suite"
   const allAmenities = [
     "Free Breakfast", "Pool", "Bar", "Gym", "Spa", "Airport Shuttle", "Restaurant",
