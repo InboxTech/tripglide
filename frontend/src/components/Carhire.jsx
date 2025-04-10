@@ -17,7 +17,8 @@ export default function CarHire() {
   const [dropoffTime, setDropoffTime] = useState("");
   const [pickupLocation, setPickupLocation] = useState("");
   const [availableLocations, setAvailableLocations] = useState([]); // Stores fetched locations
-  const [ availableCars,setAvailableCars] = useState([]);
+  const [availableCars, setAvailableCars] = useState([]);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false); // New state for custom dropdown
 
   // Get today's date
   const today = new Date().toISOString().split("T")[0];
@@ -34,18 +35,6 @@ export default function CarHire() {
         console.error("Error fetching locations:", error);
       });
   }, []);
-
-   // Fetch available cities from Flask API when component loads
-  // useEffect(() => {
-  //   axios
-  //     .get("http://localhost:5001/car") // Flask API endpoint
-  //     .then((response) => {
-  //       setAvailableCars(response.data.car_type || []); // Set available locations
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error fetching cars:", error);
-  //     });
-  // }, []);
 
   // Update current time based on selected date
   useEffect(() => {
@@ -100,9 +89,14 @@ export default function CarHire() {
     });
   };
 
+  // Handle selection from custom dropdown
+  const handleSelectLocation = (location) => {
+    setPickupLocation(location);
+    setIsDropdownOpen(false);
+  };
+
   return (
     <section className="w-full">
-
       {/* Background Image */}
       <div className="absolute inset-0 hidden lg:block -z-10">
         <img
@@ -122,24 +116,67 @@ export default function CarHire() {
         <div className="bg-[#001533] p-6 rounded-2xl shadow-lg">
           <form className="grid gap-4 md:grid-cols-2 lg:grid-cols-5 items-center">
             {/* Pickup Location */}
-            <div className="lg:col-span-1">
+            <div className="lg:col-span-1 relative">
               <label className="block text-white font-semibold mb-1">
                 Pick-up location
               </label>
-              <input
-                list="pickup-locations"
-                type="text"
-                placeholder="City, airport or station"
-                className="w-full p-3 rounded-lg bg-white text-black"
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="City, airport or station"
+                  className="w-full p-3 rounded-lg bg-white text-black"
+                  value={pickupLocation}
+                  onChange={(e) => setPickupLocation(e.target.value)}
+                  onFocus={() => setIsDropdownOpen(true)}
+                  onBlur={() => setTimeout(() => setIsDropdownOpen(false), 200)}
+                  required
+                />
+                {isDropdownOpen && availableLocations.length > 0 && (
+                  <ul className="absolute z-10 w-full bg-white text-black rounded-lg shadow-lg max-h-60 overflow-y-auto mt-1">
+                    {availableLocations.map((location, index) => (
+                      <li
+                        key={index}
+                        className="p-2 hover:bg-gray-200 cursor-pointer"
+                        onClick={() => handleSelectLocation(location)}
+                        onMouseDown={(e) => e.preventDefault()} // Prevent blur from closing
+                      >
+                        {location}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                  <svg
+                    className="w-4 h-4 text-gray-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M19 9l-7 7-7-7"
+                    ></path>
+                  </svg>
+                </div>
+              </div>
+              <select
+                className="hidden" // Hidden select for form submission
                 value={pickupLocation}
                 onChange={(e) => setPickupLocation(e.target.value)}
                 required
-              />
-              <datalist id="pickup-locations">
+              >
+                <option value="" disabled>
+                  City, airport or station
+                </option>
                 {availableLocations.map((location, index) => (
-                  <option key={index} value={location} />
+                  <option key={index} value={location}>
+                    {location}
+                  </option>
                 ))}
-              </datalist>
+              </select>
             </div>
 
             {/* Pickup Date */}
@@ -209,7 +246,7 @@ export default function CarHire() {
                 Return car to a different location
               </label>
 
-              <button 
+              <button
                 onClick={handleSearch}
                 type="submit"
                 className={`ml-auto px-6 py-3 font-semibold rounded-lg transition ${
@@ -229,7 +266,7 @@ export default function CarHire() {
 
       {/* Features Section */}
       <div className="bg-white">
-        <div className="container mx-auto max-w-7xl px-8 pt-5"> 
+        <div className="container mx-auto max-w-7xl px-8 pt-5">
           <nav className="text-sm">
             <a href="/" className="text-blue-600 hover:underline">
               Home
@@ -237,7 +274,7 @@ export default function CarHire() {
             <a href="/" className="text-blue-600 hover:underline">Home</a>
             <span className="mx-2 text-gray-400">›</span>
             <span className="text-gray-600">Car hire</span>
-          </nav>  
+          </nav>
         </div>
         <div className="container mx-auto max-w-7xl">
           <FeaturesSection features={carFeatures} />
@@ -258,10 +295,10 @@ export default function CarHire() {
             Looking for the best car hire deals worldwide?
           </h2>
           <p className="text-gray-600 mb-10 font-serif">
-            Compare rental car deals from top providers, all in one place. With flexible options and no hidden fees, 
+            Compare rental car deals from top providers, all in one place. With flexible options and no hidden fees,
             renting a car has never been easier – here’s how.
           </p>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Wide Selection */}
             <div className="bg-white p-6 rounded-lg shadow-md text-center hover:shadow-lg">
@@ -306,11 +343,10 @@ export default function CarHire() {
       </section>
       <hr className="bg-black"></hr>
 
-
-       {/* Swiper Section */}
-       <section className="bg-white">
-       <TravelDeals />
-       </section>
+      {/* Swiper Section */}
+      <section className="bg-white">
+        <TravelDeals />
+      </section>
 
       {/* Car Hire FAQ */}
       <div className="bg-white">

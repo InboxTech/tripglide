@@ -20,6 +20,7 @@
     "axios": "^1.8.3",
     "clsx": "^2.1.1",
     "cookie": "^1.0.2",
+    "express": "^5.1.0",
     "lucide-react": "^0.476.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
