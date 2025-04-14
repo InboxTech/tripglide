@@ -26,6 +26,7 @@ export default function CarHire() {
       .get("http://localhost:5001/locations") // Flask API endpoint
       .then((response) => {
         setAvailableLocations(response.data.locations || []); // Set available locations
+        console.log(response.data);
       })
       .catch((error) => {
         console.error("Error fetching locations:", error);

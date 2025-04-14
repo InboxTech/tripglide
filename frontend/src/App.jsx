@@ -20,9 +20,11 @@ import Hotels from "./components/Hotels";
 import HotelSearch from "./components/HotelSearch";
 import CarConfirmation from "./components/CarConfirmation";
 import Login from "./components/Login"
+import BookingConfirmed from "./components/BookingConfirmation";
+import Cancel from "./components/Cancel";
 
 // Initialize Stripe with your Publishable Key
-const stripePromise = loadStripe("pk_test_51RA1PaAGhuxmwIzwuekZ7LyLuwOFMdNXMGBGdVj7tO603Bz6Rq0lzHf51iuXuc6wJHCQIguaKycDVvzfhOx6gCxM00JF5p3CdX"); // Replace with your Stripe Publishable Key
+// const stripePromise = loadStripe("pk_test_51RA1PaAGhuxmwIzwuekZ7LyLuwOFMdNXMGBGdVj7tO603Bz6Rq0lzHf51iuXuc6wJHCQIguaKycDVvzfhOx6gCxM00JF5p3CdX"); // Replace with your Stripe Publishable Key
 
 function App() {
   const [user, setUser] = useState(() => {
@@ -83,25 +85,6 @@ function App() {
     setUser(null);
   };
 
-  const handleCheckout = async () => {
-    try {
-      const response = await axios.post(
-        "http://localhost:5173/create-checkout-session",
-        {}
-      );
-      const sessionId = response.data.id;
-
-      const stripe = await stripePromise;
-      const { error } = await stripe.redirectToCheckout({ sessionId });
-
-      if (error) {
-        console.error("Stripe checkout error:", error.message);
-      }
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
-
   console.log("Current mockUsers:", mockUsers);
 
   return (
@@ -113,10 +96,6 @@ function App() {
             path="/signin"
             element={<SignIn onSignIn={handleSignIn} mockUsers={mockUsers} />}
           />
-          {/* <Route
-            path="/login"
-            element={<LogIn onSignIn={handleLogIn} mockUsers={mockUsers} />}
-          /> */}
           <Route
             path="/signup"
             element={<SignUp onSignUp={handleSignUp} mockUsers={mockUsers} />}
@@ -139,10 +118,9 @@ function App() {
           <Route path="/hotels" element={<Hotels />} />
           <Route path="/hotel-search" element={<HotelSearch />} />
           <Route path="/login" element={<Login />} />
-          <Route
-            path="/car-confirmation"
-            element={<CarConfirmation onCheckout={handleCheckout} />}
-          />
+          <Route path="/cancel" element={<Cancel />} />
+          <Route path="/car-confirmation" element={<CarConfirmation />}/>
+          <Route path="/booking-confirmed" element={<BookingConfirmed />} />
         </Routes>
       </Router>
     </GoogleOAuthProvider>

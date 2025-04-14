@@ -1,249 +1,471 @@
-// import React from "react";
+import React, { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { loadStripe } from "@stripe/stripe-js";
+import {
+  FaUserFriends,
+  FaSuitcase,
+  FaCogs,     
+  FaMapMarkerAlt,
+  FaStar,
+} from "react-icons/fa";
+import Footer from "./Footer";
 
-// const CarConfirmation = ({ onCheckout }) => {
-//   return (
-//     <div>
-//       <h1>Car Confirmation</h1>
-//       <button onClick={onCheckout}>Proceed to Payment</button>
-//     </div>
-//   );
-// };
+// Load Stripe with your public key
+const stripePromise = loadStripe("pk_test_51RBqKcHDDYPUfyf2kicXW3yxLTiL7zsGgfPPFH5LNU4ldUzgnhUZ7tlYMbdKRiDXDZRNQpdk0SguQued56ZP1EqZl00Msnu4Xv6");
 
-// export default CarConfirmation;
+const CarConfirmation = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const {
+    pickupDate,
+    pickupTime,
+    dropoffDate,
+    dropoffTime,
+    pickupLocation,
+    car = {},
+    selectedDeal = {},
+  } = location.state || {};
+  const [carData, setCarData] = useState(car || {});
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [loading, setLoading] = useState(true);
+
+  // Calculate price based on per-hour rate and duration
+  useEffect(() => {
+    const calculatePrice = () => {
+      console.log("Received state:", {
+        pickupDate,
+        pickupTime,
+        dropoffDate,
+        dropoffTime,
+        pickupLocation,
+        car,
+        selectedDeal,
+      });
+
+      // Validate all required fields
+      if (!pickupDate || !pickupTime || !dropoffDate || !dropoffTime || !pickupLocation || !selectedDeal?.price) {
+        console.warn("🚨 Missing required fields or price:", {
+          pickupDate,
+          pickupTime,
+          dropoffDate,
+          dropoffTime,
+          pickupLocation,
+          selectedDeal,
+        });
+        setTotalPrice(0);
+        return;
+      }
+
+      // Parse dates using ISO format
+      const pickup = new Date(`${pickupDate}T${pickupTime}`);
+      const dropoff = new Date(`${dropoffDate}T${dropoffTime}`);
+
+      // Validate date objects
+      if (isNaN(pickup.getTime()) || isNaN(dropoff.getTime())) {
+        console.warn("❌ Invalid date format:", { pickup, dropoff });
+        setTotalPrice(0);
+        return;
+      }
+
+      // Ensure dropoff is after pickup
+      if (pickup >= dropoff) {
+        console.warn("❌ Dropoff date must be after pickup date.");
+        setTotalPrice(0);
+        return;
+      }
+
+      // Calculate hours
+      const calculatedHours = Math.max(1, Math.ceil((dropoff - pickup) / (1000 * 60 * 60))); // Minimum 1 hour, round up
+      const basePrice = calculatedHours * selectedDeal.price;
+
+      // Update state
+      setTotalPrice(basePrice);
+      console.log("Calculated:", { hours: calculatedHours, totalPrice: basePrice });
+    };
+
+    calculatePrice();
+    setLoading(false);
+  }, [pickupDate, pickupTime, dropoffDate, dropoffTime, pickupLocation, selectedDeal]);
+
+  const handlePayment = async () => {
+    if (!totalPrice || totalPrice <= 0) {
+      console.warn("Cannot proceed with payment: Total price is zero.");
+      return;
+    }
+
+    const stripe = await stripePromise;
+    try {
+      const response = await axios.post("http://localhost:5001/create-checkout-session", {
+        amount: totalPrice * 100, // Amount in paise
+        currency: "inr",
+        pickupLocation: pickupLocation || "N/A",
+        pickupDate,
+        pickupTime,
+        dropoffDate,
+        dropoffTime,
+        carId: carData.id,
+        carMake: carData.make,
+        carModel: carData.model,
+        agency: selectedDeal.agency,
+      });
+
+      const { id: sessionId } = response.data;
+
+      const { error } = await stripe.redirectToCheckout({
+        sessionId: sessionId,
+      });
+
+      if (error) {
+        console.error("Error redirecting to Stripe checkout:", error);
+      }
+    } catch (error) {
+      console.error("Axios error during payment:", error);
+    }
+  };
+
+  if (loading) return <div className="text-center py-10 text-gray-800">Loading...</div>;
+  if (!carData || !selectedDeal)
+    return <div className="text-center py-10 text-gray-800">Car or deal not found</div>;
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <div className="container mx-auto max-w-7xl px-4 py-8">
+        <h2 className="text-3xl font-bold text-gray-800 mb-6">Confirm Your Booking</h2>
+        <div className="bg-white rounded-2xl shadow-lg p-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="md:col-span-1 bg-gray-50 p-4 rounded-lg">
+              <div className="mt-6">
+                <h4 className="text-lg font-semibold text-gray-800 mb-3">Booking Details</h4>
+                <p className="text-gray-600">
+                  <strong>Location:</strong> {pickupLocation || "N/A"}
+                </p>
+                <p className="text-gray-600">
+                  <strong>Pickup Date & Time:</strong> {pickupDate && pickupTime ? `${pickupDate} ${pickupTime}` : "N/A"}
+                </p>
+                <p className="text-gray-600">
+                  <strong>Dropoff Date & Time:</strong> {dropoffDate && dropoffTime ? `${dropoffDate} ${dropoffTime}` : "N/A"}
+                </p>
+                <h4 className="text-lg font-semibold text-gray-800 mt-4 mb-3">Price Breakdown</h4>
+                <p className="text-gray-600">Rental Cost: ₹{totalPrice.toLocaleString()}</p>
+                <p className="text-gray-600">Extras: ₹0</p>
+                <p className="text-2xl font-bold text-gray-800">Total: ₹{totalPrice.toLocaleString()}</p>
+              </div>
+            </div>
+
+            <div className="md:col-span-1">
+              <div className="flex flex-col md:flex-row gap-6">
+                <div className="md:w-1/2">
+                  <img
+                    src={carData.image || "https://via.placeholder.com/300x200"}
+                    alt={`${carData.make || "Unknown"} ${carData.model || "Model"}`}
+                    className="w-full h-48 object-contain rounded-lg bg-gray-50 p-2 mb-4"
+                  />
+                  <button
+                    onClick={() => navigate(-1)}
+                    className="w-full bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+                  >
+                    Back to Search Results
+                  </button>
+                </div>
+
+                <div className="md:w-1/2">
+                  <div className="flex items-center space-x-3 mb-4">
+                    <h3 className="text-xl font-semibold text-gray-800">
+                      {carData.make || "Unknown"} {carData.model || "Model"}
+                    </h3>
+                    <span className="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+                      {carData.type || "N/A"}
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4 mb-4">
+                    <div className="flex items-center space-x-2 text-gray-600">
+                      <FaUserFriends size={14} />
+                      <span className="text-sm">{carData.passengers || "N/A"} Passengers</span>
+                    </div>
+                    <div className="flex items-center space-x-2 text-gray-600">
+                      <FaSuitcase size={14} />
+                      <span className="text-sm">4 Luggage</span>
+                    </div>
+                    <div className="flex items-center space-x-2 text-gray-600">
+                      <FaCogs size={14} />
+                      <span className="text-sm">{carData.transmission || "N/A"}</span>
+                    </div>
+                    <div className="flex items-center space-x-2 text-gray-600">
+                      <FaMapMarkerAlt size={14} />
+                      <span className="text-sm">Unlimited Mileage</span>
+                    </div>
+                    <div className="flex items-center space-x-2 text-gray-600">
+                      <FaStar size={14} className="text-yellow-400" />
+                      <span className="text-sm">{carData.ratings || "N/A"}/5</span>
+                    </div>
+                  </div>
+
+                  <div className="bg-gray-100 p-4 rounded-lg mb-4">
+                    <p className="text-gray-800 font-semibold">Agency: {selectedDeal.agency || "N/A"}</p>
+                    <p className="text-gray-600">Fuel Policy: {carData.fuel_policy || "N/A"}</p>
+                  </div>
+
+                  <div className="mt-6 border-t pt-4">
+                    <div className="flex justify-between items-center">
+                      <h2 className="text-lg font-semibold text-gray-800">Total Price</h2>
+                      <span className="text-2xl font-bold text-gray-800">₹{totalPrice.toLocaleString()}</span>
+                    </div>
+                    <button
+                      onClick={handlePayment}
+                      className="w-full mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+                    >
+                      Confirm Booking
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <Footer />
+    </div>
+  );
+};
+
+export default CarConfirmation;
 
 
 
 
-// // src/components/CarConfirmation.js
+
+
+
 // import React, { useState, useEffect } from "react";
 // import { useLocation, useNavigate } from "react-router-dom";
 // import axios from "axios";
-// import { FaUserFriends, FaSuitcase, FaCogs, FaMapMarkerAlt, FaStar } from "react-icons/fa";
+// import { loadStripe } from "@stripe/stripe-js";
+// import {
+//   FaUserFriends,
+//   FaSuitcase,
+//   FaCogs,
+//   FaMapMarkerAlt,
+//   FaStar,
+// } from "react-icons/fa";
 // import Footer from "./Footer";
+
+// // Load Stripe with your public key
+// const stripePromise = loadStripe("pk_test_51RBqKcHDDYPUff2kicXW3yxLTiL7zsGgfPPFH5LNU4ldUzgnhUZ7tlYMbdKRiDXDZRNQpdk0SguQued56ZP1EqZl00Msnu4Xv6");
 
 // const CarConfirmation = () => {
 //   const location = useLocation();
 //   const navigate = useNavigate();
-//   const { 
-//     pickupLocation, 
-//     pickupDate, 
-//     pickupTime, 
-//     dropoffDate, 
-//     dropoffTime, 
-//     carId, 
-//     selectedDeal 
+//   const {
+//     pickupDate,
+//     pickupTime,
+//     dropoffDate,
+//     dropoffTime,
+//     pickupLocation,
+//     car = {},
+//     selectedDeal = {},
 //   } = location.state || {};
-
-//   const [carData, setCarData] = useState(null);
-//   const [addOns, setAddOns] = useState({
-//     addDriver: false,
-//     childSeat: false,
-//     luggageCarrier: false
-//   });
+//   const [carData, setCarData] = useState(car || {});
 //   const [totalPrice, setTotalPrice] = useState(0);
 //   const [loading, setLoading] = useState(true);
 
+//   // Calculate price based on per-hour rate and duration
 //   useEffect(() => {
-//     const fetchCarData = async () => {
-//       try {
-//         // Assuming your Flask API has an endpoint for individual car details
-//         const response = await axios.get(`http://localhost:500/api/car/${carId}`);
-//         setCarData(response.data);
-//         calculatePrice(response.data);
-//         setLoading(false);
-//       } catch (error) {
-//         console.error("Error fetching car data:", error);
-//         setLoading(false);
+//     const calculatePrice = () => {
+//       console.log("Received state:", {
+//         pickupDate,
+//         pickupTime,
+//         dropoffDate,
+//         dropoffTime,
+//         pickupLocation,
+//         car,
+//         selectedDeal,
+//       });
+
+//       if (!pickupDate || !pickupTime || !dropoffDate || !dropoffTime || !pickupLocation) {
+//         console.warn("🚨 Missing required fields:", {
+//           pickupDate,
+//           pickupTime,
+//           dropoffDate,
+//           dropoffTime,
+//           pickupLocation,
+//         });
+//         setTotalPrice(0);
+//         return;
 //       }
+
+//       const pickup = new Date(`${pickupDate}T${pickupTime}`);
+//       const dropoff = new Date(`${dropoffDate}T${dropoffTime}`);
+
+//       if (isNaN(pickup.getTime()) || isNaN(dropoff.getTime())) {
+//         console.warn("❌ Invalid date format:", { pickup, dropoff });
+//         setTotalPrice(0);
+//         return;
+//       }
+
+//       if (pickup >= dropoff) {
+//         console.warn("❌ Dropoff date must be after pickup date.");
+//         setTotalPrice(0);
+//         return;
+//       }
+
+//       const calculatedHours = Math.max(1, Math.ceil((dropoff - pickup) / (1000 * 60 * 60)));
+//       let basePrice = 0;
+//       if (selectedDeal?.price) {
+//         basePrice = calculatedHours * selectedDeal.price;
+//       } else {
+//         console.warn("❌ Missing selectedDeal.price:", selectedDeal);
+//         basePrice = 0;
+//       }
+
+//       setTotalPrice(basePrice);
+//       console.log("Calculated:", { hours: calculatedHours, totalPrice: basePrice });
 //     };
 
-//     if (carId) {
-//       fetchCarData();
+//     calculatePrice();
+//     setLoading(false);
+//   }, [pickupDate, pickupTime, dropoffDate, dropoffTime, pickupLocation, selectedDeal]);
+
+//   const handlePayment = async () => {
+//     if (!totalPrice || totalPrice <= 0) {
+//       console.warn("Cannot proceed with payment: Total price is zero.");
+//       return;
 //     }
-//   }, [carId]);
 
-//   const calculatePrice = (car) => {
-//     if (!car || !pickupDate || !dropoffDate) return;
+//     const stripe = await stripePromise;
+//     try {
+//       const response = await axios.post("http://localhost:5001/create-checkout-session", {
+//         amount: totalPrice * 100, // Amount in paise
+//         currency: "inr",
+//         pickupLocation: pickupLocation || "N/A",
+//         pickupDate,
+//         pickupTime,
+//         dropoffDate,
+//         dropoffTime,
+//         carId: carData.id,
+//         carMake: carData.make,
+//         carModel: carData.model,
+//         agency: selectedDeal.agency,
+//       });
 
-//     const pickup = new Date(`${pickupDate}T${pickupTime}`);
-//     const dropoff = new Date(`${dropoffDate}T${dropoffTime}`);
-//     const hours = (dropoff - pickup) / (1000 * 60 * 60);
-//     const days = Math.ceil(hours / 24);
+//       const { id: sessionId } = response.data;
 
-//     let basePrice = days * (selectedDeal?.price || car.pricePerDay);
-//     let additionalCost = 0;
+//       const { error } = await stripe.redirectToCheckout({
+//         sessionId: sessionId,
+//       });
 
-//     if (addOns.addDriver) additionalCost += 2000; // ₹2000 for additional driver
-//     if (addOns.childSeat) additionalCost += 500;  // ₹500 for child seat
-//     if (addOns.luggageCarrier) additionalCost += 1000; // ₹1000 for luggage carrier
-
-//     setTotalPrice(basePrice + additionalCost);
+//       if (error) {
+//         console.error("Error redirecting to Stripe checkout:", error);
+//       }
+//     } catch (error) {
+//       console.error("Axios error during payment:", error);
+//     }
 //   };
 
-//   const handleAddOnChange = (e) => {
-//     const { name, checked } = e.target;
-//     setAddOns(prev => ({
-//       ...prev,
-//       [name]: checked
-//     }));
-//   };
-
-//   useEffect(() => {
-//     if (carData) calculatePrice(carData);
-//   }, [addOns, carData]);
-
-//   const handleConfirmBooking = () => {
-//     const bookingDetails = {
-//       pickupLocation,
-//       pickupDate,
-//       pickupTime,
-//       dropoffDate,
-//       dropoffTime,
-//       carId,
-//       carMake: carData.carMake,
-//       carModel: carData.model,
-//       totalPrice,
-//       addOns,
-//       agency: selectedDeal?.agency
-//     };
-//     // Here you could send bookingDetails to your backend
-//     // For now, we'll just navigate back with a success message
-//     navigate("/cabs", { 
-//       state: { 
-//         ...location.state, 
-//         bookingConfirmed: true, 
-//         bookingDetails 
-//       } 
-//     });
-//   };
-
-//   if (loading) return <div className="text-center py-10">Loading...</div>;
-//   if (!carData) return <div className="text-center py-10">Car not found</div>;
+//   if (loading) return <div className="text-center py-10 text-gray-800">Loading...</div>;
+//   if (!carData || !selectedDeal)
+//     return <div className="text-center py-10 text-gray-800">Car or deal not found</div>;
 
 //   return (
 //     <div className="min-h-screen bg-gray-50">
 //       <div className="container mx-auto max-w-7xl px-4 py-8">
 //         <h2 className="text-3xl font-bold text-gray-800 mb-6">Confirm Your Booking</h2>
-
-//         <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
+//         <div className="bg-white rounded-2xl shadow-lg p-6">
 //           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-//             {/* Car Details */}
-//             <div>
-//               <div className="flex items-center space-x-3 mb-4">
-//                 <h3 className="text-xl font-semibold text-gray-800">
-//                   {carData.carMake} {carData.model}
-//                 </h3>
-//                 <span className="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
-//                   {carData.type}
-//                 </span>
-//               </div>
-              
-//               <img 
-//                 src={carData.image} 
-//                 alt={`${carData.carMake} ${carData.model}`} 
-//                 className="w-full h-40 object-contain rounded-lg bg-gray-50 p-2 mb-4"
-//               />
-
-//               <div className="grid grid-cols-2 gap-4">
-//                 <div className="flex items-center space-x-2 text-gray-600">
-//                   <FaUserFriends size={14} />
-//                   <span className="text-sm">{carData.passengers} Passengers</span>
-//                 </div>
-//                 <div className="flex items-center space-x-2 text-gray-600">
-//                   <FaSuitcase size={14} />
-//                   <span className="text-sm">{carData.luggage} Luggage</span>
-//                 </div>
-//                 <div className="flex items-center space-x-2 text-gray-600">
-//                   <FaCogs size={14} />
-//                   <span className="text-sm">{carData.transmission}</span>
-//                 </div>
-//                 <div className="flex items-center space-x-2 text-gray-600">
-//                   <FaMapMarkerAlt size={14} />
-//                   <span className="text-sm">{carData.mileage}</span>
-//                 </div>
-//                 <div className="flex items-center space-x-2 text-gray-600">
-//                   <FaStar size={14} className="text-yellow-400" />
-//                   <span className="text-sm">
-//                     {carData.rating}/10 ({carData.reviews.toLocaleString()} reviews)
-//                   </span>
-//                 </div>
-//               </div>
-//             </div>
-
-//             {/* Booking Details */}
-//             <div>
-//               <h4 className="text-lg font-semibold text-gray-800 mb-4">Booking Details</h4>
-//               <div className="space-y-3">
-//                 <p className="text-gray-600">
-//                   <span className="font-medium">Pickup:</span> {pickupLocation} on {pickupDate} at {pickupTime}
-//                 </p>
-//                 <p className="text-gray-600">
-//                   <span className="font-medium">Dropoff:</span> {pickupLocation} on {dropoffDate} at {dropoffTime}
-//                 </p>
-//                 <p className="text-gray-600">
-//                   <span className="font-medium">Agency:</span> {selectedDeal?.agency}
-//                 </p>
-//                 <p className="text-gray-600">
-//                   <span className="font-medium">Base Price:</span> ₹{selectedDeal?.price.toLocaleString()}/day
-//                 </p>
-//               </div>
-
-//               {/* Add-ons */}
+//             <div className="md:col-span-1 bg-gray-50 p-4 rounded-lg">
 //               <div className="mt-6">
-//                 <h4 className="text-lg font-semibold text-gray-800 mb-3">Additional Options</h4>
-//                 <div className="space-y-3">
-//                   <label className="flex items-center text-gray-800">
-//                     <input
-//                       type="checkbox"
-//                       name="addDriver"
-//                       checked={addOns.addDriver}
-//                       onChange={handleAddOnChange}
-//                       className="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500"
-//                     />
-//                     Additional Driver (₹2000)
-//                   </label>
-//                   <label className="flex items-center text-gray-800">
-//                     <input
-//                       type="checkbox"
-//                       name="childSeat"
-//                       checked={addOns.childSeat}
-//                       onChange={handleAddOnChange}
-//                       className="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500"
-//                     />
-//                     Child Seat (₹500)
-//                   </label>
-//                   <label className="flex items-center text-gray-800">
-//                     <input
-//                       type="checkbox"
-//                       name="luggageCarrier"
-//                       checked={addOns.luggageCarrier}
-//                       onChange={handleAddOnChange}
-//                       className="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500"
-//                     />
-//                     Luggage Carrier (₹1000)
-//                   </label>
+//                 <h4 className="text-lg font-semibold text-gray-800 mb-3">Booking Details</h4>
+//                 <p className="text-gray-600">
+//                   <strong>Location:</strong> {pickupLocation || "N/A"}
+//                 </p>
+//                 <p className="text-gray-600">
+//                   <strong>Pickup Date & Time:</strong> {pickupDate && pickupTime ? `${pickupDate} ${pickupTime}` : "N/A"}
+//                 </p>
+//                 <p className="text-gray-600">
+//                   <strong>Dropoff Date & Time:</strong> {dropoffDate && dropoffTime ? `${dropoffDate} ${dropoffTime}` : "N/A"}
+//                 </p>
+//                 <h4 className="text-lg font-semibold text-gray-800 mt-4 mb-3">Price Breakdown</h4>
+//                 <p className="text-gray-600">Rental Cost: ₹{totalPrice.toLocaleString()}</p>
+//                 <p className="text-gray-600">Extras: ₹0</p>
+//                 <p className="text-2xl font-bold text-gray-800">Total: ₹{totalPrice.toLocaleString()}</p>
+//               </div>
+//             </div>
+
+//             <div className="md:col-span-1">
+//               <div className="flex flex-col md:flex-row gap-6">
+//                 <div className="md:w-1/2">
+//                   <img
+//                     src={carData.image || "https://via.placeholder.com/300x200"}
+//                     alt={`${carData.make || "Unknown"} ${carData.model || "Model"}`}
+//                     className="w-full h-48 object-contain rounded-lg bg-gray-50 p-2 mb-4"
+//                   />
+//                   <button
+//                     onClick={() => navigate(-1)}
+//                     className="w-full bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+//                   >
+//                     Back to Search Results
+//                   </button>
+//                 </div>
+
+//                 <div className="md:w-1/2">
+//                   <div className="flex items-center space-x-3 mb-4">
+//                     <h3 className="text-xl font-semibold text-gray-800">
+//                       {carData.make || "Unknown"} {carData.model || "Model"}
+//                     </h3>
+//                     <span className="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+//                       {carData.type || "N/A"}
+//                     </span>
+//                   </div>
+
+//                   <div className="grid grid-cols-2 gap-4 mb-4">
+//                     <div className="flex items-center space-x-2 text-gray-600">
+//                       <FaUserFriends size={14} />
+//                       <span className="text-sm">{carData.passengers || "N/A"} Passengers</span>
+//                     </div>
+//                     <div className="flex items-center space-x-2 text-gray-600">
+//                       <FaSuitcase size={14} />
+//                       <span className="text-sm">4 Luggage</span>
+//                     </div>
+//                     <div className="flex items-center space-x-2 text-gray-600">
+//                       <FaCogs size={14} />
+//                       <span className="text-sm">{carData.transmission || "N/A"}</span>
+//                     </div>
+//                     <div className="flex items-center space-x-2 text-gray-600">
+//                       <FaMapMarkerAlt size={14} />
+//                       <span className="text-sm">Unlimited Mileage</span>
+//                     </div>
+//                     <div className="flex items-center space-x-2 text-gray-600">
+//                       <FaStar size={14} className="text-yellow-400" />
+//                       <span className="text-sm">{carData.ratings || "N/A"}/5</span>
+//                     </div>
+//                   </div>
+
+//                   <div className="bg-gray-100 p-4 rounded-lg mb-4">
+//                     <p className="text-gray-800 font-semibold">Agency: {selectedDeal.agency || "N/A"}</p>
+//                     <p className="text-gray-600">Fuel Policy: {carData.fuel_policy || "N/A"}</p>
+//                   </div>
+
+//                   <div className="mt-6 border-t pt-4">
+//                     <div className="flex justify-between items-center">
+//                       <h2 className="text-lg font-semibold text-gray-800">Total Price</h2>
+//                       <span className="text-2xl font-bold text-gray-800">₹{totalPrice.toLocaleString()}</span>
+//                     </div>
+//                     <button
+//                       onClick={handlePayment}
+//                       className="w-full mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+//                     >
+//                       Confirm Booking
+//                     </button>
+//                   </div>
 //                 </div>
 //               </div>
 //             </div>
-//           </div>
-
-//           {/* Price Summary */}
-//           <div className="mt-6 border-t pt-4">
-//             <div className="flex justify-between items-center">
-//               <h4 className="text-lg font-semibold text-gray-800">Total Price</h4>
-//               <span className="text-2xl font-bold text-gray-800">
-//                 ₹{totalPrice.toLocaleString()}
-//               </span>
-//             </div>
-//             <button
-//               onClick={handleConfirmBooking}
-//               className="w-full mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
-//             >
-//               Confirm Booking
-//             </button>
 //           </div>
 //         </div>
 //       </div>
+
 //       <Footer />
 //     </div>
 //   );
@@ -252,178 +474,160 @@
 // export default CarConfirmation;
 
 
+// // import React, { useState, useEffect } from "react";
+// // import { useLocation, useNavigate } from "react-router-dom";
+// // import axios from "axios";
+// // import { loadStripe } from "@stripe/stripe-js";
+// // import {
+// //   FaUserFriends,
+// //   FaSuitcase,
+// //   FaCogs,
+// //   FaMapMarkerAlt,
+// //   FaStar,
+// // } from "react-icons/fa";
+// // import Footer from "./Footer";
 
+// // // Load Stripe with your public key
+// // const stripePromise = loadStripe("your-stripe-public-key");
 
-import React, { useState, useEffect } from "react";
- import { useLocation, useNavigate } from "react-router-dom";
-import axios from "axios"; // For future backend use
-import { FaUserFriends, FaSuitcase, FaCogs, FaMapMarkerAlt, FaStar } from "react-icons/fa";
-import Footer from "./Footer";
+// // const CarConfirmation = () => {
+// //   const location = useLocation();
+// //   const navigate = useNavigate();
+// //   const { car = {}, selectedDeal = {} } = location.state || {};
+// //   const [carData, setCarData] = useState(car || {});
+// //   const [totalPrice, setTotalPrice] = useState(0);
+// //   const [loading, setLoading] = useState(true);
 
-const CarConfirmation = () => {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const { pickupLocation, pickupDate, pickupTime, dropoffDate, dropoffTime, car, selectedDeal } = location.state || {};
+// //   // Fetch car data (if needed) and calculate price
+// //   useEffect(() => {
+// //     const calculatePrice = () => {
+// //       let basePrice = 0;
 
-  const [carData, setCarData] = useState(car); // Use passed car data
-  const [addOns, setAddOns] = useState({
-    addDriver: false,
-    childSeat: false,
-    luggageCarrier: false,
-  });
-  const [totalPrice, setTotalPrice] = useState(0);
-  const [loading, setLoading] = useState(false);
+// //       if (carData && selectedDeal?.price) {
+// //         basePrice = selectedDeal.price; // Simplified to a flat rate for this example; adjust based on your logic
+// //       }
+// //       setTotalPrice(basePrice);
+// //     };
 
- console.log("Location state:", location.state);
+// //     calculatePrice();
+// //     setLoading(false);
+// //   }, [carData, selectedDeal]);
 
-  // Optional backend fetch (commented out)
-  /*
-  useEffect(() => {
-    const fetchCarData = async () => {
-      try {
-        setLoading(true);
-        const response = await axios.get(`http://localhost:500/api/car/${car.id}`);
-        console.log("API response:", response.data);
-        setCarData(response.data);
-      } catch (error) {
-        console.error("Error fetching car data:", error);
-        setCarData(car); // Fallback to passed data
-      } finally {
-        setLoading(false);
-      }
-    };
-    // fetchCarData(); // Uncomment when backend is ready
-  }, [car]);
-  */
+// //   const handlePayment = async () => {
+// //     const stripe = await stripePromise;
+// //     const response = await axios.post("http://localhost:5173/create-checkout-session", {
+// //       amount: totalPrice * 100, // Amount in cents
+// //       currency: "inr",
+// //     });
 
-  const calculatePrice = (car) => {
-    if (!car || !pickupDate || !dropoffDate) {
-      console.log("Missing data for price calculation:", { car, pickupDate, dropoffDate });
-      return;
-    }
-    const pickup = new Date(`${pickupDate}T${pickupTime}`);
-    const dropoff = new Date(`${dropoffDate}T${dropoffTime}`);
-    const hours = (dropoff - pickup) / (1000 * 60 * 60);
-    const days = Math.ceil(hours / 24);
-    let basePrice = days * (selectedDeal?.price || car.pricePerDay);
-    let additionalCost = 0;
+// //     const { clientSecret } = response.data;
 
-    if (addOns.addDriver) additionalCost += 2000;
-    if (addOns.childSeat) additionalCost += 500;
-    if (addOns.luggageCarrier) additionalCost += 1000;
+// //     const { error } = await stripe.redirectToCheckout({
+// //       sessionId: clientSecret,
+// //     });
 
-    setTotalPrice(basePrice + additionalCost);
-  };
+// //     if (error) {
+// //       console.error("Error redirecting to Stripe checkout:", error);
+// //     }
+// //   };
 
-  useEffect(() => {
-    if (carData) calculatePrice(carData);
-  }, [addOns, carData]);
+// //   if (loading) return <div className="text-center py-10 text-gray-800">Loading...</div>;
+// //   if (!carData || !selectedDeal)
+// //     return <div className="text-center py-10 text-gray-800">Car or deal not found</div>;
 
-  const handleAddOnChange = (e) => {
-    const { name, checked } = e.target;
-    setAddOns(prev => ({ ...prev, [name]: checked }));
-  };
+// //   return (
+// //     <div className="min-h-screen bg-gray-50">
+// //       <div className="container mx-auto max-w-7xl px-4 py-8">
+// //         <h2 className="text-3xl font-bold text-gray-800 mb-6">Confirm Your Booking</h2>
+// //         <div className="bg-white rounded-2xl shadow-lg p-6">
+// //           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+// //             {/* Left Panel - Price Breakdown */}
+// //             <div className="md:col-span-1 bg-gray-50 p-4 rounded-lg">
+// //               <div className="mt-6">
+// //                 <h4 className="text-lg font-semibold text-gray-800 mb-3">Price Breakdown</h4>
+// //                 <p className="text-gray-600">Rental Cost: ₹{totalPrice.toLocaleString()}</p>
+// //                 <p className="text-gray-600">Extras: ₹0</p>
+// //                 <p className="text-2xl font-bold text-gray-800">Total: ₹{totalPrice.toLocaleString()}</p>
+// //               </div>
+// //             </div>
 
-  const handleConfirmBooking = () => {
-    const bookingDetails = {
-      pickupLocation,
-      pickupDate,
-      pickupTime,
-      dropoffDate,
-      dropoffTime,
-      carId: carData?.id,
-      carMake: carData?.carMake,
-      carModel: carData?.model,
-      totalPrice,
-      addOns,
-      agency: selectedDeal?.agency,
-    };
-    navigate("/cabs", { state: { ...location.state, bookingConfirmed: true, bookingDetails } });
-  };
+// //             {/* Right Panel - Car Details */}
+// //             <div className="md:col-span-1">
+// //               <div className="flex flex-col md:flex-row gap-6">
+// //                 <div className="md:w-1/2">
+// //                   <img
+// //                     src={carData.image || "https://via.placeholder.com/300x200"}
+// //                     alt={`${carData.make || "Unknown"} ${carData.model || "Model"}`}
+// //                     className="w-full h-48 object-contain rounded-lg bg-gray-50 p-2 mb-4"
+// //                   />
+// //                   <button
+// //                     onClick={() => navigate(-1)}
+// //                     className="w-full bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+// //                   >
+// //                     Back to Search Results
+// //                   </button>
+// //                 </div>
 
-  if (loading) return <div className="text-center py-10">Loading...</div>;
-  if (!carData) return <div className="text-center py-10">Car not found</div>;
+// //                 <div className="md:w-1/2">
+// //                   <div className="flex items-center space-x-3 mb-4">
+// //                     <h3 className="text-xl font-semibold text-gray-800">
+// //                       {carData.make || "Unknown"} {carData.model || "Model"}
+// //                     </h3>
+// //                     <span className="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+// //                       {carData.type || "N/A"}
+// //                     </span>
+// //                   </div>
 
-  return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto max-w-7xl px-4 py-8">
-        <h2 className="text-3xl font-bold text-gray-800 mb-6">Confirm Your Booking</h2>
-        <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <div className="flex items-center space-x-3 mb-4">
-                <h3 className="text-xl font-semibold text-gray-800">
-                  {carData.carMake} {carData.model}
-                </h3>
-                <span className="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
-                  {carData.type}
-                </span>
-              </div>
-              <img src={carData.image} alt={`${carData.carMake} ${carData.model}`} className="w-full h-40 object-contain rounded-lg bg-gray-50 p-2 mb-4" />
-              <div className="grid grid-cols-2 gap-4">
-                <div className="flex items-center space-x-2 text-gray-600">
-                  <FaUserFriends size={14} />
-                  <span className="text-sm">{carData.passengers} Passengers</span>
-                </div>
-                <div className="flex items-center space-x-2 text-gray-600">
-                  <FaSuitcase size={14} />
-                  <span className="text-sm">{carData.luggage} Luggage</span>
-                </div>
-                <div className="flex items-center space-x-2 text-gray-600">
-                  <FaCogs size={14} />
-                  <span className="text-sm">{carData.transmission}</span>
-                </div>
-                <div className="flex items-center space-x-2 text-gray-600">
-                  <FaMapMarkerAlt size={14} />
-                  <span className="text-sm">{carData.mileage}</span>
-                </div>
-                <div className="flex items-center space-x-2 text-gray-600">
-                  <FaStar size={14} className="text-yellow-400" />
-                  <span className="text-sm">{carData.rating}/10 ({carData.reviews.toLocaleString()} reviews)</span>
-                </div>
-              </div>
-            </div>
-            <div>
-              <h4 className="text-lg font-semibold text-gray-800 mb-4">Booking Details</h4>
-              <div className="space-y-3">
-                <p className="text-gray-600"><span className="font-medium">Pickup:</span> {pickupLocation} on {pickupDate} at {pickupTime}</p>
-                <p className="text-gray-600"><span className="font-medium">Dropoff:</span> {pickupLocation} on {dropoffDate} at {dropoffTime}</p>
-                <p className="text-gray-600"><span className="font-medium">Agency:</span> {selectedDeal?.agency}</p>
-                <p className="text-gray-600"><span className="font-medium">Base Price:</span> ₹{selectedDeal?.price.toLocaleString()}/day</p>
-              </div>
-              <div className="mt-6">
-                <h4 className="text-lg font-semibold text-gray-800 mb-3">Additional Options</h4>
-//                 <div className="space-y-3">
-//                   <label className="flex items-center text-gray-800">
-//                     <input type="checkbox" name="addDriver" checked={addOns.addDriver} onChange={handleAddOnChange} className="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500" />
-//                     Additional Driver (₹2000)
-//                   </label>
-//                   <label className="flex items-center text-gray-800">
-//                     <input type="checkbox" name="childSeat" checked={addOns.childSeat} onChange={handleAddOnChange} className="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500" />
-//                     Child Seat (₹500)
-//                   </label>
-//                   <label className="flex items-center text-gray-800">
-//                     <input type="checkbox" name="luggageCarrier" checked={addOns.luggageCarrier} onChange={handleAddOnChange} className="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500" />
-//                     Luggage Carrier (₹1000)
-//                   </label>
-//                 </div>
-//               </div>
-//             </div>
-//           </div>
-//           <div className="mt-6 border-t pt-4">
-//             <div className="flex justify-between items-center">
-//               <h4 className="text-lg font-semibold text-gray-800">Total Price</h4>
-//               <span className="text-2xl font-bold text-gray-800">₹{totalPrice.toLocaleString()}</span>
-//             </div>
-//             <button onClick={handleConfirmBooking} className="w-full mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
-//               Confirm Booking
-//             </button>
-//           </div>
-         </div>
-      </div>
-      <Footer />
-   </div>
-  );
-};
+// //                   <div className="grid grid-cols-2 gap-4 mb-4">
+// //                     <div className="flex items-center space-x-2 text-gray-600">
+// //                       <FaUserFriends size={14} />
+// //                       <span className="text-sm">{carData.passengers || "N/A"} Passengers</span>
+// //                     </div>
+// //                     <div className="flex items-center space-x-2 text-gray-600">
+// //                       <FaSuitcase size={14} />
+// //                       <span className="text-sm">4 Luggage</span>
+// //                     </div>
+// //                     <div className="flex items-center space-x-2 text-gray-600">
+// //                       <FaCogs size={14} />
+// //                       <span className="text-sm">{carData.transmission || "N/A"}</span>
+// //                     </div>
+// //                     <div className="flex items-center space-x-2 text-gray-600">
+// //                       <FaMapMarkerAlt size={14} />
+// //                       <span className="text-sm">Unlimited Mileage</span>
+// //                     </div>
+// //                     <div className="flex items-center space-x-2 text-gray-600">
+// //                       <FaStar size={14} className="text-yellow-400" />
+// //                       <span className="text-sm">{carData.ratings || "N/A"}/10</span>
+// //                     </div>
+// //                   </div>
 
-export default CarConfirmation;
+// //                   <div className="bg-gray-100 p-4 rounded-lg mb-4">
+// //                     <p className="text-gray-800 font-semibold">Agency: {selectedDeal.agency || "N/A"}</p>
+// //                     <p className="text-gray-600">Fuel Policy: {carData.fuel_policy || "N/A"}</p>
+// //                   </div>
+
+// //                   <div className="mt-6 border-t pt-4">
+// //                     <div className="flex justify-between items-center">
+// //                       <h2 className="text-lg font-semibold text-gray-800">Total Price</h2>
+// //                       <span className="text-2xl font-bold text-gray-800">₹{totalPrice.toLocaleString()}</span>
+// //                     </div>
+// //                     <button
+// //                       onClick={handlePayment}
+// //                       className="w-full mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+// //                     >
+// //                       Confirm Booking
+// //                     </button>
+// //                   </div>
+// //                 </div>
+// //               </div>
+// //             </div>
+// //           </div>
+// //         </div>
+// //       </div>
+
+// //       <Footer />
+// //     </div>
+// //   );
+// // };
+
+// // export default CarConfirmation;
