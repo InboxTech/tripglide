@@ -412,6 +412,7 @@ def get_data():
     transmission = request.args.get('transmission')
     fuel_policy = request.args.get('fuel_policy')
     make = request.args.get('make')
+    model = request.args.get('model')
     price = request.args.get('price')
     agency = request.args.get('agency')
     ratings = request.args.get('ratings')
@@ -431,6 +432,9 @@ def get_data():
     if make:
         query_conditions.append("Make = %s")
         query_params.append(make)
+    if model:
+        query_conditions.append("Model = %s")
+        query_params.append(model)
     if fuel_policy:
         query_conditions.append("Fuel_Policy = %s")
         query_params.append(fuel_policy)
@@ -464,6 +468,7 @@ def get_data():
                 "passengers": row["Seats"],
                 "type": row.get("CarType", "N/A"),
                 "make": row["Make"],
+                "model": row["Model"],
                 "fuel_policy": row["Fuel_Policy"],
                 "transmission": row["Transmission"],
                 "price": row["Price_Per_Hour_INR"],
