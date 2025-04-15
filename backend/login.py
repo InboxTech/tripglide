@@ -350,7 +350,9 @@ def verify_code_route():
         if verify_code(identifier, code, channel):
             cursor = db.cursor(dictionary=True)
             field = "email" if is_email(identifier) else "phone"
-            cursor.execute(f"UPDATE users SET otp_verified = 1 WHERE {field} = %s", (identifier,))
+            # Update the appropriate verification column based on the identifier type
+            verification_column = "email_verified" if is_email(identifier) else "phone_verified"
+            cursor.execute(f"UPDATE users SET {verification_column} = 1 WHERE {field} = %s", (identifier,))
             db.commit()
             cursor.execute(f"SELECT * FROM users WHERE {field} = %s", (identifier,))
             user = cursor.fetchone()

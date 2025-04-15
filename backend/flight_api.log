@@ -671,3 +671,269 @@
 2025-04-15 14:50:03,966 [INFO] 127.0.0.1 - - [15/Apr/2025 14:50:03] "[33mGET /get_flights HTTP/1.1[0m" 404 -
 2025-04-15 14:51:08,631 [INFO]  * Detected change in 'C:\\xampp\\htdocs\\Inbox\\tripglide\\backend\\flight.py', reloading
 2025-04-15 14:51:08,726 [INFO]  * Restarting with stat
+2025-04-15 14:51:09,265 [INFO] Starting Flask server on port 5000
+2025-04-15 14:51:09,305 [WARNING]  * Debugger is active!
+2025-04-15 14:51:09,309 [INFO]  * Debugger PIN: 266-754-094
+2025-04-15 14:51:14,411 [INFO] Received GET request for /get_flights
+2025-04-15 14:51:14,601 [INFO] package: mysql.connector.plugins
+2025-04-15 14:51:14,601 [INFO] plugin_name: mysql_native_password
+2025-04-15 14:51:14,604 [INFO] AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2025-04-15 14:51:14,635 [INFO] Database connection established
+2025-04-15 14:51:18,727 [INFO] Returning airports data
+2025-04-15 14:51:18,729 [INFO] Database connection closed for /get_flights
+2025-04-15 14:51:18,732 [INFO] 127.0.0.1 - - [15/Apr/2025 14:51:18] "GET /get_flights HTTP/1.1" 200 -
+2025-04-15 14:51:18,737 [INFO] Received GET request for /get_flights
+2025-04-15 14:51:18,741 [INFO] Database connection established
+2025-04-15 14:51:22,299 [INFO] Returning airports data
+2025-04-15 14:51:22,300 [INFO] Database connection closed for /get_flights
+2025-04-15 14:51:22,301 [INFO] 127.0.0.1 - - [15/Apr/2025 14:51:22] "GET /get_flights HTTP/1.1" 200 -
+2025-04-15 14:52:10,844 [INFO] 127.0.0.1 - - [15/Apr/2025 14:52:10] "OPTIONS /api/save_booking_confirmation HTTP/1.1" 200 -
+2025-04-15 14:52:11,106 [INFO] Received POST request for /save_booking_confirmation
+2025-04-15 14:52:11,111 [INFO] Database connection established
+2025-04-15 14:52:11,151 [ERROR] Database error in /save_booking_confirmation: 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`tripglide`.`flight_bookings`, CONSTRAINT `flight_bookings_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`))
+2025-04-15 14:52:11,151 [INFO] Database connection closed for /save_booking_confirmation
+2025-04-15 14:52:11,152 [INFO] 127.0.0.1 - - [15/Apr/2025 14:52:11] "[35m[1mPOST /api/save_booking_confirmation HTTP/1.1[0m" 500 -
+2025-04-15 14:54:33,789 [INFO] 127.0.0.1 - - [15/Apr/2025 14:54:33] "OPTIONS /api/save_booking_confirmation HTTP/1.1" 200 -
+2025-04-15 14:54:34,053 [INFO] Received POST request for /save_booking_confirmation
+2025-04-15 14:54:34,057 [INFO] Database connection established
+2025-04-15 14:54:34,064 [INFO] Booking saved successfully: 2701678711
+2025-04-15 14:54:34,065 [INFO] Database connection closed for /save_booking_confirmation
+2025-04-15 14:54:34,066 [INFO] 127.0.0.1 - - [15/Apr/2025 14:54:34] "POST /api/save_booking_confirmation HTTP/1.1" 200 -
+2025-04-15 14:54:52,176 [INFO] Received GET request for /api/flight_bookings
+2025-04-15 14:54:52,179 [INFO] Database connection established
+2025-04-15 14:54:52,189 [INFO] Returning 1 flight bookings for identifier=jaimilkothari2003@gmail.com
+2025-04-15 14:54:52,192 [INFO] Database connection closed for /api/flight_bookings
+2025-04-15 14:54:52,193 [INFO] 127.0.0.1 - - [15/Apr/2025 14:54:52] "GET /api/flight_bookings?identifier=jaimilkothari2003@gmail.com HTTP/1.1" 200 -
+2025-04-15 14:54:52,436 [INFO] Received GET request for /api/flight_bookings
+2025-04-15 14:54:52,441 [INFO] Database connection established
+2025-04-15 14:54:52,444 [INFO] Returning 1 flight bookings for identifier=jaimilkothari2003@gmail.com
+2025-04-15 14:54:52,444 [INFO] Database connection closed for /api/flight_bookings
+2025-04-15 14:54:52,445 [INFO] 127.0.0.1 - - [15/Apr/2025 14:54:52] "GET /api/flight_bookings?identifier=jaimilkothari2003@gmail.com HTTP/1.1" 200 -
+2025-04-15 14:57:12,976 [INFO] Received GET request for /get_flights
+2025-04-15 14:57:12,996 [INFO] Database connection established
+2025-04-15 14:57:17,667 [INFO] Returning airports data
+2025-04-15 14:57:17,670 [INFO] Database connection closed for /get_flights
+2025-04-15 14:57:17,673 [INFO] 127.0.0.1 - - [15/Apr/2025 14:57:17] "GET /get_flights HTTP/1.1" 200 -
+2025-04-15 14:57:17,679 [INFO] Received GET request for /get_flights
+2025-04-15 14:57:17,684 [INFO] Database connection established
+2025-04-15 14:57:20,756 [INFO] Returning airports data
+2025-04-15 14:57:20,758 [INFO] Database connection closed for /get_flights
+2025-04-15 14:57:20,759 [INFO] 127.0.0.1 - - [15/Apr/2025 14:57:20] "GET /get_flights HTTP/1.1" 200 -
+2025-04-15 14:57:47,672 [INFO] 127.0.0.1 - - [15/Apr/2025 14:57:47] "OPTIONS /api/save_booking_confirmation HTTP/1.1" 200 -
+2025-04-15 14:57:47,933 [INFO] Received POST request for /save_booking_confirmation
+2025-04-15 14:57:47,936 [INFO] Database connection established
+2025-04-15 14:57:47,967 [INFO] Booking saved successfully: 4154770073
+2025-04-15 14:57:47,968 [INFO] Database connection closed for /save_booking_confirmation
+2025-04-15 14:57:47,969 [INFO] 127.0.0.1 - - [15/Apr/2025 14:57:47] "POST /api/save_booking_confirmation HTTP/1.1" 200 -
+2025-04-15 15:19:07,998 [INFO] Received GET request for /api/flight_bookings
+2025-04-15 15:19:08,026 [INFO] Database connection established
+2025-04-15 15:19:08,041 [INFO] Returning 2 flight bookings for identifier=jaimilkothari2003@gmail.com
+2025-04-15 15:19:08,045 [INFO] Database connection closed for /api/flight_bookings
+2025-04-15 15:19:08,050 [INFO] 127.0.0.1 - - [15/Apr/2025 15:19:08] "GET /api/flight_bookings?identifier=jaimilkothari2003@gmail.com HTTP/1.1" 200 -
+2025-04-15 15:19:08,207 [INFO] Received GET request for /api/flight_bookings
+2025-04-15 15:19:08,210 [INFO] Database connection established
+2025-04-15 15:19:08,213 [INFO] Returning 2 flight bookings for identifier=jaimilkothari2003@gmail.com
+2025-04-15 15:19:08,215 [INFO] Database connection closed for /api/flight_bookings
+2025-04-15 15:19:08,218 [INFO] 127.0.0.1 - - [15/Apr/2025 15:19:08] "GET /api/flight_bookings?identifier=jaimilkothari2003@gmail.com HTTP/1.1" 200 -
+2025-04-15 15:29:30,943 [INFO] Received GET request for /api/flight_bookings
+2025-04-15 15:29:30,955 [INFO] Database connection established
+2025-04-15 15:29:30,966 [INFO] Returning 2 flight bookings for identifier=jaimilkothari2003@gmail.com
+2025-04-15 15:29:30,971 [INFO] Database connection closed for /api/flight_bookings
+2025-04-15 15:29:30,979 [INFO] 127.0.0.1 - - [15/Apr/2025 15:29:30] "GET /api/flight_bookings?identifier=jaimilkothari2003@gmail.com HTTP/1.1" 200 -
+2025-04-15 15:29:31,192 [INFO] Received GET request for /api/flight_bookings
+2025-04-15 15:29:31,196 [INFO] Database connection established
+2025-04-15 15:29:31,199 [INFO] Returning 2 flight bookings for identifier=jaimilkothari2003@gmail.com
+2025-04-15 15:29:31,200 [INFO] Database connection closed for /api/flight_bookings
+2025-04-15 15:29:31,201 [INFO] 127.0.0.1 - - [15/Apr/2025 15:29:31] "GET /api/flight_bookings?identifier=jaimilkothari2003@gmail.com HTTP/1.1" 200 -
+2025-04-15 15:29:52,292 [INFO] Received GET request for /get_flights
+2025-04-15 15:29:52,295 [INFO] Database connection established
+2025-04-15 15:29:57,122 [INFO] Returning airports data
+2025-04-15 15:29:57,127 [INFO] Database connection closed for /get_flights
+2025-04-15 15:29:57,129 [INFO] 127.0.0.1 - - [15/Apr/2025 15:29:57] "GET /get_flights HTTP/1.1" 200 -
+2025-04-15 15:29:57,134 [INFO] Received GET request for /get_flights
+2025-04-15 15:29:57,139 [INFO] Database connection established
+2025-04-15 15:30:01,171 [INFO] Returning airports data
+2025-04-15 15:30:01,172 [INFO] Database connection closed for /get_flights
+2025-04-15 15:30:01,172 [INFO] 127.0.0.1 - - [15/Apr/2025 15:30:01] "GET /get_flights HTTP/1.1" 200 -
+2025-04-15 15:38:55,698 [INFO]  * Detected change in 'C:\\xampp\\htdocs\\Inbox\\tripglide\\backend\\flight.py', reloading
+2025-04-15 15:38:56,046 [INFO]  * Restarting with stat
+2025-04-15 15:38:56,611 [INFO] Starting Flask server on port 5000
+2025-04-15 15:38:56,653 [WARNING]  * Debugger is active!
+2025-04-15 15:38:56,664 [INFO]  * Debugger PIN: 266-754-094
+2025-04-15 15:40:28,180 [INFO]  * Detected change in 'C:\\xampp\\htdocs\\Inbox\\tripglide\\backend\\flight.py', reloading
+2025-04-15 15:40:28,313 [INFO]  * Restarting with stat
+2025-04-15 15:40:28,796 [INFO] Starting Flask server on port 5000
+2025-04-15 15:40:28,854 [WARNING]  * Debugger is active!
+2025-04-15 15:40:28,860 [INFO]  * Debugger PIN: 266-754-094
+2025-04-15 15:45:31,413 [INFO]  * Detected change in 'C:\\xampp\\htdocs\\Inbox\\tripglide\\backend\\login.py', reloading
+2025-04-15 15:45:31,543 [INFO]  * Restarting with stat
+2025-04-15 15:45:32,466 [INFO] Starting Flask server on port 5000
+2025-04-15 15:45:32,543 [WARNING]  * Debugger is active!
+2025-04-15 15:45:32,548 [INFO]  * Debugger PIN: 266-754-094
+2025-04-15 15:46:43,555 [INFO] 127.0.0.1 - - [15/Apr/2025 15:46:43] "OPTIONS /api/save_booking_confirmation HTTP/1.1" 200 -
+2025-04-15 15:46:43,810 [INFO] Received POST request for /save_booking_confirmation
+2025-04-15 15:46:43,886 [INFO] package: mysql.connector.plugins
+2025-04-15 15:46:43,887 [INFO] plugin_name: mysql_native_password
+2025-04-15 15:46:43,889 [INFO] AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2025-04-15 15:46:43,892 [INFO] Database connection established
+2025-04-15 15:46:43,925 [INFO] Booking saved successfully: 1059087063
+2025-04-15 15:46:43,926 [INFO] Database connection closed for /save_booking_confirmation
+2025-04-15 15:46:43,928 [INFO] 127.0.0.1 - - [15/Apr/2025 15:46:43] "POST /api/save_booking_confirmation HTTP/1.1" 200 -
+2025-04-15 15:46:48,578 [INFO] Received GET request for /get_flights
+2025-04-15 15:46:48,581 [INFO] Database connection established
+2025-04-15 15:46:51,031 [INFO] Received GET request for /api/flight_bookings
+2025-04-15 15:46:51,038 [INFO] Database connection established
+2025-04-15 15:46:51,048 [INFO] Returning 3 flight bookings for identifier=jaimilkothari2003@gmail.com
+2025-04-15 15:46:51,050 [INFO] Database connection closed for /api/flight_bookings
+2025-04-15 15:46:51,054 [INFO] 127.0.0.1 - - [15/Apr/2025 15:46:51] "GET /api/flight_bookings?identifier=jaimilkothari2003@gmail.com HTTP/1.1" 200 -
+2025-04-15 15:46:51,395 [INFO] Received GET request for /api/flight_bookings
+2025-04-15 15:46:51,401 [INFO] Database connection established
+2025-04-15 15:46:51,411 [INFO] Returning 3 flight bookings for identifier=jaimilkothari2003@gmail.com
+2025-04-15 15:46:51,417 [INFO] Database connection closed for /api/flight_bookings
+2025-04-15 15:46:51,423 [INFO] 127.0.0.1 - - [15/Apr/2025 15:46:51] "GET /api/flight_bookings?identifier=jaimilkothari2003@gmail.com HTTP/1.1" 200 -
+2025-04-15 15:46:52,792 [INFO] Returning airports data
+2025-04-15 15:46:52,793 [INFO] Database connection closed for /get_flights
+2025-04-15 15:46:52,794 [INFO] 127.0.0.1 - - [15/Apr/2025 15:46:52] "GET /get_flights HTTP/1.1" 200 -
+2025-04-15 15:46:52,797 [INFO] Received GET request for /get_flights
+2025-04-15 15:46:52,803 [INFO] Database connection established
+2025-04-15 15:46:56,891 [INFO] Returning airports data
+2025-04-15 15:46:56,892 [INFO] Database connection closed for /get_flights
+2025-04-15 15:46:56,893 [INFO] 127.0.0.1 - - [15/Apr/2025 15:46:56] "GET /get_flights HTTP/1.1" 200 -
+2025-04-15 15:47:02,457 [INFO] Received GET request for /get_flights
+2025-04-15 15:47:02,461 [INFO] Database connection established
+2025-04-15 15:47:06,536 [INFO] Returning airports data
+2025-04-15 15:47:06,537 [INFO] Database connection closed for /get_flights
+2025-04-15 15:47:06,538 [INFO] 127.0.0.1 - - [15/Apr/2025 15:47:06] "GET /get_flights HTTP/1.1" 200 -
+2025-04-15 15:47:06,542 [INFO] Received GET request for /get_flights
+2025-04-15 15:47:06,546 [INFO] Database connection established
+2025-04-15 15:47:10,394 [INFO] Returning airports data
+2025-04-15 15:47:10,395 [INFO] Database connection closed for /get_flights
+2025-04-15 15:47:10,395 [INFO] 127.0.0.1 - - [15/Apr/2025 15:47:10] "GET /get_flights HTTP/1.1" 200 -
+2025-04-15 16:05:06,902 [INFO] Received GET request for /api/flight_bookings
+2025-04-15 16:05:06,950 [INFO] Database connection established
+2025-04-15 16:05:06,992 [INFO] Returning 3 flight bookings for identifier=jaimilkothari2003@gmail.com
+2025-04-15 16:05:07,002 [INFO] Database connection closed for /api/flight_bookings
+2025-04-15 16:05:07,016 [INFO] 127.0.0.1 - - [15/Apr/2025 16:05:07] "GET /api/flight_bookings?identifier=jaimilkothari2003@gmail.com HTTP/1.1" 200 -
+2025-04-15 16:05:07,026 [INFO] Received GET request for /api/flight_bookings
+2025-04-15 16:05:07,037 [INFO] Database connection established
+2025-04-15 16:05:07,043 [INFO] Returning 3 flight bookings for identifier=jaimilkothari2003@gmail.com
+2025-04-15 16:05:07,049 [INFO] Database connection closed for /api/flight_bookings
+2025-04-15 16:05:07,052 [INFO] 127.0.0.1 - - [15/Apr/2025 16:05:07] "GET /api/flight_bookings?identifier=jaimilkothari2003@gmail.com HTTP/1.1" 200 -
+2025-04-15 16:05:09,774 [INFO] Received GET request for /api/flight_bookings
+2025-04-15 16:05:09,777 [INFO] Database connection established
+2025-04-15 16:05:09,788 [INFO] Returning 3 flight bookings for identifier=jaimilkothari2003@gmail.com
+2025-04-15 16:05:09,789 [INFO] Database connection closed for /api/flight_bookings
+2025-04-15 16:05:09,790 [INFO] 127.0.0.1 - - [15/Apr/2025 16:05:09] "GET /api/flight_bookings?identifier=jaimilkothari2003@gmail.com HTTP/1.1" 200 -
+2025-04-15 16:05:10,041 [INFO] Received GET request for /api/flight_bookings
+2025-04-15 16:05:10,048 [INFO] Database connection established
+2025-04-15 16:05:10,056 [INFO] Returning 3 flight bookings for identifier=jaimilkothari2003@gmail.com
+2025-04-15 16:05:10,058 [INFO] Database connection closed for /api/flight_bookings
+2025-04-15 16:05:10,059 [INFO] 127.0.0.1 - - [15/Apr/2025 16:05:10] "GET /api/flight_bookings?identifier=jaimilkothari2003@gmail.com HTTP/1.1" 200 -
+2025-04-15 16:05:13,879 [INFO] Received GET request for /get_flights
+2025-04-15 16:05:13,883 [INFO] Database connection established
+2025-04-15 16:05:18,017 [INFO] Returning airports data
+2025-04-15 16:05:18,018 [INFO] Database connection closed for /get_flights
+2025-04-15 16:05:18,019 [INFO] 127.0.0.1 - - [15/Apr/2025 16:05:18] "GET /get_flights HTTP/1.1" 200 -
+2025-04-15 16:05:18,022 [INFO] Received GET request for /get_flights
+2025-04-15 16:05:18,026 [INFO] Database connection established
+2025-04-15 16:05:21,584 [INFO] Returning airports data
+2025-04-15 16:05:21,585 [INFO] Database connection closed for /get_flights
+2025-04-15 16:05:21,585 [INFO] 127.0.0.1 - - [15/Apr/2025 16:05:21] "GET /get_flights HTTP/1.1" 200 -
+2025-04-15 16:15:20,027 [INFO] Received GET request for /api/flight_bookings
+2025-04-15 16:15:20,039 [INFO] Database connection established
+2025-04-15 16:15:20,048 [INFO] Returning 3 flight bookings for identifier=jaimilkothari2003@gmail.com
+2025-04-15 16:15:20,053 [INFO] Database connection closed for /api/flight_bookings
+2025-04-15 16:15:20,058 [INFO] 127.0.0.1 - - [15/Apr/2025 16:15:20] "GET /api/flight_bookings?identifier=jaimilkothari2003@gmail.com HTTP/1.1" 200 -
+2025-04-15 16:15:20,278 [INFO] Received GET request for /api/flight_bookings
+2025-04-15 16:15:20,281 [INFO] Database connection established
+2025-04-15 16:15:20,288 [INFO] Returning 3 flight bookings for identifier=jaimilkothari2003@gmail.com
+2025-04-15 16:15:20,289 [INFO] Database connection closed for /api/flight_bookings
+2025-04-15 16:15:20,290 [INFO] 127.0.0.1 - - [15/Apr/2025 16:15:20] "GET /api/flight_bookings?identifier=jaimilkothari2003@gmail.com HTTP/1.1" 200 -
+2025-04-15 16:19:00,292 [INFO] Received GET request for /get_flights
+2025-04-15 16:19:00,297 [INFO] Database connection established
+2025-04-15 16:19:04,057 [INFO] Returning airports data
+2025-04-15 16:19:04,058 [INFO] Database connection closed for /get_flights
+2025-04-15 16:19:04,059 [INFO] 127.0.0.1 - - [15/Apr/2025 16:19:04] "GET /get_flights HTTP/1.1" 200 -
+2025-04-15 16:19:04,064 [INFO] Received GET request for /get_flights
+2025-04-15 16:19:04,067 [INFO] Database connection established
+2025-04-15 16:19:07,686 [INFO] Returning airports data
+2025-04-15 16:19:07,688 [INFO] Database connection closed for /get_flights
+2025-04-15 16:19:07,688 [INFO] 127.0.0.1 - - [15/Apr/2025 16:19:07] "GET /get_flights HTTP/1.1" 200 -
+2025-04-15 16:19:54,375 [INFO] Received GET request for /get_flights
+2025-04-15 16:19:54,382 [INFO] Database connection established
+2025-04-15 16:19:58,631 [INFO] Returning airports data
+2025-04-15 16:19:58,632 [INFO] Database connection closed for /get_flights
+2025-04-15 16:19:58,633 [INFO] 127.0.0.1 - - [15/Apr/2025 16:19:58] "GET /get_flights HTTP/1.1" 200 -
+2025-04-15 16:19:58,638 [INFO] Received GET request for /get_flights
+2025-04-15 16:19:58,642 [INFO] Database connection established
+2025-04-15 16:20:02,194 [INFO] Returning airports data
+2025-04-15 16:20:02,195 [INFO] Database connection closed for /get_flights
+2025-04-15 16:20:02,196 [INFO] 127.0.0.1 - - [15/Apr/2025 16:20:02] "GET /get_flights HTTP/1.1" 200 -
+2025-04-15 16:24:49,435 [INFO] Received GET request for /api/flight_bookings
+2025-04-15 16:24:49,444 [INFO] Database connection established
+2025-04-15 16:24:49,460 [INFO] Returning 3 flight bookings for identifier=jaimilkothari2003@gmail.com
+2025-04-15 16:24:49,463 [INFO] Database connection closed for /api/flight_bookings
+2025-04-15 16:24:49,467 [INFO] 127.0.0.1 - - [15/Apr/2025 16:24:49] "GET /api/flight_bookings?identifier=jaimilkothari2003@gmail.com HTTP/1.1" 200 -
+2025-04-15 16:24:49,697 [INFO] Received GET request for /api/flight_bookings
+2025-04-15 16:24:49,702 [INFO] Database connection established
+2025-04-15 16:24:49,705 [INFO] Returning 3 flight bookings for identifier=jaimilkothari2003@gmail.com
+2025-04-15 16:24:49,706 [INFO] Database connection closed for /api/flight_bookings
+2025-04-15 16:24:49,707 [INFO] 127.0.0.1 - - [15/Apr/2025 16:24:49] "GET /api/flight_bookings?identifier=jaimilkothari2003@gmail.com HTTP/1.1" 200 -
+2025-04-15 16:38:59,554 [INFO] Received GET request for /get_flights
+2025-04-15 16:38:59,568 [INFO] Database connection established
+2025-04-15 16:39:01,197 [INFO] Received GET request for /get_flights
+2025-04-15 16:39:01,213 [INFO] Database connection established
+2025-04-15 16:39:03,253 [INFO] Returning airports data
+2025-04-15 16:39:03,259 [INFO] Database connection closed for /get_flights
+2025-04-15 16:39:03,264 [INFO] 127.0.0.1 - - [15/Apr/2025 16:39:03] "GET /get_flights HTTP/1.1" 200 -
+2025-04-15 16:39:06,021 [INFO] Returning airports data
+2025-04-15 16:39:06,022 [INFO] Database connection closed for /get_flights
+2025-04-15 16:39:06,023 [INFO] 127.0.0.1 - - [15/Apr/2025 16:39:06] "GET /get_flights HTTP/1.1" 200 -
+2025-04-15 16:39:06,026 [INFO] Received GET request for /get_flights
+2025-04-15 16:39:06,092 [INFO] Database connection established
+2025-04-15 16:39:11,387 [INFO] Returning airports data
+2025-04-15 16:39:11,388 [INFO] Database connection closed for /get_flights
+2025-04-15 16:39:11,389 [INFO] 127.0.0.1 - - [15/Apr/2025 16:39:11] "GET /get_flights HTTP/1.1" 200 -
+2025-04-15 16:39:47,143 [INFO] 127.0.0.1 - - [15/Apr/2025 16:39:47] "OPTIONS /api/save_booking_confirmation HTTP/1.1" 200 -
+2025-04-15 16:39:47,396 [INFO] Received POST request for /save_booking_confirmation
+2025-04-15 16:39:47,400 [INFO] Database connection established
+2025-04-15 16:39:47,427 [INFO] Booking saved successfully: 2948178325
+2025-04-15 16:39:47,427 [INFO] Database connection closed for /save_booking_confirmation
+2025-04-15 16:39:47,429 [INFO] 127.0.0.1 - - [15/Apr/2025 16:39:47] "POST /api/save_booking_confirmation HTTP/1.1" 200 -
+2025-04-15 16:39:53,309 [INFO] Received GET request for /api/flight_bookings
+2025-04-15 16:39:53,312 [INFO] Database connection established
+2025-04-15 16:39:53,325 [INFO] Returning 4 flight bookings for identifier=jaimilkothari2003@gmail.com
+2025-04-15 16:39:53,330 [INFO] Database connection closed for /api/flight_bookings
+2025-04-15 16:39:53,332 [INFO] 127.0.0.1 - - [15/Apr/2025 16:39:53] "GET /api/flight_bookings?identifier=jaimilkothari2003@gmail.com HTTP/1.1" 200 -
+2025-04-15 16:39:53,571 [INFO] Received GET request for /api/flight_bookings
+2025-04-15 16:39:53,573 [INFO] Database connection established
+2025-04-15 16:39:53,575 [INFO] Returning 4 flight bookings for identifier=jaimilkothari2003@gmail.com
+2025-04-15 16:39:53,576 [INFO] Database connection closed for /api/flight_bookings
+2025-04-15 16:39:53,577 [INFO] 127.0.0.1 - - [15/Apr/2025 16:39:53] "GET /api/flight_bookings?identifier=jaimilkothari2003@gmail.com HTTP/1.1" 200 -
+2025-04-15 16:40:56,434 [INFO] Received GET request for /api/flight_bookings
+2025-04-15 16:40:56,436 [INFO] Database connection established
+2025-04-15 16:40:56,442 [INFO] Returning 1 flight bookings for identifier=jaimilkothari2003@gmail.com
+2025-04-15 16:40:56,452 [INFO] Database connection closed for /api/flight_bookings
+2025-04-15 16:40:56,458 [INFO] 127.0.0.1 - - [15/Apr/2025 16:40:56] "GET /api/flight_bookings?identifier=jaimilkothari2003@gmail.com HTTP/1.1" 200 -
+2025-04-15 16:40:56,698 [INFO] Received GET request for /api/flight_bookings
+2025-04-15 16:40:56,708 [INFO] Database connection established
+2025-04-15 16:40:56,714 [INFO] Returning 1 flight bookings for identifier=jaimilkothari2003@gmail.com
+2025-04-15 16:40:56,716 [INFO] Database connection closed for /api/flight_bookings
+2025-04-15 16:40:56,718 [INFO] 127.0.0.1 - - [15/Apr/2025 16:40:56] "GET /api/flight_bookings?identifier=jaimilkothari2003@gmail.com HTTP/1.1" 200 -
+2025-04-15 17:00:50,047 [INFO] Received GET request for /api/flight_bookings
+2025-04-15 17:00:50,083 [INFO] Database connection established
+2025-04-15 17:00:50,107 [INFO] Returning 1 flight bookings for identifier=jaimilkothari2003@gmail.com
+2025-04-15 17:00:50,111 [INFO] Database connection closed for /api/flight_bookings
+2025-04-15 17:00:50,114 [INFO] 127.0.0.1 - - [15/Apr/2025 17:00:50] "GET /api/flight_bookings?identifier=jaimilkothari2003@gmail.com HTTP/1.1" 200 -
+2025-04-15 17:00:50,259 [INFO] Received GET request for /api/flight_bookings
+2025-04-15 17:00:50,264 [INFO] Database connection established
+2025-04-15 17:00:50,266 [INFO] Returning 1 flight bookings for identifier=jaimilkothari2003@gmail.com
+2025-04-15 17:00:50,267 [INFO] Database connection closed for /api/flight_bookings
+2025-04-15 17:00:50,268 [INFO] 127.0.0.1 - - [15/Apr/2025 17:00:50] "GET /api/flight_bookings?identifier=jaimilkothari2003@gmail.com HTTP/1.1" 200 -
+2025-04-15 17:47:14,261 [INFO] Received GET request for /api/flight_bookings
+2025-04-15 17:47:14,299 [INFO] Database connection established
+2025-04-15 17:47:14,324 [INFO] Returning 1 flight bookings for identifier=jaimilkothari2003@gmail.com
+2025-04-15 17:47:14,326 [INFO] Database connection closed for /api/flight_bookings
+2025-04-15 17:47:14,328 [INFO] 127.0.0.1 - - [15/Apr/2025 17:47:14] "GET /api/flight_bookings?identifier=jaimilkothari2003@gmail.com HTTP/1.1" 200 -
+2025-04-15 17:48:26,050 [INFO]  * Detected change in 'C:\\xampp\\htdocs\\Inbox\\tripglide\\backend\\flight.py', reloading
+2025-04-15 17:48:26,282 [INFO]  * Restarting with stat
