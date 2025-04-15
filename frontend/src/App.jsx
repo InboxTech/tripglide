@@ -19,12 +19,8 @@ import CountryFacts from "./components/CountryFacts";
 import Hotels from "./components/Hotels";
 import HotelSearch from "./components/HotelSearch";
 import CarConfirmation from "./components/CarConfirmation";
-import Login from "./components/Login"
 import BookingConfirmed from "./components/BookingConfirmation";
 import Cancel from "./components/Cancel";
-
-// Initialize Stripe with your Publishable Key
-// const stripePromise = loadStripe("pk_test_51RA1PaAGhuxmwIzwuekZ7LyLuwOFMdNXMGBGdVj7tO603Bz6Rq0lzHf51iuXuc6wJHCQIguaKycDVvzfhOx6gCxM00JF5p3CdX"); // Replace with your Stripe Publishable Key
 
 function App() {
   const [user, setUser] = useState(() => {
@@ -117,10 +113,9 @@ function App() {
           <Route path="/country-facts" element={<CountryFacts />} />
           <Route path="/hotels" element={<Hotels />} />
           <Route path="/hotel-search" element={<HotelSearch />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/cancel" element={<Cancel />} />
-          <Route path="/car-confirmation" element={<CarConfirmation />}/>
+          <Route path="/car-confirmation" element={<CarConfirmation />} />
           <Route path="/booking-confirmed" element={<BookingConfirmed />} />
+          <Route path="/cancel" element={<Cancel />} />
         </Routes>
       </Router>
     </GoogleOAuthProvider>

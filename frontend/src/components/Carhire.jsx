@@ -15,7 +15,9 @@ export default function CarHire() {
   const [pickupTime, setPickupTime] = useState("");
   const [dropoffTime, setDropoffTime] = useState("");
   const [pickupLocation, setPickupLocation] = useState("");
-  const [availableLocations, setAvailableLocations] = useState([]);
+  const [availableLocations, setAvailableLocations] = useState([]); // Stores fetched locations
+  const [availableCars, setAvailableCars] = useState([]);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false); // New state for custom dropdown
 
   const today = new Date().toISOString().split("T")[0];
   const [currentTime, setCurrentTime] = useState("");
@@ -33,7 +35,7 @@ export default function CarHire() {
       });
   }, []);
 
-  // Update current time
+  // Update current time based on selected date
   useEffect(() => {
     const now = new Date();
     setCurrentTime(
@@ -73,9 +75,14 @@ export default function CarHire() {
     });
   };
 
+  // Handle selection from custom dropdown
+  const handleSelectLocation = (location) => {
+    setPickupLocation(location);
+    setIsDropdownOpen(false);
+  };
+
   return (
     <section className="w-full">
-
       {/* Background Image */}
       <div className="absolute inset-0 lg:block -z-10">
         <img
@@ -91,22 +98,68 @@ export default function CarHire() {
         </h1>
         <div className="bg-[#001533] p-6 rounded-2xl shadow-lg">
           <form className="grid gap-4 md:grid-cols-2 lg:grid-cols-5 items-center">
-            <div className="lg:col-span-1">
-              <label className="block text-white font-semibold mb-1">Pick-up location</label>
-              <input
-                list="pickup-locations"
-                type="text"
-                placeholder="City, airport or station"
-                className="w-full p-3 rounded-lg bg-white text-black"
+            {/* Pickup Location */}
+            <div className="lg:col-span-1 relative">
+              <label className="block text-white font-semibold mb-1">
+                Pick-up location
+              </label>
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="City, airport or station"
+                  className="w-full p-3 rounded-lg bg-white text-black"
+                  value={pickupLocation}
+                  onChange={(e) => setPickupLocation(e.target.value)}
+                  onFocus={() => setIsDropdownOpen(true)}
+                  onBlur={() => setTimeout(() => setIsDropdownOpen(false), 200)}
+                  required
+                />
+                {isDropdownOpen && availableLocations.length > 0 && (
+                  <ul className="absolute z-10 w-full bg-white text-black rounded-lg shadow-lg max-h-60 overflow-y-auto mt-1">
+                    {availableLocations.map((location, index) => (
+                      <li
+                        key={index}
+                        className="p-2 hover:bg-gray-200 cursor-pointer"
+                        onClick={() => handleSelectLocation(location)}
+                        onMouseDown={(e) => e.preventDefault()} // Prevent blur from closing
+                      >
+                        {location}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                  <svg
+                    className="w-4 h-4 text-gray-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M19 9l-7 7-7-7"
+                    ></path>
+                  </svg>
+                </div>
+              </div>
+              <select
+                className="hidden" // Hidden select for form submission
                 value={pickupLocation}
                 onChange={(e) => setPickupLocation(e.target.value)}
                 required
-              />
-              <datalist id="pickup-locations">
+              >
+                <option value="" disabled>
+                  City, airport or station
+                </option>
                 {availableLocations.map((location, index) => (
-                  <option key={index} value={location} />
+                  <option key={index} value={location}>
+                    {location}
+                  </option>
                 ))}
-              </datalist>
+              </select>
             </div>
             <div>
               <label className="block text-white font-semibold mb-1">Pick-up date</label>
@@ -245,10 +298,12 @@ export default function CarHire() {
       </section>
       <hr className="bg-black"></hr>
 
+      {/* Swiper Section */}
       <section className="bg-white">
         <TravelDeals />
       </section>
 
+      {/* Car Hire FAQ */}
       <div className="bg-white">
         <CarHireFAQ />
       </div>
