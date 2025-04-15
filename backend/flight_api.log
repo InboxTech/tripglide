@@ -11,3 +11,604 @@
 2025-04-15 12:11:04,714 [INFO] Starting Flask server on port 5000
 2025-04-15 12:11:04,780 [WARNING]  * Debugger is active!
 2025-04-15 12:11:04,786 [INFO]  * Debugger PIN: 266-754-094
+2025-04-15 12:13:50,989 [INFO] Received GET request for /get_flights
+2025-04-15 12:13:51,060 [INFO] package: mysql.connector.plugins
+2025-04-15 12:13:51,061 [INFO] plugin_name: mysql_native_password
+2025-04-15 12:13:51,062 [INFO] AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2025-04-15 12:13:51,064 [INFO] Database connection established
+2025-04-15 12:13:54,932 [INFO] Returning airports data
+2025-04-15 12:13:54,934 [INFO] Database connection closed for /get_flights
+2025-04-15 12:13:54,935 [INFO] 127.0.0.1 - - [15/Apr/2025 12:13:54] "GET /get_flights HTTP/1.1" 200 -
+2025-04-15 12:13:54,940 [INFO] Received GET request for /get_flights
+2025-04-15 12:13:54,944 [INFO] Database connection established
+2025-04-15 12:13:58,649 [INFO] Returning airports data
+2025-04-15 12:13:58,651 [INFO] Database connection closed for /get_flights
+2025-04-15 12:13:58,653 [INFO] 127.0.0.1 - - [15/Apr/2025 12:13:58] "GET /get_flights HTTP/1.1" 200 -
+2025-04-15 12:26:07,663 [INFO]  * Detected change in 'C:\\xampp\\htdocs\\Inbox\\tripglide\\backend\\flight.py', reloading
+2025-04-15 12:26:08,607 [INFO] Starting Flask server on port 5002
+2025-04-15 12:26:08,658 [WARNING]  * Debugger is active!
+2025-04-15 12:26:08,669 [INFO]  * Debugger PIN: 266-754-094
+2025-04-15 12:26:09,993 [INFO]  * Detected change in 'C:\\xampp\\htdocs\\Inbox\\tripglide\\backend\\flight.py', reloading
+2025-04-15 12:26:10,517 [INFO] Starting Flask server on port 5002
+2025-04-15 12:26:10,555 [WARNING]  * Debugger is active!
+2025-04-15 12:26:10,558 [INFO]  * Debugger PIN: 266-754-094
+2025-04-15 12:26:27,001 [INFO]  * Detected change in 'C:\\xampp\\htdocs\\Inbox\\tripglide\\backend\\flight.py', reloading
+2025-04-15 12:26:27,553 [INFO] Starting Flask server on port 5000
+2025-04-15 12:26:27,593 [WARNING]  * Debugger is active!
+2025-04-15 12:26:27,596 [INFO]  * Debugger PIN: 266-754-094
+2025-04-15 12:27:48,403 [INFO] Received GET request for /api/profile
+2025-04-15 12:27:48,479 [INFO] package: mysql.connector.plugins
+2025-04-15 12:27:48,479 [INFO] plugin_name: mysql_native_password
+2025-04-15 12:27:48,482 [INFO] AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2025-04-15 12:27:48,488 [INFO] Database connection established
+2025-04-15 12:27:48,500 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 12:27:48,643 [INFO] 127.0.0.1 - - [15/Apr/2025 12:27:48] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 12:27:48,656 [INFO] Received GET request for /api/profile
+2025-04-15 12:27:48,660 [INFO] Database connection established
+2025-04-15 12:27:48,662 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 12:27:48,686 [INFO] 127.0.0.1 - - [15/Apr/2025 12:27:48] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 12:27:48,959 [INFO] Received GET request for /api/profile
+2025-04-15 12:27:48,965 [INFO] Database connection established
+2025-04-15 12:27:48,968 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 12:27:48,986 [INFO] 127.0.0.1 - - [15/Apr/2025 12:27:48] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 12:27:48,990 [INFO] Received GET request for /api/profile
+2025-04-15 12:27:48,997 [INFO] Database connection established
+2025-04-15 12:27:49,000 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 12:27:49,018 [INFO] 127.0.0.1 - - [15/Apr/2025 12:27:49] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 12:27:49,301 [INFO] 127.0.0.1 - - [15/Apr/2025 12:27:49] "OPTIONS /api/save_booking_confirmation HTTP/1.1" 200 -
+2025-04-15 12:27:49,332 [INFO] Received GET request for /api/profile
+2025-04-15 12:27:49,335 [INFO] Database connection established
+2025-04-15 12:27:49,338 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 12:27:49,366 [INFO] 127.0.0.1 - - [15/Apr/2025 12:27:49] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 12:27:49,612 [INFO] Received POST request for /save_booking_confirmation
+2025-04-15 12:27:49,616 [INFO] Database connection established
+2025-04-15 12:27:49,661 [INFO] Booking saved successfully: 25986670
+2025-04-15 12:27:49,662 [INFO] Database connection closed for /save_booking_confirmation
+2025-04-15 12:27:49,663 [INFO] 127.0.0.1 - - [15/Apr/2025 12:27:49] "POST /api/save_booking_confirmation HTTP/1.1" 200 -
+2025-04-15 12:30:19,240 [INFO] Received GET request for /api/profile
+2025-04-15 12:30:19,250 [INFO] Database connection established
+2025-04-15 12:30:19,260 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 12:30:19,279 [INFO] 127.0.0.1 - - [15/Apr/2025 12:30:19] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 12:30:19,499 [INFO] Received GET request for /api/profile
+2025-04-15 12:30:19,503 [INFO] Database connection established
+2025-04-15 12:30:19,506 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 12:30:19,520 [INFO] 127.0.0.1 - - [15/Apr/2025 12:30:19] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 12:30:19,595 [INFO] Received GET request for /api/profile
+2025-04-15 12:30:19,598 [INFO] Database connection established
+2025-04-15 12:30:19,600 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 12:30:19,617 [INFO] 127.0.0.1 - - [15/Apr/2025 12:30:19] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 12:30:19,921 [INFO] Received GET request for /api/profile
+2025-04-15 12:30:19,926 [INFO] Database connection established
+2025-04-15 12:30:19,928 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 12:30:19,942 [INFO] 127.0.0.1 - - [15/Apr/2025 12:30:19] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 12:30:20,250 [INFO] Received GET request for /api/profile
+2025-04-15 12:30:20,254 [INFO] Database connection established
+2025-04-15 12:30:20,257 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 12:30:20,281 [INFO] 127.0.0.1 - - [15/Apr/2025 12:30:20] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 12:30:24,843 [INFO] Received GET request for /api/profile
+2025-04-15 12:30:24,849 [INFO] Database connection established
+2025-04-15 12:30:24,856 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 12:30:24,886 [INFO] 127.0.0.1 - - [15/Apr/2025 12:30:24] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 12:30:25,194 [INFO] Received GET request for /api/profile
+2025-04-15 12:30:25,199 [INFO] Database connection established
+2025-04-15 12:30:25,201 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 12:30:25,215 [INFO] 127.0.0.1 - - [15/Apr/2025 12:30:25] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 12:30:25,242 [INFO] Received GET request for /api/profile
+2025-04-15 12:30:25,247 [INFO] Database connection established
+2025-04-15 12:30:25,251 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 12:30:25,266 [INFO] 127.0.0.1 - - [15/Apr/2025 12:30:25] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 12:30:25,581 [INFO] Received GET request for /api/profile
+2025-04-15 12:30:25,586 [INFO] Database connection established
+2025-04-15 12:30:25,588 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 12:30:25,599 [INFO] 127.0.0.1 - - [15/Apr/2025 12:30:25] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 12:30:25,909 [INFO] Received GET request for /api/profile
+2025-04-15 12:30:25,913 [INFO] Database connection established
+2025-04-15 12:30:25,928 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 12:30:25,939 [INFO] 127.0.0.1 - - [15/Apr/2025 12:30:25] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 12:30:54,073 [INFO] Starting Flask server on port 5000
+2025-04-15 12:30:54,143 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.29.250:5000
+2025-04-15 12:30:54,143 [INFO] [33mPress CTRL+C to quit[0m
+2025-04-15 12:30:54,145 [INFO]  * Restarting with stat
+2025-04-15 12:30:54,568 [INFO] Starting Flask server on port 5000
+2025-04-15 12:30:54,607 [WARNING]  * Debugger is active!
+2025-04-15 12:30:54,622 [INFO]  * Debugger PIN: 266-754-094
+2025-04-15 12:31:13,186 [INFO] Received GET request for /api/profile
+2025-04-15 12:31:13,253 [INFO] package: mysql.connector.plugins
+2025-04-15 12:31:13,253 [INFO] plugin_name: mysql_native_password
+2025-04-15 12:31:13,255 [INFO] AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2025-04-15 12:31:13,257 [INFO] Database connection established
+2025-04-15 12:31:13,261 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 12:31:13,288 [INFO] 127.0.0.1 - - [15/Apr/2025 12:31:13] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 12:31:13,447 [INFO] Received GET request for /api/profile
+2025-04-15 12:31:13,450 [INFO] Database connection established
+2025-04-15 12:31:13,453 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 12:31:13,472 [INFO] 127.0.0.1 - - [15/Apr/2025 12:31:13] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 12:31:13,603 [INFO] Received GET request for /api/profile
+2025-04-15 12:31:13,606 [INFO] Database connection established
+2025-04-15 12:31:13,609 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 12:31:13,643 [INFO] 127.0.0.1 - - [15/Apr/2025 12:31:13] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 12:31:13,647 [INFO] Received GET request for /api/profile
+2025-04-15 12:31:13,652 [INFO] Database connection established
+2025-04-15 12:31:13,656 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 12:31:13,678 [INFO] 127.0.0.1 - - [15/Apr/2025 12:31:13] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 12:31:13,987 [INFO] Received GET request for /api/profile
+2025-04-15 12:31:13,993 [INFO] Database connection established
+2025-04-15 12:31:13,996 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 12:31:14,015 [INFO] 127.0.0.1 - - [15/Apr/2025 12:31:14] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 12:31:35,032 [INFO] Received GET request for /api/flight_bookings
+2025-04-15 12:31:35,038 [INFO] Database connection established
+2025-04-15 12:31:35,047 [INFO] Returning 1 flight bookings for identifier=jaimilkothari2003@gmail.com
+2025-04-15 12:31:35,048 [INFO] Database connection closed for /api/flight_bookings
+2025-04-15 12:31:35,050 [INFO] 127.0.0.1 - - [15/Apr/2025 12:31:35] "GET /api/flight_bookings?identifier=jaimilkothari2003@gmail.com HTTP/1.1" 200 -
+2025-04-15 12:31:35,294 [INFO] Received GET request for /api/flight_bookings
+2025-04-15 12:31:35,297 [INFO] Database connection established
+2025-04-15 12:31:35,301 [INFO] Returning 1 flight bookings for identifier=jaimilkothari2003@gmail.com
+2025-04-15 12:31:35,306 [INFO] Database connection closed for /api/flight_bookings
+2025-04-15 12:31:35,310 [INFO] 127.0.0.1 - - [15/Apr/2025 12:31:35] "GET /api/flight_bookings?identifier=jaimilkothari2003@gmail.com HTTP/1.1" 200 -
+2025-04-15 12:31:45,456 [INFO] Received GET request for /api/profile
+2025-04-15 12:31:45,460 [INFO] Database connection established
+2025-04-15 12:31:45,462 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 12:31:45,498 [INFO] 127.0.0.1 - - [15/Apr/2025 12:31:45] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 12:31:45,804 [INFO] Received GET request for /api/profile
+2025-04-15 12:31:45,808 [INFO] Database connection established
+2025-04-15 12:31:45,810 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 12:31:45,822 [INFO] Received GET request for /api/profile
+2025-04-15 12:31:45,825 [INFO] Database connection established
+2025-04-15 12:31:45,828 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 12:31:45,845 [INFO] 127.0.0.1 - - [15/Apr/2025 12:31:45] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 12:31:45,861 [INFO] 127.0.0.1 - - [15/Apr/2025 12:31:45] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 12:31:46,167 [INFO] Received GET request for /api/profile
+2025-04-15 12:31:46,173 [INFO] Database connection established
+2025-04-15 12:31:46,176 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 12:31:46,197 [INFO] 127.0.0.1 - - [15/Apr/2025 12:31:46] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 12:31:48,394 [INFO] Received GET request for /api/profile
+2025-04-15 12:31:48,398 [INFO] Database connection established
+2025-04-15 12:31:48,403 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 12:31:48,428 [INFO] 127.0.0.1 - - [15/Apr/2025 12:31:48] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 12:31:51,498 [INFO] Received GET request for /get_flights
+2025-04-15 12:31:51,502 [INFO] Database connection established
+2025-04-15 12:31:55,274 [INFO] Returning airports data
+2025-04-15 12:31:55,275 [INFO] Database connection closed for /get_flights
+2025-04-15 12:31:55,276 [INFO] 127.0.0.1 - - [15/Apr/2025 12:31:55] "GET /get_flights HTTP/1.1" 200 -
+2025-04-15 12:31:55,279 [INFO] Received GET request for /get_flights
+2025-04-15 12:31:55,285 [INFO] Database connection established
+2025-04-15 12:31:58,047 [INFO] Returning airports data
+2025-04-15 12:31:58,047 [INFO] Database connection closed for /get_flights
+2025-04-15 12:31:58,048 [INFO] 127.0.0.1 - - [15/Apr/2025 12:31:58] "GET /get_flights HTTP/1.1" 200 -
+2025-04-15 12:32:13,521 [INFO] 127.0.0.1 - - [15/Apr/2025 12:32:13] "[33mOPTIONS /create-checkout-session HTTP/1.1[0m" 404 -
+2025-04-15 12:33:16,891 [INFO] Received GET request for /api/profile
+2025-04-15 12:33:16,895 [INFO] Database connection established
+2025-04-15 12:33:16,898 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 12:33:16,920 [INFO] 127.0.0.1 - - [15/Apr/2025 12:33:16] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 12:33:17,150 [INFO] Received GET request for /api/profile
+2025-04-15 12:33:17,153 [INFO] Database connection established
+2025-04-15 12:33:17,157 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 12:33:17,183 [INFO] 127.0.0.1 - - [15/Apr/2025 12:33:17] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 12:33:17,232 [INFO] Received GET request for /api/profile
+2025-04-15 12:33:17,241 [INFO] 127.0.0.1 - - [15/Apr/2025 12:33:17] "OPTIONS /api/save_booking_confirmation HTTP/1.1" 200 -
+2025-04-15 12:33:17,246 [INFO] Database connection established
+2025-04-15 12:33:17,250 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 12:33:17,283 [INFO] 127.0.0.1 - - [15/Apr/2025 12:33:17] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 12:33:17,309 [INFO] Received POST request for /save_booking_confirmation
+2025-04-15 12:33:17,313 [INFO] Database connection established
+2025-04-15 12:33:17,344 [INFO] Booking saved successfully: 91175039
+2025-04-15 12:33:17,345 [INFO] Database connection closed for /save_booking_confirmation
+2025-04-15 12:33:17,346 [INFO] 127.0.0.1 - - [15/Apr/2025 12:33:17] "POST /api/save_booking_confirmation HTTP/1.1" 200 -
+2025-04-15 12:33:17,560 [INFO] Received GET request for /api/profile
+2025-04-15 12:33:17,562 [INFO] Database connection established
+2025-04-15 12:33:17,564 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 12:33:17,583 [INFO] 127.0.0.1 - - [15/Apr/2025 12:33:17] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 12:33:17,591 [INFO] Received POST request for /save_booking_confirmation
+2025-04-15 12:33:17,592 [INFO] Received GET request for /api/profile
+2025-04-15 12:33:17,595 [INFO] Database connection established
+2025-04-15 12:33:17,595 [INFO] Database connection established
+2025-04-15 12:33:17,599 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 12:33:17,603 [ERROR] Database error in /save_booking_confirmation: 1062 (23000): Duplicate entry '91175039' for key 'booking_number'
+2025-04-15 12:33:17,604 [INFO] Database connection closed for /save_booking_confirmation
+2025-04-15 12:33:17,605 [INFO] 127.0.0.1 - - [15/Apr/2025 12:33:17] "[35m[1mPOST /api/save_booking_confirmation HTTP/1.1[0m" 500 -
+2025-04-15 12:33:17,619 [INFO] 127.0.0.1 - - [15/Apr/2025 12:33:17] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 12:34:49,723 [INFO] Received GET request for /api/profile
+2025-04-15 12:34:49,727 [INFO] Database connection established
+2025-04-15 12:34:49,730 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 12:34:49,753 [INFO] 127.0.0.1 - - [15/Apr/2025 12:34:49] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 12:34:49,980 [INFO] Received GET request for /api/profile
+2025-04-15 12:34:49,983 [INFO] Database connection established
+2025-04-15 12:34:49,986 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 12:34:50,008 [INFO] 127.0.0.1 - - [15/Apr/2025 12:34:50] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 12:34:50,071 [INFO] Received GET request for /api/profile
+2025-04-15 12:34:50,074 [INFO] Database connection established
+2025-04-15 12:34:50,077 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 12:34:50,106 [INFO] 127.0.0.1 - - [15/Apr/2025 12:34:50] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 12:34:50,110 [INFO] Received GET request for /api/profile
+2025-04-15 12:34:50,119 [INFO] Database connection established
+2025-04-15 12:34:50,125 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 12:34:50,146 [INFO] 127.0.0.1 - - [15/Apr/2025 12:34:50] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 12:34:50,457 [INFO] Received GET request for /api/profile
+2025-04-15 12:34:50,460 [INFO] Database connection established
+2025-04-15 12:34:50,463 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 12:34:50,487 [INFO] 127.0.0.1 - - [15/Apr/2025 12:34:50] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 12:35:02,407 [INFO] Received GET request for /api/flight_bookings
+2025-04-15 12:35:02,412 [INFO] Database connection established
+2025-04-15 12:35:02,417 [INFO] Returning 2 flight bookings for identifier=jaimilkothari2003@gmail.com
+2025-04-15 12:35:02,421 [INFO] Database connection closed for /api/flight_bookings
+2025-04-15 12:35:02,423 [INFO] 127.0.0.1 - - [15/Apr/2025 12:35:02] "GET /api/flight_bookings?identifier=jaimilkothari2003@gmail.com HTTP/1.1" 200 -
+2025-04-15 12:35:02,741 [INFO] Received GET request for /api/flight_bookings
+2025-04-15 12:35:02,746 [INFO] Database connection established
+2025-04-15 12:35:02,749 [INFO] Returning 2 flight bookings for identifier=jaimilkothari2003@gmail.com
+2025-04-15 12:35:02,751 [INFO] Database connection closed for /api/flight_bookings
+2025-04-15 12:35:02,756 [INFO] 127.0.0.1 - - [15/Apr/2025 12:35:02] "GET /api/flight_bookings?identifier=jaimilkothari2003@gmail.com HTTP/1.1" 200 -
+2025-04-15 12:35:10,520 [INFO] Received GET request for /api/profile
+2025-04-15 12:35:10,525 [INFO] Database connection established
+2025-04-15 12:35:10,529 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 12:35:10,553 [INFO] 127.0.0.1 - - [15/Apr/2025 12:35:10] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 12:35:10,783 [INFO] Received GET request for /api/profile
+2025-04-15 12:35:10,786 [INFO] Database connection established
+2025-04-15 12:35:10,788 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 12:35:10,809 [INFO] 127.0.0.1 - - [15/Apr/2025 12:35:10] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 12:35:10,862 [INFO] Received GET request for /api/profile
+2025-04-15 12:35:10,867 [INFO] Database connection established
+2025-04-15 12:35:10,868 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 12:35:10,909 [INFO] 127.0.0.1 - - [15/Apr/2025 12:35:10] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 12:35:10,912 [INFO] Received GET request for /api/profile
+2025-04-15 12:35:10,917 [INFO] Database connection established
+2025-04-15 12:35:10,920 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 12:35:10,954 [INFO] 127.0.0.1 - - [15/Apr/2025 12:35:10] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 12:35:11,265 [INFO] Received GET request for /api/profile
+2025-04-15 12:35:11,268 [INFO] Database connection established
+2025-04-15 12:35:11,271 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 12:35:11,296 [INFO] 127.0.0.1 - - [15/Apr/2025 12:35:11] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 12:36:01,360 [INFO] Received GET request for /api/flight_bookings
+2025-04-15 12:36:01,364 [INFO] Database connection established
+2025-04-15 12:36:01,366 [INFO] Returning 2 flight bookings for identifier=jaimilkothari2003@gmail.com
+2025-04-15 12:36:01,374 [INFO] Database connection closed for /api/flight_bookings
+2025-04-15 12:36:01,376 [INFO] 127.0.0.1 - - [15/Apr/2025 12:36:01] "GET /api/flight_bookings?identifier=jaimilkothari2003@gmail.com HTTP/1.1" 200 -
+2025-04-15 12:36:01,618 [INFO] Received GET request for /api/flight_bookings
+2025-04-15 12:36:01,623 [INFO] Database connection established
+2025-04-15 12:36:01,628 [INFO] Returning 2 flight bookings for identifier=jaimilkothari2003@gmail.com
+2025-04-15 12:36:01,629 [INFO] Database connection closed for /api/flight_bookings
+2025-04-15 12:36:01,631 [INFO] 127.0.0.1 - - [15/Apr/2025 12:36:01] "GET /api/flight_bookings?identifier=jaimilkothari2003@gmail.com HTTP/1.1" 200 -
+2025-04-15 12:36:08,976 [INFO] Received GET request for /api/profile
+2025-04-15 12:36:08,980 [INFO] Database connection established
+2025-04-15 12:36:08,982 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 12:36:09,013 [INFO] 127.0.0.1 - - [15/Apr/2025 12:36:09] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 12:36:09,323 [INFO] Received GET request for /api/profile
+2025-04-15 12:36:09,324 [INFO] Received GET request for /api/profile
+2025-04-15 12:36:09,327 [INFO] Database connection established
+2025-04-15 12:36:09,327 [INFO] Database connection established
+2025-04-15 12:36:09,329 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 12:36:09,333 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 12:36:09,360 [INFO] 127.0.0.1 - - [15/Apr/2025 12:36:09] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 12:36:09,363 [INFO] 127.0.0.1 - - [15/Apr/2025 12:36:09] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 12:36:09,669 [INFO] Received GET request for /api/profile
+2025-04-15 12:36:09,672 [INFO] Database connection established
+2025-04-15 12:36:09,673 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 12:36:09,692 [INFO] 127.0.0.1 - - [15/Apr/2025 12:36:09] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 12:36:10,006 [INFO] Received GET request for /api/profile
+2025-04-15 12:36:10,010 [INFO] Database connection established
+2025-04-15 12:36:10,012 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 12:36:10,043 [INFO] 127.0.0.1 - - [15/Apr/2025 12:36:10] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 12:36:15,567 [INFO] Received GET request for /api/profile
+2025-04-15 12:36:15,572 [INFO] Database connection established
+2025-04-15 12:36:15,575 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 12:36:15,603 [INFO] 127.0.0.1 - - [15/Apr/2025 12:36:15] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 12:36:15,918 [INFO] Received GET request for /api/profile
+2025-04-15 12:36:15,919 [INFO] Received GET request for /api/profile
+2025-04-15 12:36:15,967 [INFO] Database connection established
+2025-04-15 12:36:15,968 [INFO] Database connection established
+2025-04-15 12:36:15,969 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 12:36:15,970 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 12:36:15,993 [INFO] 127.0.0.1 - - [15/Apr/2025 12:36:15] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 12:36:15,998 [INFO] 127.0.0.1 - - [15/Apr/2025 12:36:15] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 12:36:16,309 [INFO] Received GET request for /api/profile
+2025-04-15 12:36:16,311 [INFO] Database connection established
+2025-04-15 12:36:16,314 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 12:36:16,331 [INFO] 127.0.0.1 - - [15/Apr/2025 12:36:16] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 12:36:16,650 [INFO] Received GET request for /api/profile
+2025-04-15 12:36:16,654 [INFO] Database connection established
+2025-04-15 12:36:16,656 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 12:36:16,675 [INFO] 127.0.0.1 - - [15/Apr/2025 12:36:16] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 13:28:50,029 [INFO]  * Detected change in 'C:\\xampp\\htdocs\\Inbox\\tripglide\\backend\\flight.py', reloading
+2025-04-15 13:28:57,961 [INFO]  * Restarting with stat
+2025-04-15 13:28:58,596 [INFO] Starting Flask server on port 5000
+2025-04-15 13:28:58,643 [WARNING]  * Debugger is active!
+2025-04-15 13:28:58,652 [INFO]  * Debugger PIN: 266-754-094
+2025-04-15 13:29:01,083 [INFO] 127.0.0.1 - - [15/Apr/2025 13:29:01] "[33mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 404 -
+2025-04-15 13:29:01,283 [INFO] 127.0.0.1 - - [15/Apr/2025 13:29:01] "[33mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 404 -
+2025-04-15 13:29:01,440 [INFO] 127.0.0.1 - - [15/Apr/2025 13:29:01] "[33mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 404 -
+2025-04-15 13:29:07,968 [INFO] 127.0.0.1 - - [15/Apr/2025 13:29:07] "[33mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 404 -
+2025-04-15 13:29:08,233 [INFO] 127.0.0.1 - - [15/Apr/2025 13:29:08] "[33mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 404 -
+2025-04-15 13:29:08,284 [INFO] 127.0.0.1 - - [15/Apr/2025 13:29:08] "[33mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 404 -
+2025-04-15 13:29:51,188 [INFO]  * Detected change in 'C:\\xampp\\htdocs\\Inbox\\tripglide\\backend\\flight.py', reloading
+2025-04-15 13:29:51,296 [INFO]  * Restarting with stat
+2025-04-15 13:29:51,916 [INFO] Starting Flask server on port 5000
+2025-04-15 13:29:51,959 [WARNING]  * Debugger is active!
+2025-04-15 13:29:51,962 [INFO]  * Debugger PIN: 266-754-094
+2025-04-15 13:29:53,839 [INFO] Received GET request for /api/profile
+2025-04-15 13:29:54,020 [INFO] package: mysql.connector.plugins
+2025-04-15 13:29:54,020 [INFO] plugin_name: mysql_native_password
+2025-04-15 13:29:54,023 [INFO] AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2025-04-15 13:29:54,048 [INFO] Database connection established
+2025-04-15 13:29:54,083 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 13:29:54,117 [INFO] 127.0.0.1 - - [15/Apr/2025 13:29:54] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 13:29:54,128 [INFO] Received GET request for /api/profile
+2025-04-15 13:29:54,137 [INFO] Database connection established
+2025-04-15 13:29:54,153 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 13:29:54,174 [INFO] 127.0.0.1 - - [15/Apr/2025 13:29:54] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 13:29:54,500 [INFO] Received GET request for /api/profile
+2025-04-15 13:29:54,504 [INFO] Database connection established
+2025-04-15 13:29:54,506 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 13:29:54,523 [INFO] 127.0.0.1 - - [15/Apr/2025 13:29:54] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 13:35:04,202 [INFO] Received GET request for /api/profile
+2025-04-15 13:35:04,205 [INFO] Database connection established
+2025-04-15 13:35:04,206 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 13:35:04,227 [INFO] 127.0.0.1 - - [15/Apr/2025 13:35:04] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 13:35:04,466 [INFO] Received GET request for /api/profile
+2025-04-15 13:35:04,469 [INFO] Database connection established
+2025-04-15 13:35:04,471 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 13:35:04,488 [INFO] 127.0.0.1 - - [15/Apr/2025 13:35:04] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 13:35:04,572 [INFO] Received GET request for /api/profile
+2025-04-15 13:35:04,576 [INFO] Database connection established
+2025-04-15 13:35:04,578 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 13:35:04,596 [INFO] 127.0.0.1 - - [15/Apr/2025 13:35:04] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 13:35:04,806 [INFO] Received GET request for /api/profile
+2025-04-15 13:35:04,809 [INFO] Database connection established
+2025-04-15 13:35:04,811 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 13:35:04,827 [INFO] 127.0.0.1 - - [15/Apr/2025 13:35:04] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 13:35:06,536 [INFO] Received GET request for /api/profile
+2025-04-15 13:35:06,544 [INFO] Database connection established
+2025-04-15 13:35:06,553 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 13:35:06,571 [INFO] 127.0.0.1 - - [15/Apr/2025 13:35:06] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 13:35:06,886 [INFO] Received GET request for /api/profile
+2025-04-15 13:35:06,895 [INFO] Database connection established
+2025-04-15 13:35:06,902 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 13:35:06,925 [INFO] 127.0.0.1 - - [15/Apr/2025 13:35:06] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 13:35:07,144 [INFO] Received GET request for /api/profile
+2025-04-15 13:35:07,149 [INFO] Database connection established
+2025-04-15 13:35:07,151 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 13:35:07,166 [INFO] 127.0.0.1 - - [15/Apr/2025 13:35:07] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 13:35:07,237 [INFO] Received GET request for /api/profile
+2025-04-15 13:35:07,240 [INFO] Database connection established
+2025-04-15 13:35:07,242 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 13:35:07,264 [INFO] 127.0.0.1 - - [15/Apr/2025 13:35:07] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 13:35:07,470 [INFO] Received GET request for /api/profile
+2025-04-15 13:35:07,476 [INFO] Database connection established
+2025-04-15 13:35:07,479 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 13:35:07,497 [INFO] 127.0.0.1 - - [15/Apr/2025 13:35:07] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 13:35:07,501 [INFO] Received GET request for /api/profile
+2025-04-15 13:35:07,506 [INFO] Database connection established
+2025-04-15 13:35:07,508 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 13:35:07,523 [INFO] 127.0.0.1 - - [15/Apr/2025 13:35:07] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 13:35:07,811 [INFO] Received GET request for /api/profile
+2025-04-15 13:35:07,815 [INFO] Database connection established
+2025-04-15 13:35:07,818 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 13:35:07,847 [INFO] 127.0.0.1 - - [15/Apr/2025 13:35:07] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 13:35:08,155 [INFO] Received GET request for /api/profile
+2025-04-15 13:35:08,160 [INFO] Database connection established
+2025-04-15 13:35:08,164 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 13:35:08,194 [INFO] 127.0.0.1 - - [15/Apr/2025 13:35:08] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 13:35:08,512 [INFO] Received GET request for /api/profile
+2025-04-15 13:35:08,518 [INFO] Database connection established
+2025-04-15 13:35:08,521 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 13:35:08,539 [INFO] 127.0.0.1 - - [15/Apr/2025 13:35:08] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 13:35:08,761 [INFO] Received GET request for /api/profile
+2025-04-15 13:35:08,765 [INFO] Database connection established
+2025-04-15 13:35:08,766 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 13:35:08,783 [INFO] 127.0.0.1 - - [15/Apr/2025 13:35:08] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 13:35:08,852 [INFO] Received GET request for /api/profile
+2025-04-15 13:35:08,854 [INFO] Database connection established
+2025-04-15 13:35:08,857 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 13:35:08,886 [INFO] 127.0.0.1 - - [15/Apr/2025 13:35:08] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 13:35:22,786 [INFO] Received GET request for /api/profile
+2025-04-15 13:35:22,790 [INFO] Database connection established
+2025-04-15 13:35:22,794 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 13:35:22,824 [INFO] 127.0.0.1 - - [15/Apr/2025 13:35:22] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 13:35:23,050 [INFO] Received GET request for /api/profile
+2025-04-15 13:35:23,053 [INFO] Database connection established
+2025-04-15 13:35:23,055 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 13:35:23,078 [INFO] 127.0.0.1 - - [15/Apr/2025 13:35:23] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 13:35:23,144 [INFO] Received GET request for /api/profile
+2025-04-15 13:35:23,151 [INFO] Database connection established
+2025-04-15 13:35:23,155 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 13:35:23,189 [INFO] 127.0.0.1 - - [15/Apr/2025 13:35:23] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 13:35:24,684 [INFO] Received GET request for /api/profile
+2025-04-15 13:35:24,690 [INFO] Database connection established
+2025-04-15 13:35:24,693 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 13:35:24,713 [INFO] 127.0.0.1 - - [15/Apr/2025 13:35:24] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 13:35:25,020 [INFO] Received GET request for /api/profile
+2025-04-15 13:35:25,023 [INFO] Database connection established
+2025-04-15 13:35:25,024 [INFO] Received GET request for /api/profile
+2025-04-15 13:35:25,027 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 13:35:25,033 [INFO] Database connection established
+2025-04-15 13:35:25,036 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 13:35:25,060 [INFO] 127.0.0.1 - - [15/Apr/2025 13:35:25] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 13:35:25,066 [INFO] 127.0.0.1 - - [15/Apr/2025 13:35:25] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 13:35:25,382 [INFO] Received GET request for /api/profile
+2025-04-15 13:35:25,386 [INFO] Database connection established
+2025-04-15 13:35:25,388 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 13:35:25,400 [INFO] 127.0.0.1 - - [15/Apr/2025 13:35:25] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 13:35:50,277 [INFO]  * Detected change in 'C:\\xampp\\htdocs\\Inbox\\tripglide\\backend\\flight.py', reloading
+2025-04-15 13:35:50,401 [INFO]  * Restarting with stat
+2025-04-15 13:35:50,852 [INFO] Starting Flask server on port 5000
+2025-04-15 13:35:50,887 [WARNING]  * Debugger is active!
+2025-04-15 13:35:50,894 [INFO]  * Debugger PIN: 266-754-094
+2025-04-15 13:35:52,057 [INFO] 127.0.0.1 - - [15/Apr/2025 13:35:52] "[33mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 404 -
+2025-04-15 13:35:52,319 [INFO] 127.0.0.1 - - [15/Apr/2025 13:35:52] "[33mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 404 -
+2025-04-15 13:35:52,364 [INFO] 127.0.0.1 - - [15/Apr/2025 13:35:52] "[33mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 404 -
+2025-04-15 13:36:06,821 [INFO] 127.0.0.1 - - [15/Apr/2025 13:36:06] "[33mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 404 -
+2025-04-15 13:36:07,005 [INFO] 127.0.0.1 - - [15/Apr/2025 13:36:07] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-04-15 13:36:20,836 [INFO] 127.0.0.1 - - [15/Apr/2025 13:36:20] "[33mGET / HTTP/1.1[0m" 404 -
+2025-04-15 13:38:04,695 [INFO]  * Detected change in 'C:\\xampp\\htdocs\\Inbox\\tripglide\\backend\\flight.py', reloading
+2025-04-15 13:38:04,752 [INFO]  * Restarting with stat
+2025-04-15 13:38:05,215 [INFO] Starting Flask server on port 5000
+2025-04-15 13:38:05,255 [WARNING]  * Debugger is active!
+2025-04-15 13:38:05,259 [INFO]  * Debugger PIN: 266-754-094
+2025-04-15 13:38:13,188 [INFO]  * Detected change in 'C:\\xampp\\htdocs\\Inbox\\tripglide\\backend\\flight.py', reloading
+2025-04-15 13:38:13,269 [INFO]  * Restarting with stat
+2025-04-15 13:38:13,980 [INFO] Starting Flask server on port 5000
+2025-04-15 13:38:14,064 [WARNING]  * Debugger is active!
+2025-04-15 13:38:14,072 [INFO]  * Debugger PIN: 266-754-094
+2025-04-15 13:38:14,577 [INFO] 127.0.0.1 - - [15/Apr/2025 13:38:14] "[33mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 404 -
+2025-04-15 13:38:14,827 [INFO] 127.0.0.1 - - [15/Apr/2025 13:38:14] "[33mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 404 -
+2025-04-15 13:38:14,893 [INFO] 127.0.0.1 - - [15/Apr/2025 13:38:14] "[33mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 404 -
+2025-04-15 13:38:44,837 [INFO] 127.0.0.1 - - [15/Apr/2025 13:38:44] "[33mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 404 -
+2025-04-15 13:38:45,097 [INFO] 127.0.0.1 - - [15/Apr/2025 13:38:45] "[33mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 404 -
+2025-04-15 13:38:45,143 [INFO] 127.0.0.1 - - [15/Apr/2025 13:38:45] "[33mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 404 -
+2025-04-15 13:39:17,720 [INFO] Received GET request for /get_flights
+2025-04-15 13:39:17,833 [INFO] package: mysql.connector.plugins
+2025-04-15 13:39:17,833 [INFO] plugin_name: mysql_native_password
+2025-04-15 13:39:17,836 [INFO] AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2025-04-15 13:39:17,842 [INFO] Database connection established
+2025-04-15 13:39:22,310 [INFO] Returning airports data
+2025-04-15 13:39:22,311 [INFO] Database connection closed for /get_flights
+2025-04-15 13:39:22,313 [INFO] 127.0.0.1 - - [15/Apr/2025 13:39:22] "GET /get_flights HTTP/1.1" 200 -
+2025-04-15 13:39:22,802 [INFO] Received GET request for /get_flights
+2025-04-15 13:39:22,805 [INFO] Database connection established
+2025-04-15 13:39:25,136 [INFO] Received GET request for /api/flight_bookings
+2025-04-15 13:39:25,142 [INFO] Database connection established
+2025-04-15 13:39:25,191 [INFO] Returning 2 flight bookings for identifier=jaimilkothari2003@gmail.com
+2025-04-15 13:39:25,192 [INFO] Database connection closed for /api/flight_bookings
+2025-04-15 13:39:25,194 [INFO] 127.0.0.1 - - [15/Apr/2025 13:39:25] "GET /api/flight_bookings?identifier=jaimilkothari2003@gmail.com HTTP/1.1" 200 -
+2025-04-15 13:39:25,393 [INFO] Received GET request for /api/flight_bookings
+2025-04-15 13:39:25,398 [INFO] Database connection established
+2025-04-15 13:39:25,404 [INFO] Returning 2 flight bookings for identifier=jaimilkothari2003@gmail.com
+2025-04-15 13:39:25,405 [INFO] Database connection closed for /api/flight_bookings
+2025-04-15 13:39:25,406 [INFO] 127.0.0.1 - - [15/Apr/2025 13:39:25] "GET /api/flight_bookings?identifier=jaimilkothari2003@gmail.com HTTP/1.1" 200 -
+2025-04-15 13:39:26,539 [INFO] Returning airports data
+2025-04-15 13:39:26,540 [INFO] Database connection closed for /get_flights
+2025-04-15 13:39:26,541 [INFO] 127.0.0.1 - - [15/Apr/2025 13:39:26] "GET /get_flights HTTP/1.1" 200 -
+2025-04-15 13:39:26,544 [INFO] Received GET request for /get_flights
+2025-04-15 13:39:26,549 [INFO] Database connection established
+2025-04-15 13:39:30,775 [INFO] Returning airports data
+2025-04-15 13:39:30,776 [INFO] Database connection closed for /get_flights
+2025-04-15 13:39:30,777 [INFO] 127.0.0.1 - - [15/Apr/2025 13:39:30] "GET /get_flights HTTP/1.1" 200 -
+2025-04-15 13:39:55,213 [INFO] Received GET request for /api/flight_bookings
+2025-04-15 13:39:55,221 [INFO] Database connection established
+2025-04-15 13:39:55,233 [INFO] Returning 2 flight bookings for identifier=jaimilkothari2003@gmail.com
+2025-04-15 13:39:55,239 [INFO] Database connection closed for /api/flight_bookings
+2025-04-15 13:39:55,242 [INFO] 127.0.0.1 - - [15/Apr/2025 13:39:55] "GET /api/flight_bookings?identifier=jaimilkothari2003@gmail.com HTTP/1.1" 200 -
+2025-04-15 13:39:55,473 [INFO] Received GET request for /api/flight_bookings
+2025-04-15 13:39:55,478 [INFO] Database connection established
+2025-04-15 13:39:55,482 [INFO] Returning 2 flight bookings for identifier=jaimilkothari2003@gmail.com
+2025-04-15 13:39:55,483 [INFO] Database connection closed for /api/flight_bookings
+2025-04-15 13:39:55,484 [INFO] 127.0.0.1 - - [15/Apr/2025 13:39:55] "GET /api/flight_bookings?identifier=jaimilkothari2003@gmail.com HTTP/1.1" 200 -
+2025-04-15 13:40:00,660 [INFO] Received GET request for /get_flights
+2025-04-15 13:40:00,664 [INFO] Database connection established
+2025-04-15 13:40:04,509 [INFO] Returning airports data
+2025-04-15 13:40:04,510 [INFO] Database connection closed for /get_flights
+2025-04-15 13:40:04,511 [INFO] 127.0.0.1 - - [15/Apr/2025 13:40:04] "GET /get_flights HTTP/1.1" 200 -
+2025-04-15 13:40:04,514 [INFO] Received GET request for /get_flights
+2025-04-15 13:40:04,518 [INFO] Database connection established
+2025-04-15 13:40:08,348 [INFO] Returning airports data
+2025-04-15 13:40:08,349 [INFO] Database connection closed for /get_flights
+2025-04-15 13:40:08,350 [INFO] 127.0.0.1 - - [15/Apr/2025 13:40:08] "GET /get_flights HTTP/1.1" 200 -
+2025-04-15 13:40:38,367 [INFO] 127.0.0.1 - - [15/Apr/2025 13:40:38] "[33mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 404 -
+2025-04-15 13:40:38,629 [INFO] 127.0.0.1 - - [15/Apr/2025 13:40:38] "[33mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 404 -
+2025-04-15 13:40:38,674 [INFO] 127.0.0.1 - - [15/Apr/2025 13:40:38] "OPTIONS /api/save_booking_confirmation HTTP/1.1" 200 -
+2025-04-15 13:40:38,766 [INFO] 127.0.0.1 - - [15/Apr/2025 13:40:38] "[33mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 404 -
+2025-04-15 13:40:38,939 [INFO] Received POST request for /save_booking_confirmation
+2025-04-15 13:40:38,943 [INFO] Database connection established
+2025-04-15 13:40:38,968 [INFO] Booking saved successfully: 41093517
+2025-04-15 13:40:38,969 [INFO] Database connection closed for /save_booking_confirmation
+2025-04-15 13:40:38,970 [INFO] 127.0.0.1 - - [15/Apr/2025 13:40:38] "POST /api/save_booking_confirmation HTTP/1.1" 200 -
+2025-04-15 13:40:38,986 [INFO] Received POST request for /save_booking_confirmation
+2025-04-15 13:40:38,989 [INFO] Database connection established
+2025-04-15 13:40:38,995 [ERROR] Database error in /save_booking_confirmation: 1062 (23000): Duplicate entry '41093517' for key 'booking_number'
+2025-04-15 13:40:38,996 [INFO] Database connection closed for /save_booking_confirmation
+2025-04-15 13:40:38,997 [INFO] 127.0.0.1 - - [15/Apr/2025 13:40:38] "[35m[1mPOST /api/save_booking_confirmation HTTP/1.1[0m" 500 -
+2025-04-15 13:40:58,265 [INFO] Received GET request for /api/flight_bookings
+2025-04-15 13:40:58,271 [INFO] Database connection established
+2025-04-15 13:40:58,275 [INFO] Returning 3 flight bookings for identifier=jaimilkothari2003@gmail.com
+2025-04-15 13:40:58,276 [INFO] Database connection closed for /api/flight_bookings
+2025-04-15 13:40:58,277 [INFO] 127.0.0.1 - - [15/Apr/2025 13:40:58] "GET /api/flight_bookings?identifier=jaimilkothari2003@gmail.com HTTP/1.1" 200 -
+2025-04-15 13:40:58,511 [INFO] Received GET request for /api/flight_bookings
+2025-04-15 13:40:58,514 [INFO] Database connection established
+2025-04-15 13:40:58,518 [INFO] Returning 3 flight bookings for identifier=jaimilkothari2003@gmail.com
+2025-04-15 13:40:58,519 [INFO] Database connection closed for /api/flight_bookings
+2025-04-15 13:40:58,520 [INFO] 127.0.0.1 - - [15/Apr/2025 13:40:58] "GET /api/flight_bookings?identifier=jaimilkothari2003@gmail.com HTTP/1.1" 200 -
+2025-04-15 13:41:05,078 [INFO] 127.0.0.1 - - [15/Apr/2025 13:41:05] "[33mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 404 -
+2025-04-15 13:41:05,330 [INFO] 127.0.0.1 - - [15/Apr/2025 13:41:05] "[33mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 404 -
+2025-04-15 13:41:05,392 [INFO] 127.0.0.1 - - [15/Apr/2025 13:41:05] "[33mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 404 -
+2025-04-15 13:41:08,091 [INFO] 127.0.0.1 - - [15/Apr/2025 13:41:08] "[33mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 404 -
+2025-04-15 13:41:08,401 [INFO] 127.0.0.1 - - [15/Apr/2025 13:41:08] "[33mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 404 -
+2025-04-15 13:41:08,713 [INFO] 127.0.0.1 - - [15/Apr/2025 13:41:08] "[33mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 404 -
+2025-04-15 13:41:11,393 [INFO] 127.0.0.1 - - [15/Apr/2025 13:41:11] "[33mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 404 -
+2025-04-15 13:41:11,659 [INFO] 127.0.0.1 - - [15/Apr/2025 13:41:11] "[33mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 404 -
+2025-04-15 13:41:11,705 [INFO] 127.0.0.1 - - [15/Apr/2025 13:41:11] "[33mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 404 -
+2025-04-15 13:43:08,665 [INFO]  * Detected change in 'C:\\xampp\\htdocs\\Inbox\\tripglide\\backend\\flight.py', reloading
+2025-04-15 13:43:08,860 [INFO]  * Restarting with stat
+2025-04-15 13:43:09,458 [INFO] Starting Flask server on port 5000
+2025-04-15 13:43:09,563 [WARNING]  * Debugger is active!
+2025-04-15 13:43:09,574 [INFO]  * Debugger PIN: 266-754-094
+2025-04-15 13:43:12,237 [INFO] Received GET request for /api/profile
+2025-04-15 13:43:12,324 [INFO] package: mysql.connector.plugins
+2025-04-15 13:43:12,325 [INFO] plugin_name: mysql_native_password
+2025-04-15 13:43:12,327 [INFO] AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2025-04-15 13:43:12,329 [INFO] Database connection established
+2025-04-15 13:43:12,332 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 13:43:12,358 [INFO] 127.0.0.1 - - [15/Apr/2025 13:43:12] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 13:43:12,498 [INFO] Received GET request for /api/profile
+2025-04-15 13:43:12,502 [INFO] Database connection established
+2025-04-15 13:43:12,504 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 13:43:12,523 [INFO] 127.0.0.1 - - [15/Apr/2025 13:43:12] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 13:43:12,663 [INFO] Received GET request for /api/profile
+2025-04-15 13:43:12,666 [INFO] Database connection established
+2025-04-15 13:43:12,669 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 13:43:12,680 [INFO] 127.0.0.1 - - [15/Apr/2025 13:43:12] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 13:43:12,684 [INFO] Received GET request for /api/profile
+2025-04-15 13:43:12,689 [INFO] Database connection established
+2025-04-15 13:43:12,691 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 13:43:12,705 [INFO] 127.0.0.1 - - [15/Apr/2025 13:43:12] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 13:43:13,013 [INFO] Received GET request for /api/profile
+2025-04-15 13:43:13,016 [INFO] Database connection established
+2025-04-15 13:43:13,019 [INFO] Returning user profile for jaimilkothari2003@gmail.com
+2025-04-15 13:43:13,038 [INFO] 127.0.0.1 - - [15/Apr/2025 13:43:13] "[35m[1mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 500 -
+2025-04-15 13:43:50,382 [INFO]  * Detected change in 'C:\\xampp\\htdocs\\Inbox\\tripglide\\backend\\flight.py', reloading
+2025-04-15 13:43:50,481 [INFO]  * Restarting with stat
+2025-04-15 13:43:50,934 [INFO] Starting Flask server on port 5000
+2025-04-15 13:43:50,973 [WARNING]  * Debugger is active!
+2025-04-15 13:43:50,977 [INFO]  * Debugger PIN: 266-754-094
+2025-04-15 13:43:54,233 [INFO] 127.0.0.1 - - [15/Apr/2025 13:43:54] "[33mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 404 -
+2025-04-15 13:43:54,482 [INFO] 127.0.0.1 - - [15/Apr/2025 13:43:54] "[33mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 404 -
+2025-04-15 13:43:54,544 [INFO] 127.0.0.1 - - [15/Apr/2025 13:43:54] "[33mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 404 -
+2025-04-15 13:44:50,488 [INFO] 127.0.0.1 - - [15/Apr/2025 13:44:50] "[33mGET /api/profile HTTP/1.1[0m" 404 -
+2025-04-15 13:55:52,515 [INFO]  * Detected change in 'C:\\xampp\\htdocs\\Inbox\\tripglide\\backend\\flight.py', reloading
+2025-04-15 13:55:52,739 [INFO]  * Restarting with stat
+2025-04-15 13:55:53,380 [INFO] Starting Flask server on port 5000
+2025-04-15 13:55:53,421 [WARNING]  * Debugger is active!
+2025-04-15 13:55:53,430 [INFO]  * Debugger PIN: 266-754-094
+2025-04-15 13:56:32,900 [INFO]  * Detected change in 'C:\\xampp\\htdocs\\Inbox\\tripglide\\backend\\flight.py', reloading
+2025-04-15 13:56:32,976 [INFO]  * Restarting with stat
+2025-04-15 13:56:33,455 [INFO] Starting Flask server on port 5000
+2025-04-15 13:56:33,502 [WARNING]  * Debugger is active!
+2025-04-15 13:56:33,507 [INFO]  * Debugger PIN: 266-754-094
+2025-04-15 13:56:41,938 [INFO] 127.0.0.1 - - [15/Apr/2025 13:56:41] "[33mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 404 -
+2025-04-15 13:56:42,198 [INFO] 127.0.0.1 - - [15/Apr/2025 13:56:42] "[33mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 404 -
+2025-04-15 14:02:18,509 [INFO]  * Detected change in 'C:\\xampp\\htdocs\\Inbox\\tripglide\\backend\\flight.py', reloading
+2025-04-15 14:02:18,711 [INFO]  * Restarting with stat
+2025-04-15 14:02:19,370 [INFO] Starting Flask server on port 5000
+2025-04-15 14:02:19,433 [WARNING]  * Debugger is active!
+2025-04-15 14:02:19,439 [INFO]  * Debugger PIN: 266-754-094
+2025-04-15 14:04:24,160 [INFO] 127.0.0.1 - - [15/Apr/2025 14:04:24] "[33mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 404 -
+2025-04-15 14:04:24,418 [INFO] 127.0.0.1 - - [15/Apr/2025 14:04:24] "[33mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 404 -
+2025-04-15 14:04:26,362 [INFO]  * Detected change in 'C:\\xampp\\htdocs\\Inbox\\tripglide\\backend\\flight.py', reloading
+2025-04-15 14:04:26,444 [INFO]  * Restarting with stat
+2025-04-15 14:04:26,982 [INFO] Starting Flask server on port 5000
+2025-04-15 14:04:27,030 [WARNING]  * Debugger is active!
+2025-04-15 14:04:27,035 [INFO]  * Debugger PIN: 266-754-094
+2025-04-15 14:09:08,572 [INFO]  * Detected change in 'C:\\xampp\\htdocs\\Inbox\\tripglide\\backend\\flight.py', reloading
+2025-04-15 14:09:08,747 [INFO]  * Restarting with stat
+2025-04-15 14:09:09,359 [INFO] Starting Flask server on port 5000
+2025-04-15 14:09:09,398 [WARNING]  * Debugger is active!
+2025-04-15 14:09:09,402 [INFO]  * Debugger PIN: 266-754-094
+2025-04-15 14:10:34,476 [INFO]  * Detected change in 'C:\\xampp\\htdocs\\Inbox\\tripglide\\backend\\flight.py', reloading
+2025-04-15 14:10:34,613 [INFO]  * Restarting with stat
+2025-04-15 14:10:35,223 [INFO] Starting Flask server on port 5000
+2025-04-15 14:10:35,280 [WARNING]  * Debugger is active!
+2025-04-15 14:10:35,284 [INFO]  * Debugger PIN: 266-754-094
+2025-04-15 14:10:42,181 [INFO] 127.0.0.1 - - [15/Apr/2025 14:10:42] "[33mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 404 -
+2025-04-15 14:10:42,421 [INFO] 127.0.0.1 - - [15/Apr/2025 14:10:42] "[33mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 404 -
+2025-04-15 14:12:29,380 [INFO]  * Detected change in 'C:\\xampp\\htdocs\\Inbox\\tripglide\\backend\\flight.py', reloading
+2025-04-15 14:12:29,477 [INFO]  * Restarting with stat

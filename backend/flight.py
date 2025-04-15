@@ -33,7 +33,7 @@ def get_db_connection():
         conn = mysql.connector.connect(
             host="localhost",
             user="root",
-            password="",
+            password="",  # Update with your MySQL password
             database="tripglide"
         )
         logger.info("Database connection established")
@@ -43,7 +43,7 @@ def get_db_connection():
         return None
 
 # API: Fetch all flight details
-@app.route('/get_data', methods=['GET', 'OPTIONS'])
+@app.route('/api/get_data', methods=['GET', 'OPTIONS'])
 @cross_origin()
 def get_data():
     if request.method == 'OPTIONS':
@@ -78,7 +78,7 @@ def get_data():
         logger.info("Database connection closed for /get_data")
 
 # API: Fetch unique airports
-@app.route('/get_flights', methods=['GET', 'OPTIONS'])
+@app.route('/api/get_flights', methods=['GET', 'OPTIONS'])
 @cross_origin()
 def get_cities():
     if request.method == 'OPTIONS':
@@ -171,7 +171,7 @@ def save_booking_confirmation():
             ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """
         values = (
-            booking_number, traveler_name, email, phone, booked_on, airline, flight_number,
+            booking_number, traveler_name, email or None, phone or None, booked_on, airline, flight_number,
             departure_airport, departure_time, departure_date, arrival_airport, arrival_time,
             arrival_date, duration, stops, fare_type, total_price, trip_type, payment_method,
             ticket_number, meal_preference, special_request, status
@@ -191,55 +191,6 @@ def save_booking_confirmation():
         connection.close()
         logger.info("Database connection closed for /save_booking_confirmation")
 
-# API: Fetch user profile
-@app.route('/api/profile', methods=['GET', 'OPTIONS'])
-@cross_origin()
-def get_profile():
-    if request.method == 'OPTIONS':
-        logger.info("Handling OPTIONS for /api/profile")
-        return jsonify({}), 200
-    logger.info("Received GET request for /api/profile")
-    connection = get_db_connection()
-    if connection is None:
-        logger.error("Failed to connect to database for /api/profile")
-        return jsonify({"error": "DatabaseConnectionError", "message": "Failed to connect to database"}), 500
-    cursor = connection.cursor(dictionary=True)
-    try:
-        identifier = request.args.get('identifier')
-        if not identifier:
-            logger.warning("Missing identifier in /api/profile request")
-            return jsonify({"error": "ValidationError", "message": "Identifier is required"}), 400
-        query = """
-            SELECT username, email, phone 
-            FROM users 
-            WHERE email = %s OR phone = %s
-        """
-        cursor.execute(query, (identifier, identifier))
-        user = cursor.fetchone()
-        if not user:
-            logger.info(f"No user found for identifier: {identifier}")
-            return jsonify({"error": "NotFoundError", "message": "User not found"}), 404
-        response = {
-            "success": True,
-            "user": {
-                "username": user['username'] or "Guest",
-                "email": user['email'] or "Not provided",
-                "phone": user['phone'] or "Not provided"
-            }
-        }
-        logger.info(f"Returning user profile for {identifier}")
-        return jsonify(response)
-    except mysql.connector.Error as e:
-        logger.error(f"Database error in /api/profile: {str(e)}")
-        return jsonify({"error": "DatabaseQueryError", "message": str(e)}), 500
-    except Exception as e:
-        logger.error(f"Unexpected error in /api/profile: {str(e)}\n{traceback.format_exc()}")
-        return jsonify({"error": "UnexpectedError", "message": str(e)}), 500
-    finally:
-        cursor.close()
-        connection.close()
-        logger.info("Database connection closed for /api/profile")
-
 # API: Fetch flight bookings by email or phone
 @app.route('/api/flight_bookings', methods=['GET', 'OPTIONS'])
 @cross_origin()
@@ -247,41 +198,33 @@ def get_flight_bookings():
     if request.method == 'OPTIONS':
         logger.info("Handling OPTIONS for /api/flight_bookings")
         return jsonify({}), 200
-
     logger.info("Received GET request for /api/flight_bookings")
     connection = get_db_connection()
     if connection is None:
         logger.error("Failed to connect to database for /api/flight_bookings")
         return jsonify({"error": "DatabaseConnectionError", "message": "Failed to connect to database"}), 500
-
     cursor = connection.cursor(dictionary=True)
     try:
-        # Get the identifier (email or phone) from the request
         identifier = request.args.get('identifier')
         if not identifier:
             logger.warning("Missing identifier in /api/flight_bookings request")
             return jsonify({"error": "ValidationError", "message": "Identifier (email or phone) is required"}), 400
-
-        # Query to fetch flight bookings by email or phone
         query = """
             SELECT *
             FROM flight_bookings
-            WHERE email = %s OR CAST(phone AS CHAR) = %s
+            WHERE email = %s OR phone = %s
             ORDER BY booked_on DESC
         """
         logger.debug(f"Executing query with identifier: {identifier}")
         cursor.execute(query, (identifier, identifier))
         bookings = cursor.fetchall()
         logger.debug(f"Fetched {len(bookings)} bookings")
-
-        # Process bookings to handle datetime, timedelta, and NULLs
         for booking in bookings:
             for key, value in booking.items():
                 try:
                     if isinstance(value, datetime):
                         booking[key] = value.strftime("%Y-%m-%d %H:%M:%S")
                     elif isinstance(value, timedelta):
-                        # Convert timedelta to HH:MM:SS
                         total_seconds = int(value.total_seconds())
                         hours, remainder = divmod(total_seconds, 3600)
                         minutes, seconds = divmod(remainder, 60)
@@ -291,7 +234,6 @@ def get_flight_bookings():
                 except Exception as e:
                     logger.warning(f"Error processing field {key} in booking {booking.get('booking_number', 'unknown')}: {str(e)}")
                     booking[key] = ""
-
         logger.info(f"Returning {len(bookings)} flight bookings for identifier={identifier}")
         return jsonify({"success": True, "bookings": bookings})
     except mysql.connector.Error as e:
