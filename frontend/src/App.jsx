@@ -5,8 +5,9 @@ import { loadStripe } from "@stripe/stripe-js";
 import axios from "axios";
 import Header from "./components/Header";
 import SearchSection from "./components/SearchSection";
-import SignIn from "./components/SignIn";
 import SignUp from "./components/Signup";
+import Login from "./components/Login";
+import Dashboard from "./components/Dashboard";
 import ForgotPassword from "./components/ForgotPassword";
 import FlightCardList from "./components/FlightCardList";
 import CarHire from "./components/Carhire";
@@ -18,9 +19,287 @@ import RegionalSettings from "./components/RegionalSettings";
 import CountryFacts from "./components/CountryFacts";
 import Hotels from "./components/Hotels";
 import HotelSearch from "./components/HotelSearch";
-import CarConfirmation from "./components/CarConfirmation";
-import BookingConfirmed from "./components/BookingConfirmation";
-import Cancel from "./components/Cancel";
+import Favorite from "./components/Favorite";
+import FlightData from "./components/FlightData";
+import FlightCart from "./components/FlightCart";
+import BookingConfirmation from "./components/BookingConfirmation";
+import HotelCard from "./components/HotelCard";
+import HotelFilter from "./components/HotelFilter";
+import HotelDetails from "./components/HotelDetails";
+import HotelBooking from "./components/HotelBooking";
+
+const initialFlightData = [
+  {
+    id: 1,
+    price: 4500,
+    departureDate: "2025-04-15",
+    cabinClass: "Economy",
+    isFavorite: false,
+    airline: "IndiGo",
+    airlineCode: "6E",
+    flightNumber: "231",
+    departureTime: "08:00",
+    arrivalTime: "10:15",
+    duration: "2h 15m",
+    stops: 0,
+    stopCities: [],
+    departure: "Delhi",
+    arrival: "Mumbai",
+    logo: "https://i.pinimg.com/474x/e9/82/55/e98255f2c1040c38dd2314a6288f1850.jpg",
+  },
+  {
+    id: 2,
+    price: 5200,
+    departureDate: "2025-04-15",
+    cabinClass: "Economy",
+    isFavorite: false,
+    airline: "Air India",
+    airlineCode: "AI",
+    flightNumber: "102",
+    departureTime: "09:30",
+    arrivalTime: "12:00",
+    duration: "2h 30m",
+    stops: 0,
+    stopCities: [],
+    departure: "Delhi",
+    arrival: "Mumbai",
+    logo: "https://i.pinimg.com/736x/dd/f1/ce/ddf1ceee59fd228201084a162cbfb48c.jpg",
+  },
+  {
+    id: 3,
+    price: 4800,
+    departureDate: "2025-04-15",
+    cabinClass: "Economy",
+    isFavorite: false,
+    airline: "SpiceJet",
+    airlineCode: "SG",
+    flightNumber: "123",
+    departureTime: "07:45",
+    arrivalTime: "10:30",
+    duration: "2h 45m",
+    stops: 0,
+    stopCities: [],
+    departure: "Delhi",
+    arrival: "Chennai",
+    logo: "https://i.pinimg.com/474x/1f/5c/77/1f5c77cbff120399a8e50b101329a039.jpg",
+  },
+  {
+    id: 4,
+    price: 5100,
+    departureDate: "2025-04-15",
+    cabinClass: "Economy",
+    isFavorite: false,
+    airline: "Vistara",
+    airlineCode: "UK",
+    flightNumber: "945",
+    departureTime: "12:00",
+    arrivalTime: "14:30",
+    duration: "2h 30m",
+    stops: 0,
+    stopCities: [],
+    departure: "Bengaluru",
+    arrival: "Delhi",
+    logo: "https://i.pinimg.com/474x/6b/d3/8c/6bd38cd030c054f5ea2c5d16974d7fbb.jpg",
+  },
+  {
+    id: 5,
+    price: 4600,
+    departureDate: "2025-04-15",
+    cabinClass: "Economy",
+    isFavorite: false,
+    airline: "Air India",
+    airlineCode: "AI",
+    flightNumber: "789",
+    departureTime: "14:00",
+    arrivalTime: "16:20",
+    duration: "2h 20m",
+    stops: 0,
+    stopCities: [],
+    departure: "Kolkata",
+    arrival: "Delhi",
+    logo: "https://i.pinimg.com/736x/dd/f1/ce/ddf1ceee59fd228201084a162cbfb48c.jpg",
+  },
+  {
+    id: 6,
+    price: 3500,
+    departureDate: "2025-04-15",
+    cabinClass: "Economy",
+    isFavorite: false,
+    airline: "IndiGo",
+    airlineCode: "6E",
+    flightNumber: "456",
+    departureTime: "06:30",
+    arrivalTime: "07:45",
+    duration: "1h 15m",
+    stops: 0,
+    stopCities: [],
+    departure: "Chennai",
+    arrival: "Hyderabad",
+    logo: "https://i.pinimg.com/474x/e9/82/55/e98255f2c1040c38dd2314a6288f1850.jpg",
+  },
+  {
+    id: 7,
+    price: 3200,
+    departureDate: "2025-04-15",
+    cabinClass: "Economy",
+    isFavorite: false,
+    airline: "SpiceJet",
+    airlineCode: "SG",
+    flightNumber: "789",
+    departureTime: "11:00",
+    arrivalTime: "12:15",
+    duration: "1h 15m",
+    stops: 0,
+    stopCities: [],
+    departure: "Mumbai",
+    arrival: "Goa",
+    logo: "https://i.pinimg.com/474x/1f/5c/77/1f5c77cbff120399a8e50b101329a039.jpg",
+  },
+  {
+    id: 8,
+    price: 3900,
+    departureDate: "2025-04-15",
+    cabinClass: "Economy",
+    isFavorite: false,
+    airline: "Vistara",
+    airlineCode: "UK",
+    flightNumber: "821",
+    departureTime: "15:30",
+    arrivalTime: "17:00",
+    duration: "1h 30m",
+    stops: 0,
+    stopCities: [],
+    departure: "Delhi",
+    arrival: "Ahmedabad",
+    logo: "https://i.pinimg.com/474x/6b/d3/8c/6bd38cd030c054f5ea2c5d16974d7fbb.jpg",
+  },
+  {
+    id: 9,
+    price: 3400,
+    departureDate: "2025-04-15",
+    cabinClass: "Economy",
+    isFavorite: false,
+    airline: "IndiGo",
+    airlineCode: "6E",
+    flightNumber: "987",
+    departureTime: "13:00",
+    arrivalTime: "14:10",
+    duration: "1h 10m",
+    stops: 0,
+    stopCities: [],
+    departure: "Hyderabad",
+    arrival: "Bengaluru",
+    logo: "https://i.pinimg.com/474x/e9/82/55/e98255f2c1040c38dd2314a6288f1850.jpg",
+  },
+  {
+    id: 10,
+    price: 4700,
+    departureDate: "2025-04-15",
+    cabinClass: "Economy",
+    isFavorite: false,
+    airline: "Air India",
+    airlineCode: "AI",
+    flightNumber: "543",
+    departureTime: "17:00",
+    arrivalTime: "19:15",
+    duration: "2h 15m",
+    stops: 0,
+    stopCities: [],
+    departure: "Delhi",
+    arrival: "Kolkata",
+    logo: "https://i.pinimg.com/736x/dd/f1/ce/ddf1ceee59fd228201084a162cbfb48c.jpg",
+  },
+  {
+    id: 11,
+    price: 3000,
+    departureDate: "2025-04-15",
+    cabinClass: "Economy",
+    isFavorite: false,
+    airline: "SpiceJet",
+    airlineCode: "SG",
+    flightNumber: "654",
+    departureTime: "08:15",
+    arrivalTime: "09:10",
+    duration: "55m",
+    stops: 0,
+    stopCities: [],
+    departure: "Bengaluru",
+    arrival: "Chennai",
+    logo: "https://i.pinimg.com/474x/1f/5c/77/1f5c77cbff120399a8e50b101329a039.jpg",
+  },
+  {
+    id: 12,
+    price: 4900,
+    departureDate: "2025-04-15",
+    cabinClass: "Economy",
+    isFavorite: false,
+    airline: "Vistara",
+    airlineCode: "UK",
+    flightNumber: "673",
+    departureTime: "19:00",
+    arrivalTime: "21:15",
+    duration: "2h 15m",
+    stops: 0,
+    stopCities: [],
+    departure: "Mumbai",
+    arrival: "Delhi",
+    logo: "https://i.pinimg.com/474x/6b/d3/8c/6bd38cd030c054f5ea2c5d16974d7fbb.jpg",
+  },
+  {
+    id: 13,
+    price: 4300,
+    departureDate: "2025-04-15",
+    cabinClass: "Economy",
+    isFavorite: false,
+    airline: "IndiGo",
+    airlineCode: "6E",
+    flightNumber: "741",
+    departureTime: "10:00",
+    arrivalTime: "12:10",
+    duration: "2h 10m",
+    stops: 0,
+    stopCities: [],
+    departure: "Pune",
+    arrival: "Delhi",
+    logo: "https://i.pinimg.com/474x/e9/82/55/e98255f2c1040c38dd2314a6288f1850.jpg",
+  },
+  {
+    id: 14,
+    price: 4500,
+    departureDate: "2025-04-15",
+    cabinClass: "Economy",
+    isFavorite: false,
+    airline: "Air India",
+    airlineCode: "AI",
+    flightNumber: "321",
+    departureTime: "16:30",
+    arrivalTime: "18:30",
+    duration: "2h 00m",
+    stops: 0,
+    stopCities: [],
+    departure: "Chennai",
+    arrival: "Mumbai",
+    logo: "https://i.pinimg.com/736x/dd/f1/ce/ddf1ceee59fd228201084a162cbfb48c.jpg",
+  },
+  {
+    id: 15,
+    price: 3100,
+    departureDate: "2025-04-15",
+    cabinClass: "Economy",
+    isFavorite: false,
+    airline: "SpiceJet",
+    airlineCode: "SG",
+    flightNumber: "987",
+    departureTime: "09:00",
+    arrivalTime: "10:00",
+    duration: "1h 00m",
+    stops: 0,
+    stopCities: [],
+    departure: "Delhi",
+    arrival: "Jaipur",
+    logo: "https://i.pinimg.com/474x/1f/5c/77/1f5c77cbff120399a8e50b101329a039.jpg",
+  },
+];
 
 function App() {
   const [user, setUser] = useState(() => {
@@ -56,48 +335,59 @@ function App() {
 
   const handleSignUp = (userData) => {
     const completeUserData = {
-      username: userData.username,
-      email: userData.email,
+      ...userData,
       password: userData.password || "google-auth",
     };
-
-    setMockUsers((prevUsers) => {
-      const newUsers = [...prevUsers, completeUserData]; // Fixed typo here
-      console.log("Added new user:", completeUserData);
-      return newUsers;
-    });
-
-    setUser({
-      username: userData.username,
-      email: userData.email,
-    });
+    setMockUsers((prev) => [...prev, completeUserData]);
+    setUser({ username: userData.username, email: userData.email });
   };
 
-  const handleSignIn = (userData) => {
+  const handleLogin = (userData) => {
     setUser(userData);
   };
 
-  const handleLogout = () => {
-    setUser(null);
-  };
+  // const handleLogout = () => {
+  //   setUser(null);
+  // };
 
   console.log("Current mockUsers:", mockUsers);
 
   return (
     <GoogleOAuthProvider clientId="903553660853-d2uiue8osd3cjshdgidtd2hq3pge2sce.apps.googleusercontent.com">
       <Router>
-        <Header user={user} handleLogout={handleLogout} />
+        <Header
+          user={user}
+          // handleLogout={handleLogout}
+          allFlights={allFlights}
+          tripType={tripType}
+          returnDate={returnDate}
+        />
         <Routes>
           <Route
-            path="/signin"
-            element={<SignIn onSignIn={handleSignIn} mockUsers={mockUsers} />}
+            path="/login"
+            element={<Login onLogIn={handleLogin} mockUsers={mockUsers} />}
           />
           <Route
             path="/signup"
             element={<SignUp onSignUp={handleSignUp} mockUsers={mockUsers} />}
           />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route
             path="/forgot-password"
+            element={
+              <ForgotPassword
+                mockUsers={mockUsers}
+                setMockUsers={setMockUsers}
+              />
+            }
+          />
+          <Route path="/carhire" element={<CarHire />} />
+          <Route
+            path="/flight-cart"
+            element={<FlightCart user={user} />} // Pass user to FlightCart
+          />
+          <Route
+            path="/search-results"
             element={
               <ForgotPassword mockUsers={mockUsers} setMockUsers={setMockUsers} />
             }
@@ -113,9 +403,30 @@ function App() {
           <Route path="/country-facts" element={<CountryFacts />} />
           <Route path="/hotels" element={<Hotels />} />
           <Route path="/hotel-search" element={<HotelSearch />} />
-          <Route path="/car-confirmation" element={<CarConfirmation />} />
-          <Route path="/booking-confirmed" element={<BookingConfirmed />} />
-          <Route path="/cancel" element={<Cancel />} />
+          <Route path="/hotel-details/:hotel/:arrival" element={<HotelDetails />} />
+          <Route path="/hotel-card" element={<HotelCard />} />
+          <Route path="/hotel-filter" element={<HotelFilter />} />
+          <Route path="/hotel-booking" element={<HotelBooking />} />
+          <Route
+            path="/hotel-booking-confirmation"
+            element={<BookingConfirmation />} />
+
+
+          <Route
+            path="/favorites"
+            element={
+              <Favorite
+                allFlights={allFlights}
+                setAllFlights={setAllFlights}
+                tripType={tripType}
+                returnDate={returnDate}
+              />
+            }
+          />
+          <Route
+            path="/booking-confirmation"
+            element={<BookingConfirmation />}
+          />
         </Routes>
       </Router>
     </GoogleOAuthProvider>
@@ -123,154 +434,3 @@ function App() {
 }
 
 export default App;
-
-
-
-
-
-// import React, { useState, useEffect } from "react";
-// import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-// import { GoogleOAuthProvider } from "@react-oauth/google";
-// import { loadStripe } from "@stripe/stripe-js";
-// import axios from "axios";
-// import Header from "./components/Header";
-// import SearchSection from "./components/SearchSection";
-// import SignIn from "./components/SignIn";
-// import SignUp from "./components/Signup";
-// import ForgotPassword from "./components/ForgotPassword";
-// import FlightCardList from "./components/FlightCardList";
-// import CarHire from "./components/Carhire";
-// import FeaturesSection from "./components/FeaturesSection";
-// import CabListing from "./components/CabListing";
-// import Help from "./components/Help";
-// import PrivacyPolicy from "./components/PrivacyPolicy";
-// import RegionalSettings from "./components/RegionalSettings";
-// import CountryFacts from "./components/CountryFacts";
-// import Hotels from "./components/Hotels";
-// import HotelSearch from "./components/HotelSearch";
-// import CarConfirmation from "./components/CarConfirmation";
-
-// // Initialize Stripe with your Publishable Key
-// const stripePromise = loadStripe("pk_test_51RA1PaAGhuxmwIzwuekZ7LyLuwOFMdNXMGBGdVj7tO603Bz6Rq0lzHf51iuXuc6wJHCQIguaKycDVvzfhOx6gCxM00JF5p3CdX"); // Replace with your Stripe Publishable Key
-
-// function App() {
-//   const [user, setUser] = useState(() => {
-//     const savedUser = localStorage.getItem("user");
-//     return savedUser ? JSON.parse(savedUser) : null;
-//   });
-
-//   const [mockUsers, setMockUsers] = useState(() => {
-//     const savedMockUsers = localStorage.getItem("mockUsers");
-//     return savedMockUsers
-//       ? JSON.parse(savedMockUsers)
-//       : [
-//           {
-//             username: "testuser",
-//             email: "test@example.com",
-//             password: "Password123",
-//           },
-//         ];
-//   });
-
-//   useEffect(() => {
-//     if (user) {
-//       localStorage.setItem("user", JSON.stringify(user));
-//     } else {
-//       localStorage.removeItem("user");
-//     }
-//   }, [user]);
-
-//   useEffect(() => {
-//     localStorage.setItem("mockUsers", JSON.stringify(mockUsers));
-//     console.log("Updated mockUsers:", mockUsers);
-//   }, [mockUsers]);
-
-//   const handleSignUp = (userData) => {
-//     const completeUserData = {
-//       username: userData.username,
-//       email: userData.email,
-//       password: userData.password || "google-auth",
-//     };
-
-//     setMockUsers((prevUsers) => {
-//       const newUsers = [...prevUsers, completeUserData]; // Fixed typo here
-//       console.log("Added new user:", completeUserData);
-//       return newUsers;
-//     });
-
-//     setUser({
-//       username: userData.username,
-//       email: userData.email,
-//     });
-//   };
-
-//   const handleSignIn = (userData) => {
-//     setUser(userData);
-//   };
-
-//   const handleLogout = () => {
-//     setUser(null);
-//   };
-
-//   const handleCheckout = async () => {
-//     try {
-//       const response = await axios.post(
-//         "http://localhost:5001/create-checkout-session",
-//         {}
-//       );
-//       const sessionId = response.data.id;
-
-//       const stripe = await stripePromise;
-//       const { error } = await stripe.redirectToCheckout({ sessionId });
-
-//       if (error) {
-//         console.error("Stripe checkout error:", error.message);
-//       }
-//     } catch (error) {
-//       console.error("Error:", error);
-//     }
-//   };
-
-//   console.log("Current mockUsers:", mockUsers);
-
-//   return (
-//     <GoogleOAuthProvider clientId="903553660853-d2uiue8osd3cjshdgidtd2hq3pge2sce.apps.googleusercontent.com">
-//       <Router>
-//         <Header user={user} handleLogout={handleLogout} />
-//         <Routes>
-//           <Route
-//             path="/signin"
-//             element={<SignIn onSignIn={handleSignIn} mockUsers={mockUsers} />}
-//           />
-//           <Route
-//             path="/signup"
-//             element={<SignUp onSignUp={handleSignUp} mockUsers={mockUsers} />}
-//           />
-//           <Route
-//             path="/forgot-password"
-//             element={
-//               <ForgotPassword mockUsers={mockUsers} setMockUsers={setMockUsers} />
-//             }
-//           />
-//           <Route path="/carhire" element={<CarHire />} />
-//           <Route path="/search-results" element={<FlightCardList />} />
-//           <Route path="/" element={<SearchSection />} />
-//           <Route path="/features" element={<FeaturesSection />} />
-//           <Route path="/cabs" element={<CabListing />} />
-//           <Route path="/help" element={<Help />} />
-//           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-//           <Route path="/regional-settings" element={<RegionalSettings />} />
-//           <Route path="/country-facts" element={<CountryFacts />} />
-//           <Route path="/hotels" element={<Hotels />} />
-//           <Route path="/hotel-search" element={<HotelSearch />} />
-//           <Route
-//             path="/car-confirmation"
-//             element={<CarConfirmation onCheckout={handleCheckout} />}
-//           />
-//         </Routes>
-//       </Router>
-//     </GoogleOAuthProvider>
-//   );
-// }
-
-// export default App;
