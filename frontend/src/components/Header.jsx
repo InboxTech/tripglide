@@ -16,19 +16,9 @@ export default function Header({ user, allFlights, tripType, returnDate }) {
 
   useEffect(() => {
     const path = location.pathname;
-<<<<<<< HEAD
-    if (path.includes("/hotels")) {
-      setActiveTab("hotels");
-    } else if (path.includes("/carhire") || path.includes("/cabs") || path.includes("/car-confirmation")) {
-      setActiveTab("carhire");
-    } else {
-      setActiveTab("flights");
-    }
-=======
     if (path.includes("/hotels")) setActiveTab("hotels");
     else if (path.includes("/carhire") || path.includes("/cabs")) setActiveTab("carhire");
     else setActiveTab("flights");
->>>>>>> a959009f8c90503190eb78bc8a15eb0ddec31482
   }, [location.pathname]);
 
   useEffect(() => {

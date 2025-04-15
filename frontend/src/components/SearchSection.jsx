@@ -74,9 +74,6 @@ export default function SearchSection() {
           airport.toLowerCase().includes(from.toLowerCase()) && airport !== to
       )
     );
-<<<<<<< HEAD
-}
-=======
     setFromFocusIndex(-1);
   }, [from, to, departureAirports]);
 
@@ -912,4 +909,3 @@ export default function SearchSection() {
     </section>
   );
 }
->>>>>>> a959009f8c90503190eb78bc8a15eb0ddec31482
