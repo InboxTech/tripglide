@@ -1,5 +1,4 @@
 backend/venv/
 .vscode/*
-.env
 backend/.env
 node_modules
