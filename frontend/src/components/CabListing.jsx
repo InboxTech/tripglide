@@ -2039,6 +2039,154 @@ const CabListing = () => {
                 dropoffTime: formDropoffTime,
               }}
             />
+            {filteredCars.length > 0 ? (
+              filteredCars.map((car) => (
+                <div key={car.id} className="bg-white p-4 sm:p-6 rounded-2xl mb-4 sm:mb-6 shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-100">
+                  {/* Car Header */}
+                  <div className="flex items-center justify-between mb-3 sm:mb-4">
+                    <div className="flex items-center space-x-2 sm:space-x-3">
+                      <h3 className="text-lg sm:text-xl font-semibold text-gray-800 truncate">{car.carMake} {car.model}</h3>
+                      <span className="text-xs sm:text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded-full">{car.type}</span>
+                    </div>
+                    <button 
+                      onClick={() => toggleFavorite(car.id)}
+                      className="text-gray-400 hover:text-red-500 cursor-pointer transition-colors"
+                    >
+                      <FaHeart className={car.isFavorite ? 'text-red-500' : ''} size={20} />
+                    </button>
+                  </div>
+
+                  {/* Car Image and Details */}
+                  <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-3 sm:mb-4">
+                    <div className="sm:w-1/3">
+                      <img 
+                        src={car.image} 
+                        alt={`${car.carMake} ${car.model}`} 
+                        className="w-full h-32 sm:h-40 object-contain rounded-lg bg-gray-50 p-2"
+                      />
+                    </div>
+                    <div className="sm:w-2/3 flex flex-col justify-between">
+                      <div className="grid grid-cols-2 gap-2 sm:gap-4">
+                        <div className="flex items-center space-x-2 text-gray-600">
+                          <FaUserFriends size={14} />
+                          <span className="text-xs sm:text-sm">{car.passengers} Passengers</span>
+                        </div>
+                        <div className="flex items-center space-x-2 text-gray-600">
+                          <FaSuitcase size={14} />
+                          <span className="text-xs sm:text-sm">{car.luggage} Luggage</span>
+                        </div>
+                        <div className="flex items-center space-x-2 text-gray-600">
+                          <FaSnowflake size={14} />
+                          <span className="text-xs sm:text-sm">Air Conditioning</span>
+                        </div>
+                        <div className="flex items-center space-x-2 text-gray-600">
+                          <FaCogs size={14} />
+                          <span className="text-xs sm:text-sm">{car.transmission}</span>
+                        </div>
+                        <div className="flex items-center space-x-2 text-gray-600">
+                          <FaMapMarkerAlt size={14} />
+                          <span className="text-xs sm:text-sm">{car.mileage}</span>
+                        </div>
+                        <div className="flex items-center space-x-2 text-gray-600">
+                          <FaStar size={14} className="text-yellow-400" />
+                          <span className="text-xs sm:text-sm">{car.rating}/10 ({car.reviews.toLocaleString()} reviews)</span>
+                        </div>
+                      </div>
+                      <div className="mt-3 sm:mt-4 flex items-center justify-between">
+                        <span className="text-lg sm:text-2xl font-bold text-gray-800">
+                          ₹{car.pricePerDay.toLocaleString()}
+                          <span className="text-xs sm:text-sm font-normal text-gray-500">/day</span>
+                        </span>
+                        <button 
+                          onClick={() => toggleDeals(car.id)}
+                          className="flex items-center text-blue-600 font-semibold hover:text-blue-800 cursor-pointer transition-colors text-sm sm:text-base"
+                        >
+                          {expandedCarId === car.id ? (
+                            <>
+                              Hide Deals <FaChevronUp className="ml-1 sm:ml-2 cursor-pointer" />
+                            </>
+                          ) : (
+                            <>
+                              View Deals <FaChevronDown className="ml-1 sm:ml-2 cursor-pointer" />
+                            </>
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Expanded Deal Section */}
+                  {expandedCarId === car.id && (
+                    <div className="border-t pt-3 sm:pt-4">
+                      <h4 className="text-base sm:text-lg font-semibold text-gray-800 mb-3 sm:mb-4">Compare Deals</h4>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+                        {car.deals && car.deals.length > 0 ? (
+                          car.deals.map((deal, index) => (
+                            <div
+                              key={index}
+                              className="bg-gray-50 p-3 sm:p-4 rounded-lg shadow-sm border border-gray-200 hover:border-blue-300 transition-colors flex flex-col"
+                            >
+                              <div className="mb-2 sm:mb-3">
+                                <div className="flex items-center space-x-2 sm:space-x-3 mb-2">
+                                  <span className="text-sm sm:text-lg font-medium text-gray-800 truncate">{deal.agency}</span>
+                                  <div className="flex items-center space-x-1">
+                                    <span className="text-yellow-400 flex">
+                                      {[...Array(Math.round(deal.rating / 2))].map((_, i) => (
+                                        <FaStar key={i} size={12} className="sm:w-4 sm:h-4" />
+                                      ))}
+                                    </span>
+                                    <span className="text-xs sm:text-sm text-gray-600">{deal.rating}/10</span>
+                                  </div>
+                                </div>
+                                <div className="text-xs sm:text-sm text-gray-700 space-y-1 sm:space-y-2">
+                                  <ul className="space-y-1">
+                                    {deal.features.map((feature, idx) => (
+                                      <li key={idx} className="flex items-start space-x-2">
+                                        <FaMapMarkerAlt size={12} className="text-blue-500 flex-shrink-0 mt-0.5" />
+                                        <span className="break-words">{feature}</span>
+                                      </li>
+                                    ))}
+                                    {deal.freeCancellation && (
+                                      <li className="flex items-start space-x-2 text-green-600">
+                                        <FaMapMarkerAlt size={12} className="flex-shrink-0 mt-0.5" />
+                                        <span className="break-words">Free Cancellation</span>
+                                      </li>
+                                    )}
+                                  </ul>
+                                  <p className="text-gray-500 text-xs mt-1 sm:mt-2">
+                                    {deal.reviews.toLocaleString()} reviews
+                                  </p>
+                                  <div className="text-base sm:text-xl font-bold text-gray-800">
+                                    ₹{deal.price.toLocaleString()}
+                                    <span className="text-xs sm:text-sm font-normal text-gray-500">/day</span>
+                                  </div>
+                                </div>
+                              </div>
+                              <button className="w-full bg-blue-600 text-white px-3 py-1.5 cursor-pointer sm:px-4 sm:py-2 rounded-lg hover:bg-blue-700 transition text-sm sm:text-base mt-auto">
+                                Book Now
+                              </button>
+                            </div>
+                          ))
+                        ) : (
+                          <p className="text-gray-600 col-span-3 text-sm sm:text-base">No deals available for this car.</p>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))
+            ) : (
+              <div className="bg-white rounded-xl p-6 sm:p-8 text-center shadow-md">
+                <p className="text-base sm:text-lg text-gray-800">No cars found matching your criteria.</p>
+                <p className="text-gray-600 mt-2 text-sm sm:text-base">Try adjusting your filters or clear them to see all available cars.</p>
+                <button
+                  onClick={clearFilters}
+                  className="mt-4 text-blue-600 hover:text-blue-800 font-semibold text-sm sm:text-base"
+                >
+                  Clear Filters
+                </button>
+              </div>
+            )}
           </main>
         </div>
       </div>

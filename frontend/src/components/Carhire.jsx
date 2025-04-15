@@ -98,7 +98,7 @@ export default function CarHire() {
   return (
     <section className="w-full">
       {/* Background Image */}
-      <div className="absolute inset-0 hidden lg:block -z-10">
+      <div className="absolute inset-0 lg:block -z-10">
         <img
           src="/images/carbg.jpg"
           alt="Car rental background"
@@ -109,7 +109,7 @@ export default function CarHire() {
       {/* Hero Content */}
       <div className="relative max-w-7xl mx-auto px-6 py-16 lg:py-24">
         <h1 className="text-4xl lg:text-6xl font-bold text-black mb-8">
-          Find the best car rental deals
+          <b>Find the best car rental deals</b>
         </h1>
 
         {/* Search Form */}

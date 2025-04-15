@@ -1,30 +1,22 @@
-import React from "react";
-import { useState, useEffect, useRef } from "react";
-import { FaGlobe, FaUser, FaBars, FaHeart, FaPlane, FaHotel, FaCar, FaFlag, FaSearchLocation, FaQuestionCircle } from "react-icons/fa";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
+import { FaGlobe, FaUser, FaBars, FaHeart, FaPlane, FaHotel, FaCar, FaFlag, FaSearchLocation, FaQuestionCircle, FaChartBar } from "react-icons/fa";
 import logo from "../assets/image/logo2.png";
 
-export default function Header({ user, handleLogout }) {
+export default function Header({ user, allFlights, tripType, returnDate }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("flights");
   const navigate = useNavigate();
   const location = useLocation();
   const dropdownRef = useRef(null);
-  const profileRef = useRef(null);
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
-    if (isProfileOpen) setIsProfileOpen(false);
-  };
-
-  const toggleProfile = () => {
-    setIsProfileOpen(!isProfileOpen);
-    if (isDropdownOpen) setIsDropdownOpen(false);
   };
 
   useEffect(() => {
     const path = location.pathname;
+<<<<<<< HEAD
     if (path.includes("/hotels")) {
       setActiveTab("hotels");
     } else if (path.includes("/carhire") || path.includes("/cabs") || path.includes("/car-confirmation")) {
@@ -32,32 +24,40 @@ export default function Header({ user, handleLogout }) {
     } else {
       setActiveTab("flights");
     }
+=======
+    if (path.includes("/hotels")) setActiveTab("hotels");
+    else if (path.includes("/carhire") || path.includes("/cabs")) setActiveTab("carhire");
+    else setActiveTab("flights");
+>>>>>>> a959009f8c90503190eb78bc8a15eb0ddec31482
   }, [location.pathname]);
 
-  // Close dropdowns when clicking outside
   useEffect(() => {
     function handleClickOutside(event) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsDropdownOpen(false);
-      }
-      if (profileRef.current && !profileRef.current.contains(event.target)) {
-        setIsProfileOpen(false);
-      }
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) setIsDropdownOpen(false);
     }
-
     document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const onLogout = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    handleLogout();
-    setIsProfileOpen(false);
-    navigate('/');
+  const handleFavoritesClick = () => {
+    const favoriteFlights = allFlights.filter(flight => flight.isFavorite);
+    navigate("/favorites", { state: { allFlights: favoriteFlights, tripType, returnDate } });
   };
+
+  const handleUserClick = () => {
+    if (user) {
+      // If user is logged in, go directly to dashboard
+      navigate("/dashboard");
+    }
+    // If not logged in, the Link to "/login" will handle navigation
+  };
+
+  // const onLogout = (e) => {
+  //   e.preventDefault();
+  //   e.stopPropagation();
+  //   handleLogout();
+  //   navigate('/');
+  // };
 
   return (
     <header className="bg-[#06152B] text-white w-full">
@@ -70,51 +70,48 @@ export default function Header({ user, handleLogout }) {
         </div>
 
         <div className="flex items-center gap-2 md:gap-4">
-        <Link to="/country-facts" className="p-2 rounded-lg hover:bg-gray-600 transition cursor-pointer">
-          <FaGlobe />
-        </Link>
-
-          <div className="p-2 rounded-lg hover:bg-gray-600 transition cursor-pointer">
+          <Link to="/country-facts" className="p-2 rounded-lg hover:bg-gray-600 transition cursor-pointer" title="Country Facts">
+            <FaGlobe />
+          </Link>
+          <div
+            className="p-2 rounded-lg hover:bg-gray-600 transition cursor-pointer"
+            onClick={handleFavoritesClick}
+            title="Saved Trips"
+          >
             <FaHeart />
           </div>
-
-          {/* Show Profile if Logged In, Else Show Sign In Button */}
+          {/* <a
+            href="https://dashboard.stripe.com/test/guests/gcus_1R9jv32RiOcrGJvia7h7puky"
+            className="p-2 rounded-lg hover:bg-gray-600 transition cursor-pointer"
+            title="Stripe Dashboard"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <FaChartBar />
+          </a> */}
           {user ? (
-            <div className="relative" ref={profileRef}>
-              <div 
-                className="flex items-center gap-2 p-2 rounded-lg cursor-pointer hover:bg-gray-600"
-                onClick={toggleProfile}
-              >
-                <FaUser />
-                <span className="hidden sm:inline">{user.username}</span>
-              </div>
-              {isProfileOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-white text-gray-800 rounded-md shadow-lg z-20">
-                  <div className="p-1">
-                    <p className="font-semibold">{user.username}</p>
-                    <p className="text-sm text-gray-500">{user.email}</p>
-                    <button
-                      onClick={onLogout}
-                      className="mt-2 w-full text-left text-sm text-red-600 hover:underline"
-                    >
-                      Logout
-                    </button>
-                  </div>
-                </div>
-              )}
+            <div
+              className="flex items-center gap-2 p-2 rounded-lg cursor-pointer hover:bg-gray-600"
+              onClick={handleUserClick}
+              title="Go to Dashboard"
+            >
+              <FaUser />
+              <span className="hidden sm:inline">{user.username}</span>
             </div>
           ) : (
-            <Link to="/signin" className="flex items-center gap-1 p-2 rounded-lg hover:bg-gray-600 transition cursor-pointer">
+            <Link
+              to="/login"
+              className="flex items-center gap-1 p-2 rounded-lg hover:bg-gray-600 transition cursor-pointer"
+              title="Sign In"
+            >
               <FaUser />
               <span className="hidden sm:inline">Sign In</span>
             </Link>
           )}
-
           <div className="relative" ref={dropdownRef}>
             <div className="p-2 rounded-lg hover:bg-gray-600 transition cursor-pointer" onClick={toggleDropdown}>
               <FaBars />
             </div>
-
             {isDropdownOpen && (
               <div className="absolute right-0 mt-3 w-56 bg-white text-black shadow-lg rounded-xl z-20">
                 <div className="py-2">
@@ -133,12 +130,20 @@ export default function Header({ user, handleLogout }) {
                   <Link to="/regional-settings" className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 transition">
                     <FaFlag /> Regional settings
                   </Link>
-                  <Link to="/" className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 transition">
+                  <Link to="/hotels" className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 transition">
                     <FaSearchLocation className="text-[#0c828b]" /> Explore everywhere
                   </Link>
                   <Link to="/help" className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 transition">
                     <FaQuestionCircle className="text-[#0c828b]" /> Help
                   </Link>
+                  {/* {user && (
+                    <button
+                      onClick={onLogout}
+                      className="flex items-center gap-2 px-4 py-2 text-red-600 hover:bg-gray-100 transition w-full text-left"
+                    >
+                      Logout
+                    </button>
+                  )} */}
                 </div>
               </div>
             )}
@@ -151,7 +156,7 @@ export default function Header({ user, handleLogout }) {
           {[
             { id: "flights", icon: <FaPlane />, label: "Flights" },
             { id: "hotels", icon: <FaHotel />, label: "Hotels" },
-            { id: "carhire", icon: <FaCar />, label: "Car hire" }
+            { id: "carhire", icon: <FaCar />, label: "Car hire" },
           ].map(({ id, icon, label }) => (
             <Link
               key={id}
