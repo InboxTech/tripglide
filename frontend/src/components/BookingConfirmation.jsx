@@ -173,7 +173,7 @@ const BookingConfirmed = () => {
               <p><strong>Fuel Policy:</strong> {dealDetails.fuelPolicy}</p>
             </div>
           </div>
-
+ 
           {/* Date and Time Details */}
           <div className="p-6 bg-gray-50 rounded-lg border border-gray-100">
             <h3 className="text-xl font-medium text-gray-700 mb-4">Schedule</h3>
