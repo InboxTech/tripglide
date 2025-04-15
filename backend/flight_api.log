@@ -612,3 +612,62 @@
 2025-04-15 14:10:42,421 [INFO] 127.0.0.1 - - [15/Apr/2025 14:10:42] "[33mGET /api/profile?identifier=jaimilkothari2003@gmail.com HTTP/1.1[0m" 404 -
 2025-04-15 14:12:29,380 [INFO]  * Detected change in 'C:\\xampp\\htdocs\\Inbox\\tripglide\\backend\\flight.py', reloading
 2025-04-15 14:12:29,477 [INFO]  * Restarting with stat
+2025-04-15 14:12:30,104 [INFO] Starting Flask server on port 5000
+2025-04-15 14:12:30,169 [WARNING]  * Debugger is active!
+2025-04-15 14:12:30,173 [INFO]  * Debugger PIN: 266-754-094
+2025-04-15 14:14:42,043 [INFO] 127.0.0.1 - - [15/Apr/2025 14:14:42] "[33mGET /get_flights HTTP/1.1[0m" 404 -
+2025-04-15 14:14:42,048 [INFO] 127.0.0.1 - - [15/Apr/2025 14:14:42] "[33mGET /get_flights HTTP/1.1[0m" 404 -
+2025-04-15 14:14:42,055 [INFO] 127.0.0.1 - - [15/Apr/2025 14:14:42] "[33mGET /get_flights HTTP/1.1[0m" 404 -
+2025-04-15 14:18:48,258 [INFO] Received GET request for /api/flight_bookings
+2025-04-15 14:18:48,420 [INFO] package: mysql.connector.plugins
+2025-04-15 14:18:48,420 [INFO] plugin_name: mysql_native_password
+2025-04-15 14:18:48,427 [INFO] AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2025-04-15 14:18:48,445 [INFO] Database connection established
+2025-04-15 14:18:48,468 [INFO] Returning 3 flight bookings for identifier=jaimilkothari2003@gmail.com
+2025-04-15 14:18:48,469 [INFO] Database connection closed for /api/flight_bookings
+2025-04-15 14:18:48,471 [INFO] 127.0.0.1 - - [15/Apr/2025 14:18:48] "GET /api/flight_bookings?identifier=jaimilkothari2003@gmail.com HTTP/1.1" 200 -
+2025-04-15 14:18:48,521 [INFO] Received GET request for /api/flight_bookings
+2025-04-15 14:18:48,525 [INFO] Database connection established
+2025-04-15 14:18:48,530 [INFO] Returning 3 flight bookings for identifier=jaimilkothari2003@gmail.com
+2025-04-15 14:18:48,531 [INFO] Database connection closed for /api/flight_bookings
+2025-04-15 14:18:48,532 [INFO] 127.0.0.1 - - [15/Apr/2025 14:18:48] "GET /api/flight_bookings?identifier=jaimilkothari2003@gmail.com HTTP/1.1" 200 -
+2025-04-15 14:41:15,458 [INFO] 127.0.0.1 - - [15/Apr/2025 14:41:15] "[33mGET /get_flights HTTP/1.1[0m" 404 -
+2025-04-15 14:41:15,481 [INFO] 127.0.0.1 - - [15/Apr/2025 14:41:15] "[33mGET /get_flights HTTP/1.1[0m" 404 -
+2025-04-15 14:41:15,492 [INFO] 127.0.0.1 - - [15/Apr/2025 14:41:15] "[33mGET /get_flights HTTP/1.1[0m" 404 -
+2025-04-15 14:41:34,141 [INFO] Starting Flask server on port 5000
+2025-04-15 14:41:34,218 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.29.250:5000
+2025-04-15 14:41:34,218 [INFO] [33mPress CTRL+C to quit[0m
+2025-04-15 14:41:34,220 [INFO]  * Restarting with stat
+2025-04-15 14:41:34,590 [INFO] Starting Flask server on port 5000
+2025-04-15 14:41:34,627 [WARNING]  * Debugger is active!
+2025-04-15 14:41:34,642 [INFO]  * Debugger PIN: 266-754-094
+2025-04-15 14:42:27,468 [INFO] 127.0.0.1 - - [15/Apr/2025 14:42:27] "[33mGET /get_flights HTTP/1.1[0m" 404 -
+2025-04-15 14:42:27,471 [INFO] 127.0.0.1 - - [15/Apr/2025 14:42:27] "[33mGET /get_flights HTTP/1.1[0m" 404 -
+2025-04-15 14:42:27,488 [INFO] 127.0.0.1 - - [15/Apr/2025 14:42:27] "[33mGET /get_flights HTTP/1.1[0m" 404 -
+2025-04-15 14:42:57,784 [INFO] 127.0.0.1 - - [15/Apr/2025 14:42:57] "[33mGET /get_flights HTTP/1.1[0m" 404 -
+2025-04-15 14:42:57,800 [INFO] 127.0.0.1 - - [15/Apr/2025 14:42:57] "[33mGET /get_flights HTTP/1.1[0m" 404 -
+2025-04-15 14:44:52,008 [INFO] 127.0.0.1 - - [15/Apr/2025 14:44:52] "[33mGET / HTTP/1.1[0m" 404 -
+2025-04-15 14:45:01,259 [INFO] 127.0.0.1 - - [15/Apr/2025 14:45:01] "[33mGET /get_flights HTTP/1.1[0m" 404 -
+2025-04-15 14:45:06,851 [INFO] 127.0.0.1 - - [15/Apr/2025 14:45:06] "[33mGET /get_flights HTTP/1.1[0m" 404 -
+2025-04-15 14:45:10,801 [INFO] 127.0.0.1 - - [15/Apr/2025 14:45:10] "[33mGET /get_flight HTTP/1.1[0m" 404 -
+2025-04-15 14:45:17,151 [INFO] 127.0.0.1 - - [15/Apr/2025 14:45:17] "[33mGET /get_data HTTP/1.1[0m" 404 -
+2025-04-15 14:45:50,039 [INFO] 127.0.0.1 - - [15/Apr/2025 14:45:50] "[33mGET /get_flights HTTP/1.1[0m" 404 -
+2025-04-15 14:48:15,537 [INFO]  * Detected change in 'C:\\xampp\\htdocs\\Inbox\\tripglide\\backend\\flight.py', reloading
+2025-04-15 14:48:15,679 [INFO]  * Restarting with stat
+2025-04-15 14:48:16,200 [INFO] Starting Flask server on port 5000
+2025-04-15 14:48:16,255 [WARNING]  * Debugger is active!
+2025-04-15 14:48:16,258 [INFO]  * Debugger PIN: 266-754-094
+2025-04-15 14:48:21,515 [INFO] 127.0.0.1 - - [15/Apr/2025 14:48:21] "[33mGET /get_flights HTTP/1.1[0m" 404 -
+2025-04-15 14:48:21,540 [INFO] 127.0.0.1 - - [15/Apr/2025 14:48:21] "[33mGET /get_flights HTTP/1.1[0m" 404 -
+2025-04-15 14:48:50,570 [INFO]  * Detected change in 'C:\\xampp\\htdocs\\Inbox\\tripglide\\backend\\flight.py', reloading
+2025-04-15 14:48:50,693 [INFO]  * Restarting with stat
+2025-04-15 14:48:51,164 [INFO] Starting Flask server on port 5000
+2025-04-15 14:48:51,200 [WARNING]  * Debugger is active!
+2025-04-15 14:48:51,203 [INFO]  * Debugger PIN: 266-754-094
+2025-04-15 14:50:03,949 [INFO] 127.0.0.1 - - [15/Apr/2025 14:50:03] "[33mGET /get_flights HTTP/1.1[0m" 404 -
+2025-04-15 14:50:03,966 [INFO] 127.0.0.1 - - [15/Apr/2025 14:50:03] "[33mGET /get_flights HTTP/1.1[0m" 404 -
+2025-04-15 14:51:08,631 [INFO]  * Detected change in 'C:\\xampp\\htdocs\\Inbox\\tripglide\\backend\\flight.py', reloading
+2025-04-15 14:51:08,726 [INFO]  * Restarting with stat

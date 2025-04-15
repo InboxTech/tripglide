@@ -12,7 +12,9 @@ import {
   FaCalendarAlt,
   FaClock,
   FaExclamationCircle,
+  FaDownload,
 } from "react-icons/fa";
+import { jsPDF } from "jspdf";
 
 // Utility function to calculate duration
 const calculateDuration = (depTime, arrTime) => {
@@ -33,6 +35,66 @@ const calculateDuration = (depTime, arrTime) => {
     console.error("Duration calculation error:", e);
     return "N/A";
   }
+};
+
+// Utility function to convert number to words (for INR total)
+const numberToWords = (num) => {
+  const units = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"];
+  const teens = [
+    "",
+    "Eleven",
+    "Twelve",
+    "Thirteen",
+    "Fourteen",
+    "Fifteen",
+    "Sixteen",
+    "Seventeen",
+    "Eighteen",
+    "Nineteen",
+  ];
+  const tens = [
+    "",
+    "Ten",
+    "Twenty",
+    "Thirty",
+    "Forty",
+    "Fifty",
+    "Sixty",
+    "Seventy",
+    "Eighty",
+    "Ninety",
+  ];
+  const thousands = ["", "Thousand", "Million", "Billion"];
+
+  if (num === 0) return "Zero";
+
+  const convertLessThanThousand = (n) => {
+    if (n === 0) return "";
+    if (n < 10) return units[n];
+    if (n < 20) return teens[n - 10];
+    if (n < 100) {
+      const ten = Math.floor(n / 10);
+      const unit = n % 10;
+      return `${tens[ten]}${unit ? " " + units[unit] : ""}`;
+    }
+    const hundred = Math.floor(n / 100);
+    const remainder = n % 100;
+    return `${units[hundred]} Hundred${remainder ? " " + convertLessThanThousand(remainder) : ""}`;
+  };
+
+  let words = "";
+  let thousandIndex = 0;
+
+  while (num > 0) {
+    const chunk = num % 1000;
+    if (chunk) {
+      words = `${convertLessThanThousand(chunk)} ${thousands[thousandIndex]} ${words}`.trim();
+    }
+    num = Math.floor(num / 1000);
+    thousandIndex++;
+  }
+
+  return words;
 };
 
 // Utility function to generate a random 10-digit integer
@@ -136,7 +198,7 @@ const BookingConfirmation = () => {
           try {
             errorData = await response.json();
           } catch {
-            errorData = { error: "UnknownError", "message": response.statusText || "Failed to parse response" };
+            errorData = { error: "UnknownError", message: response.statusText || "Failed to parse response" };
           }
           const errorName = errorData.error || `HTTPError_${response.status}`;
           const message = errorData.message || response.statusText || "Failed to save booking";
@@ -257,6 +319,201 @@ const BookingConfirmation = () => {
     saveBookingIfNeeded();
   }, [bookingDetails, userDetails, bookingNumber, saveBooking]);
 
+  // Download Invoice with Dark Blue and White Theme
+  const downloadInvoice = () => {
+    if (!bookingDetails || !userDetails) return;
+
+    const { selectedFlight, selectedFare, searchParams } = bookingDetails;
+    const { tripType, from, to, departDate } = searchParams;
+    const firstLeg =
+      tripType === "multicity" && selectedFlight?.multiCityFlights
+        ? selectedFlight.multiCityFlights[0]
+        : selectedFlight;
+
+    const doc = new jsPDF();
+    let yPosition = 10;
+
+    // Colors
+    const darkBlue = [30, 58, 138]; // #1E3A8A
+    const lightGray = [243, 244, 246]; // #F3F4F6
+    const white = [255, 255, 255]; // #FFFFFF
+    const darkGray = [55, 65, 81]; // #374151
+
+    // Outer Border
+    doc.setLineWidth(0.5);
+    doc.setDrawColor(...darkBlue);
+    doc.rect(5, 5, 200, 287, "S"); // Border around the entire page
+
+    // Header: Dark Blue Background with White Text
+    doc.setFillColor(...darkBlue);
+    doc.rect(0, 0, 210, 30, "F"); // Full-width header
+    doc.setFontSize(18);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(...white);
+    doc.text("TripGlide", 15, yPosition + 10);
+    doc.setFontSize(14);
+    doc.text("INVOICE", 190, yPosition + 10, { align: "right" });
+    yPosition += 20;
+
+    // Invoice Number and Booking Date
+    doc.setFontSize(9);
+    doc.setFont("helvetica", "normal");
+    doc.text(`Invoice No: INV-2025-${bookingNumber}`, 190, yPosition, { align: "right" });
+    yPosition += 5;
+    doc.text(
+      `Booking Date: ${new Date().toLocaleDateString("en-US", {
+        weekday: "short",
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+      })}`,
+      190,
+      yPosition,
+      { align: "right" }
+    );
+    yPosition += 10;
+
+    // Customer Info Section
+    doc.setFillColor(...white);
+    doc.rect(10, yPosition - 5, 190, 40, "F"); // White background for customer info
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(...darkGray);
+    doc.text("Customer Information", 15, yPosition);
+    doc.setLineWidth(0.2);
+    doc.setDrawColor(...darkBlue);
+    doc.line(15, yPosition + 2, 85, yPosition + 2); // Underline for header
+    yPosition += 10;
+
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+    doc.text(`Traveler: ${userDetails.name || "Guest"}`, 15, yPosition);
+    yPosition += 5;
+    doc.text(`Email: ${userDetails.email || "Not provided"}`, 15, yPosition);
+    yPosition += 5;
+    doc.text(`Booking ID: TG-${bookingNumber}`, 15, yPosition);
+    yPosition += 15;
+
+    // Flight Details Section
+    doc.setFillColor(...lightGray);
+    doc.rect(10, yPosition - 5, 190, 10, "F"); // Light gray background for section header
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(...darkGray);
+    doc.text("Flight Details", 15, yPosition);
+    doc.setLineWidth(0.2);
+    doc.line(15, yPosition + 2, 65, yPosition + 2); // Underline for header
+    yPosition += 10;
+
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+    const flightTitle = `${firstLeg?.airline || "Unknown Airline"} • ${
+      firstLeg?.flightNumber || "N/A"
+    } - ${firstLeg?.departure || from} (${firstLeg?.departureAirport || ""}) to ${
+      firstLeg?.arrival || to
+    } (${firstLeg?.arrivalAirport || ""})`;
+    doc.text(flightTitle, 15, yPosition, { maxWidth: 180 });
+    yPosition += 8;
+    const travelDate = `Travel Date: ${new Date(firstLeg?.departureDate || departDate).toLocaleDateString("en-US", {
+      weekday: "short",
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    })}, ${firstLeg?.departureTime || "N/A"}`;
+    doc.text(travelDate, 15, yPosition);
+    yPosition += 5;
+    doc.text(`Traveler: ${userDetails.name || "Guest"}`, 15, yPosition);
+    yPosition += 10;
+
+    // Fare Breakdown Table
+    doc.setFillColor(...darkBlue);
+    doc.rect(15, yPosition - 5, 180, 8, "F"); // Dark blue header for table
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(...white);
+    doc.text("Description", 20, yPosition);
+    doc.text("Base Fare", 100, yPosition, { align: "right" });
+    doc.text("Service Fee & Taxes", 150, yPosition, { align: "right" });
+    doc.text("Amount", 190, yPosition, { align: "right" });
+    yPosition += 8;
+
+    doc.setLineWidth(0.1);
+    doc.setDrawColor(...darkGray);
+    doc.line(15, yPosition - 2, 195, yPosition - 2); // Divider below table header
+    yPosition += 5;
+
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(...darkGray);
+    const baseFare = Math.round(selectedFare?.price * 0.7) || 0; // Assume 70% is base fare
+    const taxes = Math.round(selectedFare?.price * 0.3) || 0; // Assume 30% is taxes
+    const total = selectedFare?.price || 0;
+
+    // Row 1: Base Fare
+    doc.setFillColor(245, 245, 245); // Very light gray for alternating row
+    doc.rect(15, yPosition - 5, 180, 8, "F");
+    doc.text("Flight Charges", 20, yPosition);
+    doc.text(`Rs. ${baseFare.toLocaleString()}`, 100, yPosition, { align: "right" });
+    doc.text(`Rs. ${taxes.toLocaleString()}`, 150, yPosition, { align: "right" });
+    doc.text(`Rs. ${total.toLocaleString()}`, 190, yPosition, { align: "right" });
+    yPosition += 10;
+
+    // Total Row
+    doc.setFillColor(...lightGray);
+    doc.rect(15, yPosition - 5, 180, 8, "F");
+    doc.setFont("helvetica", "bold");
+    doc.text("Total", 20, yPosition);
+    doc.text(`Rs. ${total.toLocaleString()}`, 190, yPosition, { align: "right" });
+    yPosition += 15;
+
+    // Total in Words
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(9);
+    const totalInWords = `${numberToWords(total).toUpperCase()} ONLY (INR)`;
+    doc.text(`Grand Total (in words): ${totalInWords}`, 15, yPosition, { maxWidth: 180 });
+    yPosition += 15;
+
+    // Footer: Dark Blue Background with White Text
+    doc.setFillColor(...darkBlue);
+    doc.rect(0, 260, 210, 37, "F"); // Footer at the bottom
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(...white);
+    doc.text("TripGlide Customer Support", 15, 270);
+    yPosition = 275;
+    doc.setFont("helvetica", "normal");
+    doc.text("TripGlide Pvt. Ltd.", 15, yPosition);
+    yPosition += 5;
+    doc.text("123 Travel Lane, Phase 1, Gujarat, India", 15, yPosition);
+    yPosition += 5;
+    doc.text("India Toll Free: 1-800-123-4567", 15, yPosition);
+
+    // Footer Note
+    doc.setFontSize(8);
+    doc.setTextColor(200, 200, 200); // Light gray for note
+    doc.text(
+      "Note: This is a computer-generated invoice and does not require a signature/stamp.",
+      15,
+      290,
+      { maxWidth: 180 }
+    );
+
+    doc.save(`invoice_${bookingNumber}.pdf`);
+  };
+
+  // Format date for display
+  const formatDate = (dateString) => {
+    if (!dateString) return "N/A";
+    try {
+      const options = { month: "short", day: "numeric" };
+      const date = new Date(dateString);
+      if (isNaN(date.getTime())) throw new Error("Invalid date");
+      return date.toLocaleDateString("en-US", options);
+    } catch (e) {
+      console.error("Date format error:", e);
+      return "N/A";
+    }
+  };
+
   if (!isLoaded || (!bookingDetails && !error)) {
     return (
       <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
@@ -299,19 +556,6 @@ const BookingConfirmation = () => {
   } else if (tripType === "oneway") {
     flightSummary = `${from} → ${to} • ${departDate}`;
   }
-
-  const formatDate = (dateString) => {
-    if (!dateString) return "N/A";
-    try {
-      const options = { month: "short", day: "numeric" };
-      const date = new Date(dateString);
-      if (isNaN(date.getTime())) throw new Error("Invalid date");
-      return date.toLocaleDateString("en-US", options);
-    } catch (e) {
-      console.error("Date format error:", e);
-      return "N/A";
-    }
-  };
 
   const getAirlineLogo = (flight) => {
     if (flight?.logo) return flight.logo;
@@ -691,12 +935,21 @@ const BookingConfirmation = () => {
           <p className="text-gray-600 mb-4">
             Thank you for your booking! A confirmation email has been sent to your registered email address.
           </p>
-          <button
-            onClick={() => navigate("/")}
-            className="bg-blue-600 text-white px-4 py-2 cursor-pointer rounded-lg hover:bg-blue-700"
-          >
-            Back to Home
-          </button>
+          <div className="flex justify-center gap-4">
+            <button
+              onClick={() => navigate("/")}
+              className="bg-blue-600 text-white px-4 py-2 cursor-pointer rounded-lg hover:bg-blue-700"
+            >
+              Back to Home
+            </button>
+            <button
+              onClick={downloadInvoice}
+              className="bg-green-600 text-white px-4 py-2 cursor-pointer rounded-lg hover:bg-green-700 flex items-center"
+            >
+              <FaDownload className="mr-2" />
+              Download Invoice
+            </button>
+          </div>
         </div>
       </div>
 
