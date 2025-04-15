@@ -3,5 +3,4 @@ backend/venv/
 backend/.env
 node_modules
 .env
-.vscode/*backend/server.log
 backend/server.log

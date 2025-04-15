@@ -14,7 +14,7 @@ CORS(app, resources={
 })
 
 # Stripe configuration
-stripe.api_key = 'sk_test_51RA20B4D8TqxSjMO4yaoLCpIHU1UEfFgw3a0DrvrOvjxNdv9e6dkTD6Dyq44FS3eSX0GaDkAXTl4NJItJEep9Lmj00Y4x8iFGM'
+stripe.api_key = 'sk_test_51RBDzAQVbUKIjAtM6UPjWghbzD1KfUtRfU4CezBB2BfzXAiDzVhevRZ5gzvDTTwnppMqs8ODDcaTgVI6DSLn3Vgm00CGD9930m'
 
 def get_db_connection():
     try:
@@ -176,6 +176,8 @@ def create_checkout_session():
     except Exception as e:
         print(f"Error creating checkout session: {e}")
         return jsonify({'error': str(e)}), 500
+
+
 
 @app.route('/api/bookings', methods=['POST', 'OPTIONS'])
 def store_booking():
