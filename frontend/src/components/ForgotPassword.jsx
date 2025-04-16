@@ -16,7 +16,7 @@ const ForgotPassword = ({ mockUsers, setMockUsers }) => {
     formState: { errors },
   } = useForm();
 
-  const API_URL = "http://localhost:5001/api";
+  const API_URL = "http://localhost:5005/api";
 
   // Step 1: Check Identifier
   const onSubmitIdentifier = async (data) => {

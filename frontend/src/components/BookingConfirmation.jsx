@@ -35,13 +35,15 @@ const calculateDuration = (depTime, arrTime) => {
   return `${hours}h ${minutes}m`;
 };
 
+const BookingConfirmed = () => {
+  const navigate = useNavigate();
   const [bookingDetails, setBookingDetails] = useState(null);
   const [userDetails, setUserDetails] = useState(null);
   const [bookingNumber, setBookingNumber] = useState("");
   const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState("");
 
-  const API_URL = "http://localhost:5001/api";
+  const API_URL = "http://localhost:5005/api";
 
   // Generate random booking number
   useEffect(() => {
@@ -163,10 +165,11 @@ const calculateDuration = (depTime, arrTime) => {
     );
   }
 
-  const { selectedFlight, selectedFare, searchParams } = bookingDetails;
+  const { selectedFlight, selectedFare, searchParams } = bookingDetails || {};
   const { tripType, from, to, departDate, returnDate, multiCityFlights } = searchParams || {};
-  const firstLeg = tripType === "multicity" && selectedFlight?.multiCityFlights ? selectedFlight.multiCityFlights[0] : selectedFlight;
-  const isFlightDeal = bookingDetails.isFlightDeal;
+  const firstLeg =
+    tripType === "multicity" && selectedFlight?.multiCityFlights ? selectedFlight.multiCityFlights[0] : selectedFlight;
+  const isFlightDeal = bookingDetails?.isFlightDeal;
 
   let flightSummary = "";
   if (tripType === "multicity" && multiCityFlights) {
@@ -192,6 +195,7 @@ const calculateDuration = (depTime, arrTime) => {
   };
 
   const getAirlineLogo = (flight) => {
+    if (!flight) return "/api/placeholder/40/40";
     if (flight?.logo) return flight.logo;
     const airlineLogos = {
       indigo: "https://i.pinimg.com/474x/e9/82/55/e98255f2c1040c38dd2314a6288f1850.jpg",
@@ -241,21 +245,21 @@ const calculateDuration = (depTime, arrTime) => {
               <FaUser className="text-gray-500 mr-2" />
               <div>
                 <p className="text-gray-500 text-sm">Traveler</p>
-                <p className="font-semibold">{userDetails?.name}</p>
+                <p className="font-semibold">{userDetails?.name || "N/A"}</p>
               </div>
             </div>
             <div className="flex items-center">
               <FaPhone className="text-gray-500 mr-2" />
               <div>
                 <p className="text-gray-500 text-sm">Phone</p>
-                <p className="font-semibold">{userDetails?.phone}</p>
+                <p className="font-semibold">{userDetails?.phone || "N/A"}</p>
               </div>
             </div>
             <div className="flex items-center">
               <FaEnvelope className="text-gray-500 mr-2" />
               <div>
                 <p className="text-gray-500 text-sm">Email</p>
-                <p className="font-semibold">{userDetails?.email}</p>
+                <p className="font-semibold">{userDetails?.email || "N/A"}</p>
               </div>
             </div>
             <div className="flex items-center">
@@ -288,42 +292,42 @@ const calculateDuration = (depTime, arrTime) => {
                 <div key={index} className="border rounded-lg p-3 mb-3 shadow-sm">
                   <div className="flex justify-between items-center mb-2">
                     <div className="flex items-center">
-                      <img src={getAirlineLogo(leg)} alt={leg.airline || "Unknown"} className="h-8 w-8 mr-2" />
-                      <span className="font-semibold">{leg.airline || "Unknown Airline"}</span>
+                      <img src={getAirlineLogo(leg)} alt={leg?.airline || "Unknown"} className="h-8 w-8 mr-2" />
+                      <span className="font-semibold">{leg?.airline || "Unknown Airline"}</span>
                     </div>
-                    <div className="text-sm text-gray-500">Flight {leg.flightNumber || "N/A"}</div>
+                    <div className="text-sm text-gray-500">Flight {leg?.flightNumber || "N/A"}</div>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
                     <div>
                       <p className="text-sm text-gray-500">From</p>
-                      <p className="font-semibold">{leg.departure || "N/A"}</p>
-                      <p className="text-xs text-gray-500">{leg.departureAirport ? `(${leg.departureAirport})` : ""}</p>
+                      <p className="font-semibold">{leg?.departure || "N/A"}</p>
+                      <p className="text-xs text-gray-500">{leg?.departureAirport ? `(${leg.departureAirport})` : ""}</p>
                       <p className="text-sm flex items-center">
                         <FaClock className="mr-1 text-xs" />
-                        {leg.departureTime || "N/A"}
+                        {leg?.departureTime || "N/A"}
                       </p>
-                      <p className="text-xs text-gray-500">{formatDate(leg.departureDate || departDate)}</p>
+                      <p className="text-xs text-gray-500">{formatDate(leg?.departureDate || departDate)}</p>
                     </div>
                     <div className="flex flex-col items-center justify-center">
                       <div className="text-xs text-gray-500">
-                        {leg.duration || calculateDuration(leg.departureTime, leg.arrivalTime)}
+                        {leg?.duration || calculateDuration(leg?.departureTime, leg?.arrivalTime)}
                       </div>
                       <div className="relative w-full h-0.5 bg-gray-300 my-1">
                         <div className="absolute top-1/2 right-0 transform -translate-y-1/2 -translate-x-1 w-2 h-2 rounded-full bg-blue-500"></div>
                       </div>
                       <div className="text-xs text-gray-500">
-                        {(leg.stops || 0) === 0 ? "Nonstop" : `${leg.stops} stop`}
+                        {(leg?.stops || 0) === 0 ? "Nonstop" : `${leg?.stops} stop`}
                       </div>
                     </div>
                     <div>
                       <p className="text-sm text-gray-500">To</p>
-                      <p className="font-semibold">{leg.arrival || "N/A"}</p>
-                      <p className="text-xs text-gray-500">{leg.arrivalAirport ? `(${leg.arrivalAirport})` : ""}</p>
+                      <p className="font-semibold">{leg?.arrival || "N/A"}</p>
+                      <p className="text-xs text-gray-500">{leg?.arrivalAirport ? `(${leg.arrivalAirport})` : ""}</p>
                       <p className="text-sm flex items-center">
                         <FaClock className="mr-1 text-xs" />
-                        {leg.arrivalTime || "N/A"}
+                        {leg?.arrivalTime || "N/A"}
                       </p>
-                      <p className="text-xs text-gray-500">{formatDate(leg.departureDate || departDate)}</p>
+                      <p className="text-xs text-gray-500">{formatDate(leg?.departureDate || departDate)}</p>
                     </div>
                   </div>
                 </div>
@@ -391,7 +395,7 @@ const calculateDuration = (depTime, arrTime) => {
                       </span>
                     </div>
                     <div className="text-sm text-gray-500">
-                      Flight {selectedFlight.returnFlight?.flightNumber || "987"}
+                      Flight {selectedFlight.returnFlight?.flightNumber || "N/A"}
                     </div>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
@@ -524,7 +528,7 @@ const calculateDuration = (depTime, arrTime) => {
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 <tr>
-                  <td className="px-3 py-2 whitespace-nowrap text-sm">{userDetails?.name}</td>
+                  <td className="px-3 py-2 whitespace-nowrap text-sm">{userDetails?.name || "N/A"}</td>
                   <td className="px-3 py-2 whitespace-nowrap text-sm">{generateTicketNumber()}</td>
                   <td className="px-3 py-2 whitespace-nowrap text-sm">Any meal</td>
                   <td className="px-3 py-2 whitespace-nowrap text-sm">—</td>

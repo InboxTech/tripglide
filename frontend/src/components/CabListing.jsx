@@ -53,7 +53,7 @@ const CabListing = () => {
   useEffect(() => {
     const fetchLocations = async () => {
       try {
-        const response = await axios.get("http://localhost:5001/locations");
+        const response = await axios.get("http://localhost:5005/locations");
         setLocations(response.data.locations || []);
       } catch (error) {
         console.error("Error fetching locations:", error);
@@ -113,7 +113,7 @@ const CabListing = () => {
         fuel_policy:
           filters.fuelPolicy.length === 1 ? filters.fuelPolicy[0] : null,
       };
-      const response = await axios.get("http://localhost:5001", {
+      const response = await axios.get("http://localhost:5005", {
         params,
       });
       setCars(response.data || []);

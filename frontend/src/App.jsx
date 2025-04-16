@@ -9,10 +9,11 @@ import SignUp from "./components/Signup";
 import Login from "./components/Login";
 import Dashboard from "./components/Dashboard";
 import ForgotPassword from "./components/ForgotPassword";
-import FlightCardList from "./components/FlightCardList";
+import FlightCards from "./components/FlightCards";
 import CarHire from "./components/Carhire";
 import FeaturesSection from "./components/FeaturesSection";
 import CabListing from "./components/CabListing";
+import CarBooking from "./components/CarBooking";
 import Help from "./components/Help";
 import PrivacyPolicy from "./components/PrivacyPolicy";
 import RegionalSettings from "./components/RegionalSettings";
@@ -358,9 +359,9 @@ function App() {
         <Header
           user={user}
           // handleLogout={handleLogout}
-          allFlights={allFlights}
-          tripType={tripType}
-          returnDate={returnDate}
+          // allFlights={allFlights}
+          // tripType={tripType}
+          // returnDate={returnDate}
         />
         <Routes>
           <Route
@@ -381,7 +382,7 @@ function App() {
               />
             }
           />
-          <Route path="/carhire" element={<CarHire />} />
+         
           <Route
             path="/flight-cart"
             element={<FlightCart user={user} />} // Pass user to FlightCart
@@ -392,8 +393,10 @@ function App() {
               <ForgotPassword mockUsers={mockUsers} setMockUsers={setMockUsers} />
             }
           />
-          <Route path="/carhire" element={<CarHire />} />
-          <Route path="/search-results" element={<FlightCardList />} />
+           <Route path="/carhire" element={<CarHire />} />
+          <Route path="/car-booking" element={<CarBooking />} />
+          
+          <Route path="/search-results" element={<FlightCards />} />
           <Route path="/" element={<SearchSection />} />
           <Route path="/features" element={<FeaturesSection />} />
           <Route path="/cabs" element={<CabListing />} />
@@ -403,10 +406,10 @@ function App() {
           <Route path="/country-facts" element={<CountryFacts />} />
           <Route path="/hotels" element={<Hotels />} />
           <Route path="/hotel-search" element={<HotelSearch />} />
-          {/* <Route path="/car-confirmation" element={<CarConfirmation />} /> */}
+         
         <Route path="/hotel-details/:hotel/:arrival" element={<HotelDetails />} /> 
         <Route path="/hotel-booking" element={<HotelBooking />} />
-          <Route path="/favorites" element={<Favorite allFlights={allFlights} />} />
+          <Route path="/favorites" element={<Favorite />} />
           <Route path="/booking-confirmation" element={<BookingConfirmation />} />
 
           

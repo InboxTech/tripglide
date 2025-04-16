@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { loadStripe } from '@stripe/stripe-js';
 
 // Load Stripe with your publishable key
-const stripePromise = loadStripe("pk_test_51R9gCp2RiOcrGJvieLzKDxaRl6BUuUMsLgqRw9JtzVE7ODz7SJSy7NPqSfTySDpE42Z66YlDFTHSTqZakuWN58u200VoXJx5zQ");
+const stripePromise = loadStripe("pk_test_51RBqKcHDDYPUff2kicXW3yxLTiL7zsGgfPPFH5LNU4ldUzgnhUZ7tlYMbdKRiDXDZRNQpdk0SguQued56ZP1EqZl00Msnu4Xv6");
 
 // Utility function to format date with correct day for 2025
 const formatDateWithDay = (day, month) => {
