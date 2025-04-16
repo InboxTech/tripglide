@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -57,12 +56,11 @@ const CarConfirmation = () => {
         return;
       }
       const calculatedHours = Math.max(1, Math.ceil((dropoff - pickup) / (1000 * 60 * 60)));
-      const basePrice = calculatedHours * selectedDeal.price; // Use price from CarCard
+      const basePrice = calculatedHours * selectedDeal.price;
       const extraCost = (extras.additionalDriver ? EXTRA_PRICES.additionalDriver : 0) +
                         (extras.extraLuggage ? EXTRA_PRICES.extraLuggage : 0) +
                         (extras.childSeat ? EXTRA_PRICES.childSeat : 0);
       setTotalPrice(basePrice + extraCost);
-      console.log("Calculated Total Price:", basePrice + extraCost); // Debug log
     };
     calculatePrice();
     setLoading(false);
@@ -78,24 +76,15 @@ const CarConfirmation = () => {
       pickupTime,
       dropoffDate,
       dropoffTime,
-      dropoffLocation: location.state.dropoffLocation || pickupLocation,
-      isDifferentLocation: location.state.isDifferentLocation || false,
       car: carData,
-      selectedDeal: {
-        agency: selectedDeal.agency,
-        pricePerDay: selectedDeal.price, // Map price to pricePerDay
-        fuelPolicy: selectedDeal.fuelPolicy || carData.fuel_policy,
-        id: selectedDeal.id,
-      },
+      selectedDeal,
       extras,
-      totalPrice, // Ensure totalPrice is included
     };
     localStorage.setItem('lastBooking', JSON.stringify(bookingData));
-    console.log("Stored Booking Data:", bookingData); // Debug log
 
     const stripe = await stripePromise;
     try {
-      const response = await axios.post("http://localhost:5008/create-checkout-session", {
+      const response = await axios.post("http://localhost:5001/create-checkout-session", {
         amount: totalPrice * 100,
         pickupLocation,
         pickupDate,
@@ -112,7 +101,7 @@ const CarConfirmation = () => {
       await stripe.redirectToCheckout({ sessionId });
     } catch (error) {
       console.error("Payment error:", error);
-      localStorage.removeItem('lastBooking');
+      localStorage.removeItem('lastBooking'); // Clean up on error
     }
   };
 
@@ -162,7 +151,7 @@ const CarConfirmation = () => {
                     <div className="flex items-center space-x-2 text-gray-600"><FaSuitcase size={14} /><span className="text-sm">4 Luggage</span></div>
                     <div className="flex items-center space-x-2 text-gray-600"><FaCogs size={14} /><span className="text-sm">{carData.transmission || "N/A"}</span></div>
                     <div className="flex items-center space-x-2 text-gray-600"><FaMapMarkerAlt size={14} /><span className="text-sm">Unlimited Mileage</span></div>
-                    <div className="flex items-center space-x-2 text-gray-600"><FaStar size={14} className="text-yellow-400" /><span className="text-sm">{carData.rating || "N/A"}/5</span></div>
+                    <div className="flex items-center space-x-2 text-gray-600"><FaStar size={14} className="text-yellow-400" /><span className="text-sm">{carData.ratings || "N/A"}/5</span></div>
                   </div>
                   <div className="bg-gray-100 p-4 rounded-lg mb-4">
                     <p className="text-gray-800 font-semibold">Agency: {selectedDeal.agency || "N/A"}</p>

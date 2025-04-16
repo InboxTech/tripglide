@@ -27,7 +27,7 @@ export default function CarHire() {
   // Fetch available cities from Flask API when component loads
   useEffect(() => {
     axios
-      .get("http://localhost:5008/locations") // Flask API endpoint
+      .get("http://localhost:5001/locations") // Flask API endpoint
       .then((response) => {
         setAvailableLocations(response.data.locations || []); // Set available locations
       })

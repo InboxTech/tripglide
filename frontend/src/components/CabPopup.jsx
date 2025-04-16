@@ -575,7 +575,7 @@ export default function CabPopup({
 
   useEffect(() => {
     axios
-      .get("http://localhost:5008/locations")
+      .get("http://localhost:5001/locations")
       .then((response) => {
         setAvailableLocations(response.data.locations || []);
       })

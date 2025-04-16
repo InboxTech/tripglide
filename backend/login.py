@@ -28,7 +28,7 @@ def get_db_connection():
             host="localhost",
             user="root",
             password="",  # Update with your MySQL password if set
-            database="main"
+            database="tripglide"
         )
         logger.info("Database connection established")
         return db
