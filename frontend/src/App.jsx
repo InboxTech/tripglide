@@ -23,6 +23,7 @@ import Favorite from "./components/Favorite";
 import FlightData from "./components/FlightData";
 import FlightCart from "./components/FlightCart";
 import BookingConfirmation from "./components/BookingConfirmation";
+import CarBooking from "./components/BookingConfirmed";
 
 const initialFlightData = [
   {
@@ -393,6 +394,7 @@ function App() {
           <Route path="/hotel-search" element={<HotelSearch />} />
           <Route path="/car-confirmation" element={<CarConfirmation />} />
           <Route path="/booking-confirmed" element={<BookingConfirmed />} />
+          <Route path="/car-booking" element={<CarBooking />} />
           <Route path="/cancel" element={<Cancel />} />
           <Route
             path="/favorites"
