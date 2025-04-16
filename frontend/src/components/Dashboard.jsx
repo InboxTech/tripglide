@@ -1,11 +1,71 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  FaCheckCircle, FaUser, FaBars, FaEdit, FaLock, FaMobileAlt, FaSignOutAlt, FaUsers, FaLaptop, FaPlane, FaHotel, FaCar,
+  FaCheckCircle, FaUser, FaBars, FaEdit, FaLock, FaMobileAlt, FaSignOutAlt, FaUsers, FaLaptop, FaPlane, FaHotel, FaCar, FaDownload
 } from "react-icons/fa";
 import { AiOutlinePlus, AiOutlineDelete } from "react-icons/ai";
 import { IoClose } from "react-icons/io5";
 import { motion, AnimatePresence } from "framer-motion";
+import { jsPDF } from "jspdf";
+
+const numberToWords = (num) => {
+  const units = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"];
+  const teens = [
+    "",
+    "Eleven",
+    "Twelve",
+    "Thirteen",
+    "Fourteen",
+    "Fifteen",
+    "Sixteen",
+    "Seventeen",
+    "Eighteen",
+    "Nineteen",
+  ];
+  const tens = [
+    "",
+    "Ten",
+    "Twenty",
+    "Thirty",
+    "Forty",
+    "Fifty",
+    "Sixty",
+    "Seventy",
+    "Eighty",
+    "Ninety",
+  ];
+  const thousands = ["", "Thousand", "Million", "Billion"];
+
+  if (num === 0) return "Zero";
+
+  const convertLessThanThousand = (n) => {
+    if (n === 0) return "";
+    if (n < 10) return units[n];
+    if (n < 20) return teens[n - 10];
+    if (n < 100) {
+      const ten = Math.floor(n / 10);
+      const unit = n % 10;
+      return `${tens[ten]}${unit ? " " + units[unit] : ""}`;
+    }
+    const hundred = Math.floor(n / 100);
+    const remainder = n % 100;
+    return `${units[hundred]} Hundred${remainder ? " " + convertLessThanThousand(remainder) : ""}`;
+  };
+
+  let words = "";
+  let thousandIndex = 0;
+
+  while (num > 0) {
+    const chunk = num % 1000;
+    if (chunk) {
+      words = `${convertLessThanThousand(chunk)} ${thousands[thousandIndex]} ${words}`.trim();
+    }
+    num = Math.floor(num / 1000);
+    thousandIndex++;
+  }
+
+  return words;
+};
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -30,6 +90,8 @@ const Dashboard = () => {
   const [carRentals, setCarRentals] = useState([]);
   const [historyTab, setHistoryTab] = useState("Flights");
   const [isLoading, setIsLoading] = useState(false);
+  const [toast, setToast] = useState({ message: "", type: "", visible: false });
+  const [cancellingBookings, setCancellingBookings] = useState(new Set());
 
   const API_URL_LOGIN = "http://localhost:5001/api";
   const API_URL_FLIGHT = "http://localhost:5000/api";
@@ -76,6 +138,180 @@ const Dashboard = () => {
   };
 
   const getIdentifier = (user) => user.email || user.phone;
+
+  const showToast = (message, type) => {
+    setToast({ message, type, visible: true });
+    setTimeout(() => setToast({ message: "", type: "", visible: false }), 3000);
+  };
+
+  const downloadInvoice = (booking) => {
+    const doc = new jsPDF();
+    let yPosition = 10;
+
+    // Colors
+    const darkBlue = [30, 58, 138]; // #1E3A8A
+    const lightGray = [243, 244, 246]; // #F3F4F6
+    const white = [255, 255, 255]; // #FFFFFF
+    const darkGray = [55, 65, 81]; // #374151
+
+    // Outer Border
+    doc.setLineWidth(0.5);
+    doc.setDrawColor(...darkBlue);
+    doc.rect(5, 5, 200, 287, "S"); // Border around the entire page
+
+    // Header: Dark Blue Background with White Text
+    doc.setFillColor(...darkBlue);
+    doc.rect(0, 0, 210, 30, "F"); // Full-width header
+    doc.setFontSize(18);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(...white);
+    doc.text("TripGlide", 15, yPosition + 10);
+    doc.setFontSize(14);
+    doc.text("INVOICE", 190, yPosition + 10, { align: "right" });
+    yPosition += 20;
+
+    // Invoice Number and Booking Date
+    doc.setFontSize(9);
+    doc.setFont("helvetica", "normal");
+    doc.text(`Invoice No: INV-2025-${booking.booking_number}`, 190, yPosition, { align: "right" });
+    yPosition += 5;
+    doc.text(
+      `Booking Date: ${new Date(booking.booked_on).toLocaleDateString("en-US", {
+        weekday: "short",
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+      })}`,
+      190,
+      yPosition,
+      { align: "right" }
+    );
+    yPosition += 10;
+
+    // Customer Info Section
+    doc.setFillColor(...white);
+    doc.rect(10, yPosition - 5, 190, 40, "F"); // White background for customer info
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(...darkGray);
+    doc.text("Customer Information", 15, yPosition);
+    doc.setLineWidth(0.2);
+    doc.setDrawColor(...darkBlue);
+    doc.line(15, yPosition + 2, 85, yPosition + 2); // Underline for header
+    yPosition += 10;
+
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+    doc.text(`Traveler: ${booking.traveler_name || "Guest"}`, 15, yPosition);
+    yPosition += 5;
+    doc.text(`Email: ${booking.email || "Not provided"}`, 15, yPosition);
+    yPosition += 5;
+    doc.text(`Booking ID: TG-${booking.booking_number}`, 15, yPosition);
+    yPosition += 15;
+
+    // Flight Details Section
+    doc.setFillColor(...lightGray);
+    doc.rect(10, yPosition - 5, 190, 10, "F"); // Light gray background for section header
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(...darkGray);
+    doc.text("Flight Details", 15, yPosition);
+    doc.setLineWidth(0.2);
+    doc.line(15, yPosition + 2, 65, yPosition + 2); // Underline for header
+    yPosition += 10;
+
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+    const flightTitle = `${booking.airline || "Unknown Airline"} • ${
+      booking.flight_number || "N/A"
+    } - ${booking.departure_airport} to ${booking.arrival_airport}`;
+    doc.text(flightTitle, 15, yPosition, { maxWidth: 180 });
+    yPosition += 8;
+    const travelDate = `Travel Date: ${new Date(booking.departure_date).toLocaleDateString("en-US", {
+      weekday: "short",
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    })}, ${booking.departure_time || "N/A"}`;
+    doc.text(travelDate, 15, yPosition);
+    yPosition += 5;
+    doc.text(`Traveler: ${booking.traveler_name || "Guest"}`, 15, yPosition);
+    yPosition += 10;
+
+    // Fare Breakdown Table
+    doc.setFillColor(...darkBlue);
+    doc.rect(15, yPosition - 5, 180, 8, "F"); // Dark blue header for table
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(...white);
+    doc.text("Description", 20, yPosition);
+    doc.text("Base Fare", 100, yPosition, { align: "right" });
+    doc.text("Service Fee & Taxes", 150, yPosition, { align: "right" });
+    doc.text("Amount", 190, yPosition, { align: "right" });
+    yPosition += 8;
+
+    doc.setLineWidth(0.1);
+    doc.setDrawColor(...darkGray);
+    doc.line(15, yPosition - 2, 195, yPosition - 2); // Divider below table header
+    yPosition += 5;
+
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(...darkGray);
+    const baseFare = Math.round(booking.total_price * 0.7) || 0; // Assume 70% is base fare
+    const taxes = Math.round(booking.total_price * 0.3) || 0; // Assume 30% is taxes
+    const total = booking.total_price || 0;
+
+    // Row 1: Base Fare
+    doc.setFillColor(245, 245, 245); // Very light gray for alternating row
+    doc.rect(15, yPosition - 5, 180, 8, "F");
+    doc.text("Flight Charges", 20, yPosition);
+    doc.text(`Rs. ${baseFare.toLocaleString()}`, 100, yPosition, { align: "right" });
+    doc.text(`Rs. ${taxes.toLocaleString()}`, 150, yPosition, { align: "right" });
+    doc.text(`Rs. ${total.toLocaleString()}`, 190, yPosition, { align: "right" });
+    yPosition += 10;
+
+    // Total Row
+    doc.setFillColor(...lightGray);
+    doc.rect(15, yPosition - 5, 180, 8, "F");
+    doc.setFont("helvetica", "bold");
+    doc.text("Total", 20, yPosition);
+    doc.text(`Rs. ${total.toLocaleString()}`, 190, yPosition, { align: "right" });
+    yPosition += 15;
+
+    // Total in Words
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(9);
+    const totalInWords = `${numberToWords(total).toUpperCase()} ONLY (INR)`;
+    doc.text(`Grand Total (in words): ${totalInWords}`, 15, yPosition, { maxWidth: 180 });
+    yPosition += 15;
+
+    // Footer: Dark Blue Background with White Text
+    doc.setFillColor(...darkBlue);
+    doc.rect(0, 260, 210, 37, "F"); // Footer at the bottom
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(...white);
+    doc.text("_tripglide Customer Support", 15, 270);
+    yPosition = 275;
+    doc.setFont("helvetica", "normal");
+    doc.text("_tripglide Pvt. Ltd.", 15, yPosition);
+    yPosition += 5;
+    doc.text("123 Travel Lane, Phase 1, Gujarat, India", 15, yPosition);
+    yPosition += 5;
+    doc.text("India Toll Free: 1-800-123-4567", 15, yPosition);
+
+    // Footer Note
+    doc.setFontSize(8);
+    doc.setTextColor(200, 200, 200); // Light gray for note
+    doc.text(
+      "Note: This is a computer-generated invoice and does not require a signature/stamp.",
+      15,
+      290,
+      { maxWidth: 180 }
+    );
+
+    doc.save(`invoice_${booking.booking_number}.pdf`);
+  };
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -144,26 +380,40 @@ const Dashboard = () => {
       }
       const endpoints = [
         { url: `${API_URL_FLIGHT}/flight_bookings?identifier=${encodeURIComponent(identifier)}`, setter: setFlightBookings, key: "bookings" },
-        { url: `${API_URL_LOGIN}/hotel_bookings?user_id=${user.user_id}`, setter: setHotelBookings, key: "bookings" },
-        { url: `${API_URL_LOGIN}/car_rentals?user_id=${user.user_id}`, setter: setCarRentals, key: "bookings" },
       ];
       for (const { url, setter, key } of endpoints) {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 10000);
-        try {
-          const response = await fetch(url, { signal: controller.signal });
-          if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error || `HTTP error! Status: ${response.status}`);
+        let attempts = 2;
+        while (attempts > 0) {
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 10000);
+          try {
+            const response = await fetch(url, { signal: controller.signal });
+            clearTimeout(timeoutId);
+            if (!response.ok) {
+              const errorData = await response.json();
+              throw new Error(errorData.message || errorData.error || `Failed to load ${key} (Status: ${response.status})`);
+            }
+            const data = await response.json();
+            if (data.success) {
+              setter(data[key] || []);
+              break;
+            } else {
+              throw new Error(data.error || `Failed to load ${key}`);
+            }
+          } catch (err) {
+            clearTimeout(timeoutId);
+            if (err.name === 'AbortError') {
+              throw new Error(`Request timed out for ${key}`);
+            }
+            attempts--;
+            if (attempts === 0) {
+              console.error(`Failed to fetch ${key} after retries:`, err);
+              setError(`Unable to load ${key}: ${err.message}`);
+            }
+            if (attempts > 0) {
+              await new Promise(resolve => setTimeout(resolve, 1000));
+            }
           }
-          const data = await response.json();
-          if (data.success) {
-            setter(data[key] || []);
-          } else {
-            setError(data.error || `Failed to load ${key}`);
-          }
-        } finally {
-          clearTimeout(timeoutId);
         }
       }
     } catch (err) {
@@ -171,6 +421,46 @@ const Dashboard = () => {
       setError(`Failed to load booking history: ${err.message}`);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleCancelFlight = async (bookingNumber) => {
+    if (!window.confirm("Are you sure you want to cancel this flight booking?")) return;
+    setCancellingBookings((prev) => new Set([...prev, bookingNumber]));
+    try {
+      const response = await fetch(`${API_URL_FLIGHT}/cancel_flight_booking`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ booking_number: bookingNumber }),
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || errorData.error || `Failed to cancel booking (Status: ${response.status})`);
+      }
+      const data = await response.json();
+      if (data.success) {
+        showToast("Flight booking cancelled successfully", "success");
+        setFlightBookings((prev) => {
+          const updated = prev.map((b) =>
+            b.booking_number === bookingNumber ? { ...b, status: "Cancelled" } : b
+          );
+          return updated.sort((a, b) => {
+            const order = { Upcoming: 1, Completed: 2, Cancelled: 3 };
+            return order[a.status] - order[b.status] || new Date(b.booked_on) - new Date(a.booked_on);
+          });
+        });
+      } else {
+        throw new Error(data.error || "Failed to cancel booking");
+      }
+    } catch (err) {
+      console.error("Cancel flight error:", err);
+      showToast(`Failed to cancel booking: ${err.message}`, "error");
+    } finally {
+      setCancellingBookings((prev) => {
+        const newSet = new Set(prev);
+        newSet.delete(bookingNumber);
+        return newSet;
+      });
     }
   };
 
@@ -227,7 +517,7 @@ const Dashboard = () => {
       }
       const res = await response.json();
       if (res.success) {
-        alert("Profile updated successfully!");
+        showToast("Profile updated successfully!", "success");
         localStorage.setItem("user", JSON.stringify(formData));
         setUser(formData);
         setCompletionPercentage(calculateCompletionPercentage(formData));
@@ -269,7 +559,7 @@ const Dashboard = () => {
       }
       const res = await response.json();
       if (res.success) {
-        alert("Password changed successfully!");
+        showToast("Password changed successfully!", "success");
         setShowPasswordPopup(false);
         setPasswordData({ currentPassword: "", newPassword: "", confirmPassword: "" });
         setPasswordError("");
@@ -320,7 +610,7 @@ const Dashboard = () => {
       }
       const res = await response.json();
       if (res.success) {
-        alert("Phone verified successfully!");
+        showToast("Phone verified successfully!", "success");
         setShowVerificationPopup(false);
         setVerificationData({ identifier: "", code: "" });
         fetchProfile(getIdentifier(user));
@@ -363,6 +653,22 @@ const Dashboard = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-50 font-sans">
+      <AnimatePresence>
+        {toast.visible && (
+          <motion.div
+            initial={{ opacity: 0, y: -50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -50 }}
+            transition={{ duration: 0.3 }}
+            className={`fixed top-4 right-4 px-6 py-3 rounded-lg shadow-lg text-white text-sm z-50 ${
+              toast.type === "success" ? "bg-green-600" : "bg-red-600"
+            }`}
+          >
+            {toast.message}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <div className="lg:hidden flex justify-between items-center p-4 bg-white shadow-md border-b border-gray-200">
         <motion.button
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -417,7 +723,7 @@ const Dashboard = () => {
         </motion.nav>
 
         {isMobileMenuOpen && (
-          <div className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40" onClick={() => setIsMobileMenuOpen(false)}></div>
+          <div className="lg:hidden fixed inset-0 backdrop-brightness-30 z-40" onClick={() => setIsMobileMenuOpen(false)}></div>
         )}
 
         <div className="flex-1 w-full lg:ml-0 mt-4 lg:mt-0 overflow-y-auto">
@@ -510,15 +816,47 @@ const Dashboard = () => {
                       {flightBookings.length === 0 ? (
                         <p className="text-gray-500 text-sm">No flight bookings found.</p>
                       ) : (
-                        flightBookings.map((booking) => (
-                          <motion.div key={booking.booking_id || booking.booking_number} variants={itemVariants} className="border rounded-lg p-4 mb-4 shadow-sm">
+                        flightBookings.map((booking, index) => (
+                          <motion.div
+                            key={booking.booking_number}
+                            variants={itemVariants}
+                            className={`border rounded-lg p-4 mb-4 shadow-sm ${
+                              booking.status === "Cancelled" ? "bg-gray-100 opacity-75 border-gray-300" : "bg-white"
+                            }`}
+                            layout
+                            transition={{ duration: 0.5 }}
+                          >
                             <div className="flex justify-between items-center mb-2">
-                              <p className="text-sm font-medium text-gray-800">
+                              <p className="text-sm font-medium text-gray-800 max-w-2xl">
                                 {booking.airline} • {booking.departure_airport} → {booking.arrival_airport}
                               </p>
-                              <span className={`text-xs px-2 py-1 rounded ${booking.status === 'Upcoming' ? 'bg-green-100 text-green-800' : booking.status === 'Completed' ? 'bg-blue-100 text-blue-800' : 'bg-red-100 text-red-800'}`}>
-                                {booking.status}
-                              </span>
+                              <div className="flex items-center space-x-2">
+                                <span
+                                  className={`text-xs px-2 py-1 rounded ${
+                                    booking.status === "Upcoming"
+                                      ? "bg-green-100 text-green-800"
+                                      : booking.status === "Completed"
+                                      ? "bg-blue-100 text-blue-800"
+                                      : "bg-red-100 text-red-800"
+                                  }`}
+                                >
+                                  {booking.status}
+                                </span>
+                                {booking.status === "Upcoming" && !cancellingBookings.has(booking.booking_number) && (
+                                  <motion.button
+                                    variants={buttonVariants}
+                                    whileHover="hover"
+                                    whileTap="tap"
+                                    onClick={() => handleCancelFlight(booking.booking_number)}
+                                    className="text-sm text-white bg-red-600 hover:bg-red-700 px-3 py-1 rounded-lg transition"
+                                  >
+                                    Cancel Flight
+                                  </motion.button>
+                                )}
+                                {cancellingBookings.has(booking.booking_number) && (
+                                  <p className="text-sm text-gray-500">Cancelling...</p>
+                                )}
+                              </div>
                             </div>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                               <div>
@@ -565,6 +903,18 @@ const Dashboard = () => {
                                 <p className="text-xs text-gray-500">Created At</p>
                                 <p className="text-sm">{formatDate(booking.created_at)}</p>
                               </div>
+                            </div>
+                            <div className="flex justify-end mt-4">
+                              <motion.button
+                                variants={buttonVariants}
+                                whileHover="hover"
+                                whileTap="tap"
+                                onClick={() => downloadInvoice(booking)}
+                                className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition text-sm flex items-center"
+                              >
+                                <FaDownload className="mr-2" />
+                                Invoice
+                              </motion.button>
                             </div>
                           </motion.div>
                         ))
@@ -728,7 +1078,7 @@ const Dashboard = () => {
 
       <AnimatePresence>
         {showPopup && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }} className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }} className="fixed inset-0 backdrop-brightness-30 flex items-center justify-center z-50 p-4">
             <motion.div
               className="bg-white p-6 rounded-xl shadow-2xl w-full max-w-lg relative"
               initial={{ scale: 0.9 }}
@@ -796,7 +1146,7 @@ const Dashboard = () => {
 
       <AnimatePresence>
         {showPasswordPopup && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }} className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }} className="fixed inset-0 backdrop-brightness-30 flex items-center justify-center z-50 p-4">
             <motion.div className="bg-white rounded-xl p-6 w-full max-w-md" initial={{ scale: 0.9 }} animate={{ scale: 1 }} exit={{ scale: 0.9 }} transition={{ type: "spring", stiffness: 200, damping: 20 }}>
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-xl font-semibold text-gray-800">Change Password</h2>
@@ -853,7 +1203,7 @@ const Dashboard = () => {
 
       <AnimatePresence>
         {showVerificationPopup && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }} className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }} className="fixed inset-0 backdrop-brightness-30 flex items-center justify-center z-50 p-4">
             <motion.div className="bg-white rounded-xl p-6 w-full max-w-md" initial={{ scale: 0.9 }} animate={{ scale: 1 }} exit={{ scale: 0.9 }} transition={{ type: "spring", stiffness: 200, damping: 20 }}>
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-xl font-semibold text-gray-800">Verify Phone</h2>
