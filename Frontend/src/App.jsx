@@ -1,13 +1,20 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import Header from "./components/Header";
 import SearchSection from "./components/SearchSection";
 import SignUp from "./components/Signup";
 import Login from "./components/Login";
 import Dashboard from "./components/Dashboard";
 import ForgotPassword from "./components/ForgotPassword";
 import CarHire from "./components/Carhire";
-import Hotels from "./components/Hotels";
 import FeaturesSection from "./components/FeaturesSection";
+import CabListing from "./components/CabListing";
+import Help from "./components/Help";
+import PrivacyPolicy from "./components/PrivacyPolicy";
+import RegionalSettings from "./components/RegionalSettings";
+import CountryFacts from "./components/CountryFacts";
+import Hotels from "./components/Hotels";
 import HotelSearch from "./components/HotelSearch";
 import Favorite from "./components/Favorite";
 import FlightData from "./components/FlightData";
@@ -291,7 +298,6 @@ const initialFlightData = [
   },
 ];
 
-
 function App() {
   const [user, setUser] = useState(() => {
     const savedUser = localStorage.getItem("user");
@@ -393,6 +399,12 @@ function App() {
           />
           <Route path="/" element={<SearchSection />} />
           <Route path="/features" element={<FeaturesSection />} />
+          <Route path="/cabs" element={<CabListing />} />
+          <Route path="/help" element={<Help />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/regional-settings" element={<RegionalSettings />} />
+          <Route path="/country-facts" element={<CountryFacts />} />
+          <Route path="/hotels" element={<Hotels />} />
           <Route path="/hotel-search" element={<HotelSearch />} />
           {/* <Route path="/car-confirmation" element={<CarConfirmation />} /> */}
         <Route path="/hotel-details/:hotel/:arrival" element={<HotelDetails />} /> 
@@ -402,10 +414,8 @@ function App() {
 
           
         </Routes>
-      
-      
       </Router>
-      </GoogleOAuthProvider>
+    </GoogleOAuthProvider>
   );
 }
 
