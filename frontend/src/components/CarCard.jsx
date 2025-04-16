@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaHeart, FaUserFriends, FaSnowflake, FaCogs, FaStar, FaChevronDown, FaChevronUp } from "react-icons/fa";
@@ -30,21 +31,20 @@ const CarCard = ({ cars, locationState }) => {
   // Ensure all 8 unique models for the active make are displayed
   const uniqueCars = [];
   const seenModels = new Set();
-  const makeCars = cars.filter(car => car.make === activeMake); // Filter by active make from fetched cars
+  const makeCars = cars.filter(car => car.make === activeMake);
   makeCars.forEach((car) => {
     if (!seenModels.has(car.model) && uniqueCars.length < 8) {
       seenModels.add(car.model);
-      uniqueCars.push(car); // Add first instance of each unique model
+      uniqueCars.push(car);
     }
   });
-  // Pad with duplicates if less than 8 unique models (for debugging)
   if (uniqueCars.length < 8 && makeCars.length > 0) {
     console.warn("Only", uniqueCars.length, "unique models found for", activeMake, ". Expected 8. Available data:", makeCars.map(car => `${car.make} ${car.model}`));
     while (uniqueCars.length < 8 && makeCars.length > uniqueCars.length) {
-      uniqueCars.push(makeCars[uniqueCars.length % makeCars.length]); // Cycle through available cars
+      uniqueCars.push(makeCars[uniqueCars.length % makeCars.length]);
     }
   }
-  console.log("Displayed Models for", activeMake, ": ", uniqueCars.map(car => `${car.make} ${car.model}`)); // Debug
+  console.log("Displayed Models for", activeMake, ": ", uniqueCars.map(car => `${car.make} ${car.model}`));
 
   // Filter agencies for the specific make and model, limited to 5 unique agencies
   const carAgencies = {};
@@ -54,14 +54,17 @@ const CarCard = ({ cars, locationState }) => {
     if (!carAgencies[key].some(d => d.agency === car.agency)) {
       carAgencies[key].push({
         agency: car.agency,
-        price: car.price,
-        fuelPolicy: car.fuel_policy || `Fuel Policy for ${car.model} not specified`, // Match CabListing filters
+        price: car.price || car.pricePerDay || 0, // Fallback to price or pricePerDay from backend
+        fuelPolicy: car.fuel_policy || `Fuel Policy for ${car.model} not specified`,
         id: car.id,
       });
     }
   });
+  console.log("Car Agencies with Prices:", carAgencies); // Debug log
 
   const toggleFavorite = (carId) => {
+    // Note: This mutates a prop, which is unsafe. Should lift state to parent.
+    // For now, this works with the current setup.
     setCars(prev => prev.map(car => car.id === carId ? { ...car, isFavorite: !car.isFavorite } : car));
   };
 
@@ -70,16 +73,16 @@ const CarCard = ({ cars, locationState }) => {
       state: {
         ...locationState,
         car,
-        selectedDeal: deal,
+        selectedDeal: deal, // Pass the deal with the correct price
       },
     });
+    console.log("Booking Data Passed:", { car, selectedDeal }); // Debug log
   };
 
   const makes = ["Volkswagen", "Toyota", "Ford", "Hyundai", "Honda"];
 
   return (
     <>
-      {/* Tabs Section */}
       <div className="mb-4 flex space-x-2">
         {makes.map((make) => (
           <button
@@ -101,7 +104,7 @@ const CarCard = ({ cars, locationState }) => {
             <div className="flex items-center justify-between mb-3 sm:mb-4">
               <div className="flex items-center space-x-2 sm:space-x-3">
                 <h3 className="text-lg sm:text-xl font-semibold text-gray-800 truncate">
-                   {car.model}
+                  {car.model}
                 </h3>
                 <span className="text-xs sm:text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded-full">{car.type}</span>
               </div>
@@ -157,7 +160,7 @@ const CarCard = ({ cars, locationState }) => {
                       <div key={deal.id} className="bg-gray-100 p-4 rounded-lg flex justify-between items-center">
                         <div>
                           <p className="font-semibold">{deal.agency}</p>
-                          <p className="text-sm text-gray-600">₹{deal.price}/hour</p>
+                          <p className="text-sm text-gray-600">₹{deal.price.toLocaleString()}/hour</p>
                           <p className="text-sm text-gray-600">Fuel Policy: {deal.fuelPolicy}</p>
                         </div>
                         <button
