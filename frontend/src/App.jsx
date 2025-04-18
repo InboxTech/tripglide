@@ -24,7 +24,7 @@ import BookingConfirmation from "./components/BookingConfirmation";
 const initialFlightData = [
   {
     id: 1,
-    price: 4500,
+    price: 8000, 
     departureDate: "2025-04-15",
     cabinClass: "Economy",
     isFavorite: false,
@@ -42,7 +42,7 @@ const initialFlightData = [
   },
   {
     id: 2,
-    price: 5200,
+    price: 12000,
     departureDate: "2025-04-15",
     cabinClass: "Economy",
     isFavorite: false,
@@ -60,7 +60,7 @@ const initialFlightData = [
   },
   {
     id: 3,
-    price: 4800,
+    price: 10000, 
     departureDate: "2025-04-15",
     cabinClass: "Economy",
     isFavorite: false,
@@ -78,7 +78,7 @@ const initialFlightData = [
   },
   {
     id: 4,
-    price: 5100,
+    price: 15000, 
     departureDate: "2025-04-15",
     cabinClass: "Economy",
     isFavorite: false,
@@ -96,7 +96,7 @@ const initialFlightData = [
   },
   {
     id: 5,
-    price: 4600,
+    price: 11500,
     departureDate: "2025-04-15",
     cabinClass: "Economy",
     isFavorite: false,
@@ -114,7 +114,7 @@ const initialFlightData = [
   },
   {
     id: 6,
-    price: 3500,
+    price: 8200, 
     departureDate: "2025-04-15",
     cabinClass: "Economy",
     isFavorite: false,
@@ -132,7 +132,7 @@ const initialFlightData = [
   },
   {
     id: 7,
-    price: 3200,
+    price: 9500, 
     departureDate: "2025-04-15",
     cabinClass: "Economy",
     isFavorite: false,
@@ -150,7 +150,7 @@ const initialFlightData = [
   },
   {
     id: 8,
-    price: 3900,
+    price: 14500,
     departureDate: "2025-04-15",
     cabinClass: "Economy",
     isFavorite: false,
@@ -168,7 +168,7 @@ const initialFlightData = [
   },
   {
     id: 9,
-    price: 3400,
+    price: 8300, 
     departureDate: "2025-04-15",
     cabinClass: "Economy",
     isFavorite: false,
@@ -186,7 +186,7 @@ const initialFlightData = [
   },
   {
     id: 10,
-    price: 4700,
+    price: 11800, 
     departureDate: "2025-04-15",
     cabinClass: "Economy",
     isFavorite: false,
@@ -204,7 +204,7 @@ const initialFlightData = [
   },
   {
     id: 11,
-    price: 3000,
+    price: 9000, 
     departureDate: "2025-04-15",
     cabinClass: "Economy",
     isFavorite: false,
@@ -222,7 +222,7 @@ const initialFlightData = [
   },
   {
     id: 12,
-    price: 4900,
+    price: 14800, 
     departureDate: "2025-04-15",
     cabinClass: "Economy",
     isFavorite: false,
@@ -240,7 +240,7 @@ const initialFlightData = [
   },
   {
     id: 13,
-    price: 4300,
+    price: 8100, 
     departureDate: "2025-04-15",
     cabinClass: "Economy",
     isFavorite: false,
@@ -258,7 +258,7 @@ const initialFlightData = [
   },
   {
     id: 14,
-    price: 4500,
+    price: 12200, 
     departureDate: "2025-04-15",
     cabinClass: "Economy",
     isFavorite: false,
@@ -276,7 +276,7 @@ const initialFlightData = [
   },
   {
     id: 15,
-    price: 3100,
+    price: 9200, 
     departureDate: "2025-04-15",
     cabinClass: "Economy",
     isFavorite: false,

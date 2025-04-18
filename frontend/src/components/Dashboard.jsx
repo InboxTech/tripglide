@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  FaCheckCircle, FaUser, FaBars, FaEdit, FaLock, FaMobileAlt, FaSignOutAlt, FaUsers, FaLaptop, FaPlane, FaHotel, FaCar, FaDownload
+  FaCheckCircle, FaUser, FaBars, FaEdit, FaLock, FaMobileAlt, FaSignOutAlt, FaUsers, FaLaptop, FaPlane, FaHotel, FaCar, FaDownload, FaTicketAlt
 } from "react-icons/fa";
 import { AiOutlinePlus, AiOutlineDelete } from "react-icons/ai";
 import { IoClose } from "react-icons/io5";
@@ -699,7 +699,7 @@ const Dashboard = () => {
           <ul className="space-y-2">
             {[
               { section: "Profile", label: "Profile", icon: <FaUser className="mr-2" /> },
-              { section: "BookingHistory", label: "Booking History", icon: <FaPlane className="mr-2" /> },
+              { section: "BookingHistory", label: "Booking History", icon: <FaTicketAlt className="mr-2" /> },
               { section: "Login_details", label: "Login Details", icon: <FaLock className="mr-2" /> },
               { section: "coTravellersSection", label: "Co-Travellers", icon: <FaUsers className="mr-2" /> },
               { section: "devicesSection", label: "Devices", icon: <FaLaptop className="mr-2" /> },
