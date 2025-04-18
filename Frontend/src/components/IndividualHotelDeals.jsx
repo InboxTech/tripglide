@@ -148,7 +148,7 @@ const IndividualHotelDeals = () => {
                     weekday: "short",
                     day: "2-digit",
                     month: "short",
-                  })} | 11:00 PM
+                  })} | 11:00 AM
                 </p>
               ) : (
                 <input
@@ -169,7 +169,7 @@ const IndividualHotelDeals = () => {
                     weekday: "short",
                     day: "2-digit",
                     month: "short",
-                  })} | 02:00 AM
+                  })} | 02:00 PM
                 </p>
               ) : (
                 <input
