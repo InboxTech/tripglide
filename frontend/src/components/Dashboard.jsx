@@ -49,6 +49,12 @@ const Dashboard = () => {
   const [hotelBookings, setHotelBookings] = useState([]);
   const [carRentals, setCarRentals] = useState([]);
   const [historyTab, setHistoryTab] = useState("Flights");
+  const [dropdownOpen, setDropdownOpen] = useState({
+    flight: null,
+    hotel: null,
+    car: null,
+  });
+  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0, id: null, type: null });
 
   const API_URL = "http://localhost:5000/api";
 
@@ -468,34 +474,37 @@ const Dashboard = () => {
     }
   };
 
-  // State for dropdown visibility
-const [dropdownOpen, setDropdownOpen] = useState({
-  flight: null,
-  hotel: null,
-  car: null,
-});
-
-// Toggle dropdown for a specific booking/rental
-const toggleDropdown = (id, type) => {
-  setDropdownOpen((prev) => ({
-    ...prev,
-    [type]: prev[type] === id ? null : id,
-  }));
-};
-
-// Close dropdown when clicking outside
-useEffect(() => {
-  const handleClickOutside = (event) => {
-    if (!event.target.closest(".dropdown-container")) {
-      setDropdownOpen({ flight: null, hotel: null, car: null });
+  const toggleDropdown = (id, type, event) => {
+    if (event) {
+      const rect = event.currentTarget.getBoundingClientRect();
+      setDropdownPosition({
+        top: rect.bottom + window.scrollY,
+        left: rect.left + window.scrollX,
+        id,
+        type,
+      });
+    } else {
+      setDropdownPosition((prev) =>
+        prev.id === id && prev.type === type ? { top: 0, left: 0, id: null, type: null } : prev
+      );
     }
+    setDropdownOpen((prev) => ({
+      ...prev,
+      [type]: prev[type] === id ? null : id,
+    }));
   };
-  document.addEventListener("click", handleClickOutside);
-  return () => {
-    document.removeEventListener("click", handleClickOutside);
-  };
-}, []);
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (!event.target.closest(".dropdown-container")) {
+        setDropdownOpen({ flight: null, hotel: null, car: null });
+      }
+    };
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("user");
@@ -663,764 +672,818 @@ useEffect(() => {
                 )}
       
                 {activeSection === "BookingHistory" && (
-            <motion.div
-              key="BookingHistory"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.3 }}
-              className="bg-white rounded-xl shadow-md p-6 border border-gray-100"
-            >
-              {error && (
-                <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="bg-red-50 text-red-600 p-3 rounded-lg mb-4 text-sm border border-red-200"
-                >
-                  {error}
-                </motion.div>
-              )}
-              {/* Tabs */}
-              <div className="flex border-b border-gray-200 mb-6 space-x-4">
-                {["Flights", "Hotels", "Cars"].map((tab) => (
-                  <button
-                    key={tab}
-                    onClick={() => setHistoryTab(tab)}
-                    className={`px-4 py-2 text-sm font-semibold transition-colors ${
-                      historyTab === tab
-                        ? "border-b-2 border-blue-600 text-blue-600"
-                        : "text-gray-600 hover:text-blue-600"
-                    }`}
+                  <motion.div
+                    key="BookingHistory"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.3 }}
+                    className="bg-white rounded-xl shadow-md p-6 border border-gray-100"
                   >
-                    {tab}
-                  </button>
-                ))}
-              </div>
-              <motion.div
-                variants={containerVariants}
-                initial="hidden"
-                animate="visible"
-                className="space-y-8"
-              >
-                {historyTab === "Flights" && (
-                  <>
-                    <h3 className="text-xl font-semibold text-gray-800 flex items-center space-x-2">
-                      <FaPlane className="text-blue-600 text-2xl" /> <span>Flight Bookings</span>
-                    </h3>
-                    {/* Upcoming Flights */}
-                    <div className="space-y-4">
-                      <h4 className="text-lg font-medium text-gray-700">Upcoming Flights</h4>
-                      {flightBookings.filter((b) => b.status === "Upcoming" || b.status === "Pending").length === 0 ? (
-                        <p className="text-gray-500 text-sm bg-gray-50 p-4 rounded-lg">
-                          No upcoming or pending flights booked.
-                        </p>
-                      ) : (
-                        <div className="relative overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 snap-x snap-mandatory shadow-sm">
-                          <div className="w-full min-w-[800px]">
-                            <div className="grid grid-cols-12 gap-x-4 text-sm font-medium text-gray-600 bg-gray-100 p-3 rounded-t-lg">
-                              <div className="col-span-1 text-left">S.No</div>
-                              <div className="col-span-2 text-left">Flight No.</div>
-                              <div className="col-span-2 text-left">Airline</div>
-                              <div className="col-span-2 text-left">Route</div>
-                              <div className="col-span-2 text-left">Departure</div>
-                              <div className="col-span-1 text-left">Price</div>
-                              <div className="col-span-1 text-left">Status</div>
-                              <div className="col-span-1 text-left"></div>
-                            </div>
-                            {flightBookings
-                              .filter((b) => b.status === "Upcoming" || b.status === "Pending")
-                              .sort((a, b) => new Date(a.departure_date) - new Date(b.departure_date))
-                              .map((booking, index) => (
-                                <motion.div
-                                  key={booking.booking_id}
-                                  variants={itemVariants}
-                                  className={`p-3 border-b border-gray-100 last:border-b-0 ${
-                                    index % 2 === 0 ? "bg-white" : "bg-gray-50"
-                                  }`}
-                                >
-                                  <div className="grid grid-cols-12 gap-x-4 items-center text-sm">
-                                    <div className="col-span-1 text-left">
-                                      <p className="text-gray-800">{index + 1}</p>
-                                    </div>
-                                    <div className="col-span-2 text-left">
-                                      <p className="text-gray-800 truncate">{booking.flight_number}</p>
-                                    </div>
-                                    <div className="col-span-2 text-left">
-                                      <p className="text-gray-800 truncate">{booking.airline}</p>
-                                    </div>
-                                    <div className="col-span-2 text-left">
-                                      <p className="text-gray-800 truncate">
-                                        {booking.from_city} to {booking.to_city}
-                                      </p>
-                                    </div>
-                                    <div className="col-span-2 text-left">
-                                      <p className="text-gray-800 truncate">{formatDate(booking.departure_date)}</p>
-                                    </div>
-                                    <div className="col-span-1 text-left">
-                                      <span className="text-gray-800">₹{booking.cost.toFixed(2)}</span>
-                                    </div>
-                                    <div className="col-span-1 text-left">
-                                      <span
-                                        className={`inline-block px-2 py-1 text-xs font-semibold rounded-full ${
-                                          booking.status === "Pending"
-                                            ? "bg-yellow-100 text-yellow-800"
-                                            : "bg-green-100 text-green-800"
+                    {error && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="bg-red-50 text-red-600 p-3 rounded-lg mb-4 text-sm border border-red-200"
+                      >
+                        {error}
+                      </motion.div>
+                    )}
+                    {/* Tabs */}
+                    <div className="flex border-b border-gray-200 mb-6 space-x-4">
+                      {["Flights", "Hotels", "Cars"].map((tab) => (
+                        <button
+                          key={tab}
+                          onClick={() => setHistoryTab(tab)}
+                          className={`px-4 py-2 text-sm font-semibold transition-colors ${
+                            historyTab === tab
+                              ? "border-b-2 border-blue-600 text-blue-600"
+                              : "text-gray-600 hover:text-blue-600"
+                          }`}
+                        >
+                          {tab}
+                        </button>
+                      ))}
+                    </div>
+                    <motion.div
+                      variants={containerVariants}
+                      initial="hidden"
+                      animate="visible"
+                      className="space-y-8"
+                    >
+                      {historyTab === "Flights" && (
+                        <>
+                          <h3 className="text-xl font-semibold text-gray-800 flex items-center space-x-2">
+                            <FaPlane className="text-blue-600 text-2xl" /> <span>Flight Bookings</span>
+                          </h3>
+                          {/* Upcoming Flights */}
+                          <div className="space-y-4">
+                            <h4 className="text-lg font-medium text-gray-700">Upcoming Flights</h4>
+                            {flightBookings.filter((b) => b.status === "Upcoming" || b.status === "Pending").length === 0 ? (
+                              <p className="text-gray-500 text-sm bg-gray-50 p-4 rounded-lg">
+                                No upcoming or pending flights booked.
+                              </p>
+                            ) : (
+                              <div className="relative overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 snap-x snap-mandatory shadow-sm">
+                                <div className="w-full min-w-[800px]">
+                                  <div className="grid grid-cols-12 gap-x-4 text-sm font-medium text-gray-600 bg-gray-100 p-3 rounded-t-lg">
+                                    <div className="col-span-1 text-left">Serial No.</div>
+                                    <div className="col-span-2 text-left">Flight No.</div>
+                                    <div className="col-span-2 text-left">Airline</div>
+                                    <div className="col-span-2 text-left">Route</div>
+                                    <div className="col-span-2 text-left">Departure</div>
+                                    <div className="col-span-1 text-left">Price</div>
+                                    <div className="col-span-1 text-left">Status</div>
+                                    <div className="col-span-1 text-left"></div>
+                                  </div>
+                                  {flightBookings
+                                    .filter((b) => b.status === "Upcoming" || b.status === "Pending")
+                                    .sort((a, b) => new Date(a.departure_date) - new Date(b.departure_date))
+                                    .map((booking, index) => (
+                                      <motion.div
+                                        key={booking.booking_id}
+                                        variants={itemVariants}
+                                        className={`p-3 border-b border-gray-100 last:border-b-0 ${
+                                          index % 2 === 0 ? "bg-white" : "bg-gray-50"
                                         }`}
                                       >
-                                        {booking.status}
-                                      </span>
-                                    </div>
-                                    <div className="col-span-1 text-left relative dropdown-container">
-                                      <motion.button
-                                        variants={buttonVariants}
-                                        whileHover={{ scale: 1.1 }}
-                                        whileTap={{ scale: 0.9 }}
-                                        onClick={() => toggleDropdown(booking.booking_id, "flight")}
-                                        className="text-gray-600 hover:text-gray-800"
-                                      >
-                                        <HiDotsVertical />
-                                      </motion.button>
-                                      {dropdownOpen.flight === booking.booking_id && (
-                                        <motion.div
-                                          initial={{ opacity: 0, y: -10 }}
-                                          animate={{ opacity: 1, y: 0 }}
-                                          exit={{ opacity: 0, y: -10 }}
-                                          className="absolute right-0 bottom-0 mt-2 w-32 bg-white border border-gray-200 rounded-lg shadow-lg z-0"
-                                        >
-                                          {booking.status === "Pending" && (
-                                            <button
-                                              onClick={() => handleCompleteFlight(booking.booking_id)}
-                                              className="block w-full text-left px-4 py-2 text-sm text-green-600 hover:bg-gray-100"
+                                        <div className="grid grid-cols-12 gap-x-4 items-center text-sm">
+                                          <div className="col-span-1 text-left">
+                                            <p className="text-gray-800">{index + 1}</p>
+                                          </div>
+                                          <div className="col-span-2 text-left">
+                                            <p className="text-gray-800 truncate">{booking.flight_number}</p>
+                                          </div>
+                                          <div className="col-span-2 text-left">
+                                            <p className="text-gray-800 truncate">{booking.airline}</p>
+                                          </div>
+                                          <div className="col-span-2 text-left">
+                                            <p className="text-gray-800 truncate">
+                                              {booking.from_city} to {booking.to_city}
+                                            </p>
+                                          </div>
+                                          <div className="col-span-2 text-left">
+                                            <p className="text-gray-800 truncate">{formatDate(booking.departure_date)}</p>
+                                          </div>
+                                          <div className="col-span-1 text-left">
+                                            <span className="text-gray-800">₹{booking.cost.toFixed(2)}</span>
+                                          </div>
+                                          <div className="col-span-1 text-left">
+                                            <span
+                                              className={`inline-block px-2 py-1 text-xs font-semibold rounded-full ${
+                                                booking.status === "Pending"
+                                                  ? "bg-yellow-100 text-yellow-800"
+                                                  : "bg-green-100 text-green-800"
+                                              }`}
                                             >
-                                              Complete
-                                            </button>
-                                          )}
-                                          <button
-                                            onClick={() => handleCancelFlight(booking.booking_id)}
-                                            className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
-                                          >
-                                            Cancel
-                                          </button>
-                                        </motion.div>
-                                      )}
-                                    </div>
-                                  </div>
-                                </motion.div>
-                              ))}
+                                              {booking.status}
+                                            </span>
+                                          </div>
+                                          <div className="col-span-1 text-left relative dropdown-container">
+                                            <motion.button
+                                              variants={buttonVariants}
+                                              whileHover={{ scale: 1.1 }}
+                                              whileTap={{ scale: 0.9 }}
+                                              onClick={(event) => toggleDropdown(booking.booking_id, "flight", event)}
+                                              className="text-gray-600 hover:text-gray-800 p-1 rounded-full hover:bg-gray-200 transition"
+                                            >
+                                              <HiDotsVertical size={20} />
+                                            </motion.button>
+                                          </div>
+                                        </div>
+                                      </motion.div>
+                                    ))}
+                                </div>
+                              </div>
+                            )}
                           </div>
-                        </div>
-                      )}
-                    </div>
-                    {/* Past Flights */}
-                    <div className="space-y-4">
-                      <h4 className="text-lg font-medium text-gray-700">Past Flights</h4>
-                      {flightBookings.filter((b) => b.status === "Completed").length === 0 ? (
-                        <p className="text-gray-500 text-sm bg-gray-50 p-4 rounded-lg">
-                          No past flights recorded.
-                        </p>
-                      ) : (
-                        <div className="relative overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 snap-x snap-mandatory shadow-sm">
-                          <div className="w-full min-w-[800px]">
-                            <div className="grid grid-cols-12 gap-x-4 text-sm font-medium text-gray-600 bg-gray-100 p-3 rounded-t-lg">
-                              <div className="col-span-1 text-left">S.No</div>
-                              <div className="col-span-2 text-left">Flight No.</div>
-                              <div className="col-span-2 text-left">Airline</div>
-                              <div className="col-span-2 text-left">Route</div>
-                              <div className="col-span-2 text-left">Departure</div>
-                              <div className="col-span-1 text-left">Price</div>
-                              <div className="col-span-1 text-left">Status</div>
-                              <div className="col-span-1 text-left"></div>
-                            </div>
-                            {flightBookings
-                              .filter((b) => b.status === "Completed")
-                              .sort((a, b) => new Date(a.departure_date) - new Date(b.departure_date))
-                              .map((booking, index) => (
-                                <motion.div
-                                  key={booking.booking_id}
-                                  variants={itemVariants}
-                                  className={`p-3 border-b border-gray-100 last:border-b-0 ${
-                                    index % 2 === 0 ? "bg-white" : "bg-gray-50"
-                                  }`}
-                                >
-                                  <div className="grid grid-cols-12 gap-x-4 items-center text-sm">
-                                    <div className="col-span-1 text-left">
-                                      <p className="text-gray-800">{index + 1}</p>
-                                    </div>
-                                    <div className="col-span-2 text-left">
-                                      <p className="text-gray-800 truncate">{booking.flight_number}</p>
-                                    </div>
-                                    <div className="col-span-2 text-left">
-                                      <p className="text-gray-800 truncate">{booking.airline}</p>
-                                    </div>
-                                    <div className="col-span-2 text-left">
-                                      <p className="text-gray-800 truncate">
-                                        {booking.from_city} to {booking.to_city}
-                                      </p>
-                                    </div>
-                                    <div className="col-span-2 text-left">
-                                      <p className="text-gray-800 truncate">{formatDate(booking.departure_date)}</p>
-                                    </div>
-                                    <div className="col-span-1 text-left">
-                                      <span className="text-gray-800">₹{booking.cost.toFixed(2)}</span>
-                                    </div>
-                                    <div className="col-span-1 text-left">
-                                      <span className="inline-block px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
-                                        Completed
-                                      </span>
-                                    </div>
+                          {/* Past Flights */}
+                          <div className="space-y-4">
+                            <h4 className="text-lg font-medium text-gray-700">Past Flights</h4>
+                            {flightBookings.filter((b) => b.status === "Completed").length === 0 ? (
+                              <p className="text-gray-500 text-sm bg-gray-50 p-4 rounded-lg">
+                                No past flights recorded.
+                              </p>
+                            ) : (
+                              <div className="relative overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 snap-x snap-mandatory shadow-sm">
+                                <div className="w-full min-w-[800px]">
+                                  <div className="grid grid-cols-12 gap-x-4 text-sm font-medium text-gray-600 bg-gray-100 p-3 rounded-t-lg">
+                                    <div className="col-span-1 text-left">Serial No.</div>
+                                    <div className="col-span-2 text-left">Flight No.</div>
+                                    <div className="col-span-2 text-left">Airline</div>
+                                    <div className="col-span-2 text-left">Route</div>
+                                    <div className="col-span-2 text-left">Departure</div>
+                                    <div className="col-span-1 text-left">Price</div>
+                                    <div className="col-span-1 text-left">Status</div>
                                     <div className="col-span-1 text-left"></div>
                                   </div>
-                                </motion.div>
-                              ))}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                    {/* Cancelled Flights */}
-                    <div className="space-y-4">
-                      <h4 className="text-lg font-medium text-gray-700">Cancelled Flights</h4>
-                      {flightBookings.filter((b) => b.status === "Cancelled").length === 0 ? (
-                        <p className="text-gray-500 text-sm bg-gray-50 p-4 rounded-lg">
-                          No cancelled flights.
-                        </p>
-                      ) : (
-                        <div className="relative overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 snap-x snap-mandatory shadow-sm">
-                          <div className="w-full min-w-[800px]">
-                            <div className="grid grid-cols-12 gap-x-4 text-sm font-medium text-gray-600 bg-gray-100 p-3 rounded-t-lg">
-                              <div className="col-span-1 text-left">S.No</div>
-                              <div className="col-span-2 text-left">Flight No.</div>
-                              <div className="col-span-2 text-left">Airline</div>
-                              <div className="col-span-2 text-left">Route</div>
-                              <div className="col-span-2 text-left">Departure</div>
-                              <div className="col-span-1 text-left">Price</div>
-                              <div className="col-span-1 text-left">Status</div>
-                              <div className="col-span-1 text-left"></div>
-                            </div>
-                            {flightBookings
-                              .filter((b) => b.status === "Cancelled")
-                              .sort((a, b) => new Date(a.departure_date) - new Date(b.departure_date))
-                              .map((booking, index) => (
-                                <motion.div
-                                  key={booking.booking_id}
-                                  variants={itemVariants}
-                                  className={`p-3 border-b border-gray-100 last:border-b-0 ${
-                                    index % 2 === 0 ? "bg-white" : "bg-gray-50"
-                                  }`}
-                                >
-                                  <div className="grid grid-cols-12 gap-x-4 items-center text-sm">
-                                    <div className="col-span-1 text-left">
-                                      <p className="text-gray-800">{index + 1}</p>
-                                    </div>
-                                    <div className="col-span-2 text-left">
-                                      <p className="text-gray-800 truncate">{booking.flight_number}</p>
-                                    </div>
-                                    <div className="col-span-2 text-left">
-                                      <p className="text-gray-800 truncate">{booking.airline}</p>
-                                    </div>
-                                    <div className="col-span-2 text-left">
-                                      <p className="text-gray-800 truncate">
-                                        {booking.from_city} to {booking.to_city}
-                                      </p>
-                                    </div>
-                                    <div className="col-span-2 text-left">
-                                      <p className="text-gray-800 truncate">{formatDate(booking.departure_date)}</p>
-                                    </div>
-                                    <div className="col-span-1 text-left">
-                                      <span className="text-gray-800">₹{booking.cost.toFixed(2)}</span>
-                                    </div>
-                                    <div className="col-span-1 text-left">
-                                      <span className="inline-block px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">
-                                        Cancelled
-                                      </span>
-                                    </div>
-                                    <div className="col-span-1 text-left"></div>
-                                  </div>
-                                </motion.div>
-                              ))}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </>
-                )}
-                {historyTab === "Hotels" && (
-                  <>
-                    <h3 className="text-xl font-semibold text-gray-800 flex items-center space-x-2">
-                      <FaHotel className="text-blue-600 text-2xl" /> <span>Hotel Bookings</span>
-                    </h3>
-                    {/* Upcoming Hotels */}
-                    <div className="space-y-4">
-                      <h4 className="text-lg font-medium text-gray-700">Upcoming Hotels</h4>
-                      {hotelBookings.filter((b) => b.status === "Upcoming" || b.status === "Pending").length === 0 ? (
-                        <p className="text-gray-500 text-sm bg-gray-50 p-4 rounded-lg">
-                          No upcoming or pending hotel bookings.
-                        </p>
-                      ) : (
-                        <div className="relative overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 snap-x snap-mandatory shadow-sm">
-                          <div className="w-full min-w-[800px]">
-                            <div className="grid grid-cols-12 gap-x-4 text-sm font-medium text-gray-600 bg-gray-100 p-3 rounded-t-lg">
-                              <div className="col-span-1 text-left">S.No</div>
-                              <div className="col-span-2 text-left">Hotel</div>
-                              <div className="col-span-2 text-left">City</div>
-                              <div className="col-span-2 text-left">Check-In</div>
-                              <div className="col-span-2 text-left">Check-Out</div>
-                              <div className="col-span-1 text-left">Price</div>
-                              <div className="col-span-1 text-left">Status</div>
-                              <div className="col-span-1 text-left"></div>
-                            </div>
-                            {hotelBookings
-                              .filter((b) => b.status === "Upcoming" || b.status === "Pending")
-                              .sort((a, b) => new Date(a.check_in_date) - new Date(b.check_in_date))
-                              .map((booking, index) => (
-                                <motion.div
-                                  key={booking.booking_id}
-                                  variants={itemVariants}
-                                  className={`p-3 border-b border-gray-100 last:border-b-0 ${
-                                    index % 2 === 0 ? "bg-white" : "bg-gray-50"
-                                  }`}
-                                >
-                                  <div className="grid grid-cols-12 gap-x-4 items-center text-sm">
-                                    <div className="col-span-1 text-left">
-                                      <p className="text-gray-800">{index + 1}</p>
-                                    </div>
-                                    <div className="col-span-2 text-left">
-                                      <p className="text-gray-800 truncate">{booking.hotel_name}</p>
-                                    </div>
-                                    <div className="col-span-2 text-left">
-                                      <p className="text-gray-800 truncate">{booking.city}</p>
-                                    </div>
-                                    <div className="col-span-2 text-left">
-                                      <p className="text-gray-800 truncate">{formatDate(booking.check_in_date)}</p>
-                                    </div>
-                                    <div className="col-span-2 text-left">
-                                      <p className="text-gray-800 truncate">{formatDate(booking.check_out_date)}</p>
-                                    </div>
-                                    <div className="col-span-1 text-left">
-                                      <span className="text-gray-800">₹{booking.cost.toFixed(2)}</span>
-                                    </div>
-                                    <div className="col-span-1 text-left">
-                                      <span
-                                        className={`inline-block px-2 py-1 text-xs font-semibold rounded-full ${
-                                          booking.status === "Pending"
-                                            ? "bg-yellow-100 text-yellow-800"
-                                            : "bg-green-100 text-green-800"
+                                  {flightBookings
+                                    .filter((b) => b.status === "Completed")
+                                    .sort((a, b) => new Date(a.departure_date) - new Date(b.departure_date))
+                                    .map((booking, index) => (
+                                      <motion.div
+                                        key={booking.booking_id}
+                                        variants={itemVariants}
+                                        className={`p-3 border-b border-gray-100 last:border-b-0 ${
+                                          index % 2 === 0 ? "bg-white" : "bg-gray-50"
                                         }`}
                                       >
-                                        {booking.status}
-                                      </span>
-                                    </div>
-                                    <div className="col-span-1 text-left relative dropdown-container">
-                                      <motion.button
-                                        variants={buttonVariants}
-                                        whileHover={{ scale: 1.1 }}
-                                        whileTap={{ scale: 0.9 }}
-                                        onClick={() => toggleDropdown(booking.booking_id, "hotel")}
-                                        className="text-gray-600 hover:text-gray-800"
-                                      >
-                                        <HiDotsVertical />
-                                      </motion.button>
-                                      {dropdownOpen.hotel === booking.booking_id && (
-                                        <motion.div
-                                          initial={{ opacity: 0, y: -10 }}
-                                          animate={{ opacity: 1, y: 0 }}
-                                          exit={{ opacity: 0, y: -10 }}
-                                          className="absolute right-0 bottom-0 mt-2 w-32 bg-white border border-gray-200 rounded-lg shadow-lg z-10"
-                                        >
-                                          {booking.status === "Pending" && (
-                                            <button
-                                              onClick={() => handleCompleteHotel(booking.booking_id)}
-                                              className="block w-full text-left px-4 py-2 text-sm text-green-600 hover:bg-gray-100"
-                                            >
-                                              Complete
-                                            </button>
-                                          )}
-                                          <button
-                                            onClick={() => handleCancelHotel(booking.booking_id)}
-                                            className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
-                                          >
-                                            Cancel
-                                          </button>
-                                        </motion.div>
-                                      )}
-                                    </div>
-                                  </div>
-                                </motion.div>
-                              ))}
+                                        <div className="grid grid-cols-12 gap-x-4 items-center text-sm">
+                                          <div className="col-span-1 text-left">
+                                            <p className="text-gray-800">{index + 1}</p>
+                                          </div>
+                                          <div className="col-span-2 text-left">
+                                            <p className="text-gray-800 truncate">{booking.flight_number}</p>
+                                          </div>
+                                          <div className="col-span-2 text-left">
+                                            <p className="text-gray-800 truncate">{booking.airline}</p>
+                                          </div>
+                                          <div className="col-span-2 text-left">
+                                            <p className="text-gray-800 truncate">
+                                              {booking.from_city} to {booking.to_city}
+                                            </p>
+                                          </div>
+                                          <div className="col-span-2 text-left">
+                                            <p className="text-gray-800 truncate">{formatDate(booking.departure_date)}</p>
+                                          </div>
+                                          <div className="col-span-1 text-left">
+                                            <span className="text-gray-800">₹{booking.cost.toFixed(2)}</span>
+                                          </div>
+                                          <div className="col-span-1 text-left">
+                                            <span className="inline-block px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
+                                              Completed
+                                            </span>
+                                          </div>
+                                          <div className="col-span-1 text-left"></div>
+                                        </div>
+                                      </motion.div>
+                                    ))}
+                                </div>
+                              </div>
+                            )}
                           </div>
-                        </div>
-                      )}
-                    </div>
-                    {/* Past Hotels */}
-                    <div className="space-y-4">
-                      <h4 className="text-lg font-medium text-gray-700">Past Hotels</h4>
-                      {hotelBookings.filter((b) => b.status === "Completed").length === 0 ? (
-                        <p className="text-gray-500 text-sm bg-gray-50 p-4 rounded-lg">
-                          No past hotel bookings.
-                        </p>
-                      ) : (
-                        <div className="relative overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 snap-x snap-mandatory shadow-sm">
-                          <div className="w-full min-w-[800px]">
-                            <div className="grid grid-cols-12 gap-x-4 text-sm font-medium text-gray-600 bg-gray-100 p-3 rounded-t-lg">
-                              <div className="col-span-1 text-left">S.No</div>
-                              <div className="col-span-2 text-left">Hotel</div>
-                              <div className="col-span-2 text-left">City</div>
-                              <div className="col-span-2 text-left">Check-In</div>
-                              <div className="col-span-2 text-left">Check-Out</div>
-                              <div className="col-span-1 text-left">Price</div>
-                              <div className="col-span-1 text-left">Status</div>
-                              <div className="col-span-1 text-left"></div>
-                            </div>
-                            {hotelBookings
-                              .filter((b) => b.status === "Completed")
-                              .sort((a, b) => new Date(a.check_in_date) - new Date(b.check_in_date))
-                              .map((booking, index) => (
-                                <motion.div
-                                  key={booking.booking_id}
-                                  variants={itemVariants}
-                                  className={`p-3 border-b border-gray-100 last:border-b-0 ${
-                                    index % 2 === 0 ? "bg-white" : "bg-gray-50"
-                                  }`}
-                                >
-                                  <div className="grid grid-cols-12 gap-x-4 items-center text-sm">
-                                    <div className="col-span-1 text-left">
-                                      <p className="text-gray-800">{index + 1}</p>
-                                    </div>
-                                    <div className="col-span-2 text-left">
-                                      <p className="text-gray-800 truncate">{booking.hotel_name}</p>
-                                    </div>
-                                    <div className="col-span-2 text-left">
-                                      <p className="text-gray-800 truncate">{booking.city}</p>
-                                    </div>
-                                    <div className="col-span-2 text-left">
-                                      <p className="text-gray-800 truncate">{formatDate(booking.check_in_date)}</p>
-                                    </div>
-                                    <div className="col-span-2 text-left">
-                                      <p className="text-gray-800 truncate">{formatDate(booking.check_out_date)}</p>
-                                    </div>
-                                    <div className="col-span-1 text-left">
-                                      <span className="text-gray-800">₹{booking.cost.toFixed(2)}</span>
-                                    </div>
-                                    <div className="col-span-1 text-left">
-                                      <span className="inline-block px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
-                                        Completed
-                                      </span>
-                                    </div>
+                          {/* Cancelled Flights */}
+                          <div className="space-y-4">
+                            <h4 className="text-lg font-medium text-gray-700">Cancelled Flights</h4>
+                            {flightBookings.filter((b) => b.status === "Cancelled").length === 0 ? (
+                              <p className="text-gray-500 text-sm bg-gray-50 p-4 rounded-lg">
+                                No cancelled flights.
+                              </p>
+                            ) : (
+                              <div className="relative overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 snap-x snap-mandatory shadow-sm">
+                                <div className="w-full min-w-[800px]">
+                                  <div className="grid grid-cols-12 gap-x-4 text-sm font-medium text-gray-600 bg-gray-100 p-3 rounded-t-lg">
+                                    <div className="col-span-1 text-left">Serial No.</div>
+                                    <div className="col-span-2 text-left">Flight No.</div>
+                                    <div className="col-span-2 text-left">Airline</div>
+                                    <div className="col-span-2 text-left">Route</div>
+                                    <div className="col-span-2 text-left">Departure</div>
+                                    <div className="col-span-1 text-left">Price</div>
+                                    <div className="col-span-1 text-left">Status</div>
                                     <div className="col-span-1 text-left"></div>
                                   </div>
-                                </motion.div>
-                              ))}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                    {/* Cancelled Hotels */}
-                    <div className="space-y-4">
-                      <h4 className="text-lg font-medium text-gray-700">Cancelled Hotels</h4>
-                      {hotelBookings.filter((b) => b.status === "Cancelled").length === 0 ? (
-                        <p className="text-gray-500 text-sm bg-gray-50 p-4 rounded-lg">
-                          No cancelled hotel bookings.
-                        </p>
-                      ) : (
-                        <div className="relative overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 snap-x snap-mandatory shadow-sm">
-                          <div className="w-full min-w-[800px]">
-                            <div className="grid grid-cols-12 gap-x-4 text-sm font-medium text-gray-600 bg-gray-100 p-3 rounded-t-lg">
-                              <div className="col-span-1 text-left">S.No</div>
-                              <div className="col-span-2 text-left">Hotel</div>
-                              <div className="col-span-2 text-left">City</div>
-                              <div className="col-span-2 text-left">Check-In</div>
-                              <div className="col-span-2 text-left">Check-Out</div>
-                              <div className="col-span-1 text-left">Price</div>
-                              <div className="col-span-1 text-left">Status</div>
-                              <div className="col-span-1 text-left"></div>
-                            </div>
-                            {hotelBookings
-                              .filter((b) => b.status === "Cancelled")
-                              .sort((a, b) => new Date(a.check_in_date) - new Date(b.check_in_date))
-                              .map((booking, index) => (
-                                <motion.div
-                                  key={booking.booking_id}
-                                  variants={itemVariants}
-                                  className={`p-3 border-b border-gray-100 last:border-b-0 ${
-                                    index % 2 === 0 ? "bg-white" : "bg-gray-50"
-                                  }`}
-                                >
-                                  <div className="grid grid-cols-12 gap-x-4 items-center text-sm">
-                                    <div className="col-span-1 text-left">
-                                      <p className="text-gray-800">{index + 1}</p>
-                                    </div>
-                                    <div className="col-span-2 text-left">
-                                      <p className="text-gray-800 truncate">{booking.hotel_name}</p>
-                                    </div>
-                                    <div className="col-span-2 text-left">
-                                      <p className="text-gray-800 truncate">{booking.city}</p>
-                                    </div>
-                                    <div className="col-span-2 text-left">
-                                      <p className="text-gray-800 truncate">{formatDate(booking.check_in_date)}</p>
-                                    </div>
-                                    <div className="col-span-2 text-left">
-                                      <p className="text-gray-800 truncate">{formatDate(booking.check_out_date)}</p>
-                                    </div>
-                                    <div className="col-span-1 text-left">
-                                      <span className="text-gray-800">₹{booking.cost.toFixed(2)}</span>
-                                    </div>
-                                    <div className="col-span-1 text-left">
-                                      <span className="inline-block px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">
-                                        Cancelled
-                                      </span>
-                                    </div>
-                                    <div className="col-span-1 text-left"></div>
-                                  </div>
-                                </motion.div>
-                              ))}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </>
-                )}
-                {historyTab === "Cars" && (
-                  <>
-                    <h3 className="text-xl font-semibold text-gray-800 flex items-center space-x-2">
-                      <FaCar className="text-blue-600" /> <span>Car Rentals</span>
-                    </h3>
-                    {/* Upcoming Cars */}
-                    <div className="space-y-4">
-                      <h4 className="text-lg font-medium text-gray-700">Upcoming Rentals</h4>
-                      {carRentals.filter((b) => b.status === "Upcoming" || b.status === "Pending").length === 0 ? (
-                        <p className="text-gray-500 text-sm bg-gray-50 p-4 rounded-lg">
-                          No upcoming or pending car rentals.
-                        </p>
-                      ) : (
-                        <div className="relative overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 snap-x snap-mandatory shadow-sm">
-                          <div className="w-full min-w-[800px]">
-                            <div className="grid grid-cols-12 gap-x-4 text-sm font-medium text-gray-600 bg-gray-100 p-3 rounded-t-lg">
-                              <div className="col-span-1 text-left">S.No</div>
-                              <div className="col-span-2 text-left">Car</div>
-                              <div className="col-span-2 text-left">Route</div>
-                              <div className="col-span-2 text-left">Start</div>
-                              <div className="col-span-2 text-left">End</div>
-                              <div className="col-span-1 text-left">Price</div>
-                              <div className="col-span-1 text-left">Status</div>
-                              <div className="col-span-1 text-left"></div>
-                            </div>
-                            {carRentals
-                              .filter((b) => b.status === "Upcoming" || b.status === "Pending")
-                              .sort((a, b) => new Date(a.start_date || a.end_date) - new Date(b.start_date || b.end_date))
-                              .map((rental, index) => (
-                                <motion.div
-                                  key={rental.rental_id}
-                                  variants={itemVariants}
-                                  className={`p-3 border-b border-gray-100 last:border-b-0 ${
-                                    index % 2 === 0 ? "bg-white" : "bg-gray-50"
-                                  }`}
-                                >
-                                  <div className="grid grid-cols-12 gap-x-4 items-center text-sm">
-                                    <div className="col-span-1 text-left">
-                                      <p className="text-gray-800">{index + 1}</p>
-                                    </div>
-                                    <div className="col-span-2 text-left">
-                                      <p className="text-gray-800 truncate">{rental.car_name}</p>
-                                    </div>
-                                    <div className="col-span-2 text-left">
-                                      <p className="text-gray-800 truncate">
-                                        {rental.from_location} to {rental.to_location}
-                                      </p>
-                                    </div>
-                                    <div className="col-span-2 text-left">
-                                      <p className="text-gray-800 truncate">{formatDate(rental.start_date || rental.end_date)}</p>
-                                    </div>
-                                    <div className="col-span-2 text-left">
-                                      <p className="text-gray-800 truncate">{formatDate(rental.end_date)}</p>
-                                    </div>
-                                    <div className="col-span-1 text-left">
-                                      <span className="text-gray-800">₹{rental.cost.toFixed(2)}</span>
-                                    </div>
-                                    <div className="col-span-1 text-left">
-                                      <span
-                                        className={`inline-block px-2 py-1 text-xs font-semibold rounded-full ${
-                                          rental.status === "Pending"
-                                            ? "bg-yellow-100 text-yellow-800"
-                                            : "bg-green-100 text-green-800"
+                                  {flightBookings
+                                    .filter((b) => b.status === "Cancelled")
+                                    .sort((a, b) => new Date(a.departure_date) - new Date(b.departure_date))
+                                    .map((booking, index) => (
+                                      <motion.div
+                                        key={booking.booking_id}
+                                        variants={itemVariants}
+                                        className={`p-3 border-b border-gray-100 last:border-b-0 ${
+                                          index % 2 === 0 ? "bg-white" : "bg-gray-50"
                                         }`}
                                       >
-                                        {rental.status}
-                                      </span>
-                                    </div>
-                                    <div className="col-span-1 text-left relative dropdown-container">
-                                      <motion.button
-                                        variants={buttonVariants}
-                                        whileHover={{ scale: 1.1 }}
-                                        whileTap={{ scale: 0.9 }}
-                                        onClick={() => toggleDropdown(rental.rental_id, "car")}
-                                        className="text-gray-600 hover:text-gray-800"
+                                        <div className="grid grid-cols-12 gap-x-4 items-center text-sm">
+                                          <div className="col-span-1 text-left">
+                                            <p className="text-gray-800">{index + 1}</p>
+                                          </div>
+                                          <div className="col-span-2 text-left">
+                                            <p className="text-gray-800 truncate">{booking.flight_number}</p>
+                                          </div>
+                                          <div className="col-span-2 text-left">
+                                            <p className="text-gray-800 truncate">{booking.airline}</p>
+                                          </div>
+                                          <div className="col-span-2 text-left">
+                                            <p className="text-gray-800 truncate">
+                                              {booking.from_city} to {booking.to_city}
+                                            </p>
+                                          </div>
+                                          <div className="col-span-2 text-left">
+                                            <p className="text-gray-800 truncate">{formatDate(booking.departure_date)}</p>
+                                          </div>
+                                          <div className="col-span-1 text-left">
+                                            <span className="text-gray-800">₹{booking.cost.toFixed(2)}</span>
+                                          </div>
+                                          <div className="col-span-1 text-left">
+                                            <span className="inline-block px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">
+                                              Cancelled
+                                            </span>
+                                          </div>
+                                          <div className="col-span-1 text-left"></div>
+                                        </div>
+                                      </motion.div>
+                                    ))}
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        </>
+                      )}
+                      {historyTab === "Hotels" && (
+                        <>
+                          <h3 className="text-xl font-semibold text-gray-800 flex items-center space-x-2">
+                            <FaHotel className="text-blue-600 text-2xl" /> <span>Hotel Bookings</span>
+                          </h3>
+                          {/* Upcoming Hotels */}
+                          <div className="space-y-4">
+                            <h4 className="text-lg font-medium text-gray-700">Upcoming Hotels</h4>
+                            {hotelBookings.filter((b) => b.status === "Upcoming" || b.status === "Pending").length === 0 ? (
+                              <p className="text-gray-500 text-sm bg-gray-50 p-4 rounded-lg">
+                                No upcoming or pending hotel bookings.
+                              </p>
+                            ) : (
+                              <div className="relative overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 snap-x snap-mandatory shadow-sm">
+                                <div className="w-full min-w-[800px]">
+                                  <div className="grid grid-cols-12 gap-x-4 text-sm font-medium text-gray-600 bg-gray-100 p-3 rounded-t-lg">
+                                    <div className="col-span-1 text-left">Serial No.</div>
+                                    <div className="col-span-2 text-left">Hotel</div>
+                                    <div className="col-span-2 text-left">City</div>
+                                    <div className="col-span-2 text-left">Check-In</div>
+                                    <div className="col-span-2 text-left">Check-Out</div>
+                                    <div className="col-span-1 text-left">Price</div>
+                                    <div className="col-span-1 text-left">Status</div>
+                                    <div className="col-span-1 text-left"></div>
+                                  </div>
+                                  {hotelBookings
+                                    .filter((b) => b.status === "Upcoming" || b.status === "Pending")
+                                    .sort((a, b) => new Date(a.check_in_date) - new Date(b.check_in_date))
+                                    .map((booking, index) => (
+                                      <motion.div
+                                        key={booking.booking_id}
+                                        variants={itemVariants}
+                                        className={`p-3 border-b border-gray-100 last:border-b-0 ${
+                                          index % 2 === 0 ? "bg-white" : "bg-gray-50"
+                                        }`}
                                       >
-                                        <HiDotsVertical />
-                                      </motion.button>
-                                      {dropdownOpen.car === rental.rental_id && (
-                                        <motion.div
-                                          initial={{ opacity: 0, y: -10 }}
-                                          animate={{ opacity: 1, y: 0 }}
-                                          exit={{ opacity: 0, y: -10 }}
-                                          className="absolute right-0 bottom-0 mt-2 w-32 bg-white border border-gray-200 rounded-lg shadow-lg z-10"
-                                        >
-                                          {rental.status === "Pending" && (
-                                            <button
-                                              onClick={() => handleCompleteCar(rental.rental_id)}
-                                              className="block w-full text-left px-4 py-2 text-sm text-green-600 hover:bg-gray-100"
+                                        <div className="grid grid-cols-12 gap-x-4 items-center text-sm">
+                                          <div className="col-span-1 text-left">
+                                            <p className="text-gray-800">{index + 1}</p>
+                                          </div>
+                                          <div className="col-span-2 text-left">
+                                            <p className="text-gray-800 truncate">{booking.hotel_name}</p>
+                                          </div>
+                                          <div className="col-span-2 text-left">
+                                            <p className="text-gray-800 truncate">{booking.city}</p>
+                                          </div>
+                                          <div className="col-span-2 text-left">
+                                            <p className="text-gray-800 truncate">{formatDate(booking.check_in_date)}</p>
+                                          </div>
+                                          <div className="col-span-2 text-left">
+                                            <p className="text-gray-800 truncate">{formatDate(booking.check_out_date)}</p>
+                                          </div>
+                                          <div className="col-span-1 text-left">
+                                            <span className="text-gray-800">₹{booking.cost.toFixed(2)}</span>
+                                          </div>
+                                          <div className="col-span-1 text-left">
+                                            <span
+                                              className={`inline-block px-2 py-1 text-xs font-semibold rounded-full ${
+                                                booking.status === "Pending"
+                                                  ? "bg-yellow-100 text-yellow-800"
+                                                  : "bg-green-100 text-green-800"
+                                              }`}
                                             >
-                                              Complete
-                                            </button>
-                                          )}
-                                          <button
-                                            onClick={() => handleCancelCar(rental.rental_id)}
-                                            className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
-                                          >
-                                            Cancel
-                                          </button>
-                                        </motion.div>
-                                      )}
-                                    </div>
-                                  </div>
-                                </motion.div>
-                              ))}
+                                              {booking.status}
+                                            </span>
+                                          </div>
+                                          <div className="col-span-1 text-left relative dropdown-container">
+                                            <motion.button
+                                              variants={buttonVariants}
+                                              whileHover={{ scale: 1.1 }}
+                                              whileTap={{ scale: 0.9 }}
+                                              onClick={(event) => toggleDropdown(booking.booking_id, "hotel", event)}
+                                              className="text-gray-600 hover:text-gray-800"
+                                            >
+                                              <HiDotsVertical />
+                                            </motion.button>
+                                          </div>
+                                        </div>
+                                      </motion.div>
+                                    ))}
+                                </div>
+                              </div>
+                            )}
                           </div>
-                        </div>
-                      )}
-                    </div>
-                    {/* Past Cars */}
-                    <div className="space-y-4">
-                      <h4 className="text-lg font-medium text-gray-700">Past Rentals</h4>
-                      {carRentals.filter((b) => b.status === "Completed").length === 0 ? (
-                        <p className="text-gray-500 text-sm bg-gray-50 p-4 rounded-lg">
-                          No past car rentals.
-                        </p>
-                      ) : (
-                        <div className="relative overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 snap-x snap-mandatory shadow-sm">
-                          <div className="w-full min-w-[800px]">
-                            <div className="grid grid-cols-12 gap-x-4 text-sm font-medium text-gray-600 bg-gray-100 p-3 rounded-t-lg">
-                              <div className="col-span-1 text-left">S.No</div>
-                              <div className="col-span-2 text-left">Car</div>
-                              <div className="col-span-2 text-left">Route</div>
-                              <div className="col-span-2 text-left">Start</div>
-                              <div className="col-span-2 text-left">End</div>
-                              <div className="col-span-1 text-left">Price</div>
-                              <div className="col-span-1 text-left">Status</div>
-                              <div className="col-span-1 text-left"></div>
-                            </div>
-                            {carRentals
-                              .filter((b) => b.status === "Completed")
-                              .sort((a, b) => new Date(a.start_date || a.end_date) - new Date(b.start_date || b.end_date))
-                              .map((rental, index) => (
-                                <motion.div
-                                  key={rental.rental_id}
-                                  variants={itemVariants}
-                                  className={`p-3 border-b border-gray-100 last:border-b-0 ${
-                                    index % 2 === 0 ? "bg-white" : "bg-gray-50"
-                                  }`}
-                                >
-                                  <div className="grid grid-cols-12 gap-x-4 items-center text-sm">
-                                    <div className="col-span-1 text-left">
-                                      <p className="text-gray-800">{index + 1}</p>
-                                    </div>
-                                    <div className="col-span-2 text-left">
-                                      <p className="text-gray-800 truncate">{rental.car_name}</p>
-                                    </div>
-                                    <div className="col-span-2 text-left">
-                                      <p className="text-gray-800 truncate">
-                                        {rental.from_location} to {rental.to_location}
-                                      </p>
-                                    </div>
-                                    <div className="col-span-2 text-left">
-                                      <p className="text-gray-800 truncate">{formatDate(rental.start_date || rental.end_date)}</p>
-                                    </div>
-                                    <div className="col-span-2 text-left">
-                                      <p className="text-gray-800 truncate">{formatDate(rental.end_date)}</p>
-                                    </div>
-                                    <div className="col-span-1 text-left">
-                                      <span className="text-gray-800">₹{rental.cost.toFixed(2)}</span>
-                                    </div>
-                                    <div className="col-span-1 text-left">
-                                      <span className="inline-block px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
-                                        Completed
-                                      </span>
-                                    </div>
+                          {/* Past Hotels */}
+                          <div className="space-y-4">
+                            <h4 className="text-lg font-medium text-gray-700">Past Hotels</h4>
+                            {hotelBookings.filter((b) => b.status === "Completed").length === 0 ? (
+                              <p className="text-gray-500 text-sm bg-gray-50 p-4 rounded-lg">
+                                No past hotel bookings.
+                              </p>
+                            ) : (
+                              <div className="relative overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 snap-x snap-mandatory shadow-sm">
+                                <div className="w-full min-w-[800px]">
+                                  <div className="grid grid-cols-12 gap-x-4 text-sm font-medium text-gray-600 bg-gray-100 p-3 rounded-t-lg">
+                                    <div className="col-span-1 text-left">Serial No.</div>
+                                    <div className="col-span-2 text-left">Hotel</div>
+                                    <div className="col-span-2 text-left">City</div>
+                                    <div className="col-span-2 text-left">Check-In</div>
+                                    <div className="col-span-2 text-left">Check-Out</div>
+                                    <div className="col-span-1 text-left">Price</div>
+                                    <div className="col-span-1 text-left">Status</div>
                                     <div className="col-span-1 text-left"></div>
                                   </div>
-                                </motion.div>
-                              ))}
+                                  {hotelBookings
+                                    .filter((b) => b.status === "Completed")
+                                    .sort((a, b) => new Date(a.check_in_date) - new Date(b.check_in_date))
+                                    .map((booking, index) => (
+                                      <motion.div
+                                        key={booking.booking_id}
+                                        variants={itemVariants}
+                                        className={`p-3 border-b border-gray-100 last:border-b-0 ${
+                                          index % 2 === 0 ? "bg-white" : "bg-gray-50"
+                                        }`}
+                                      >
+                                        <div className="grid grid-cols-12 gap-x-4 items-center text-sm">
+                                          <div className="col-span-1 text-left">
+                                            <p className="text-gray-800">{index + 1}</p>
+                                          </div>
+                                          <div className="col-span-2 text-left">
+                                            <p className="text-gray-800 truncate">{booking.hotel_name}</p>
+                                          </div>
+                                          <div className="col-span-2 text-left">
+                                            <p className="text-gray-800 truncate">{booking.city}</p>
+                                          </div>
+                                          <div className="col-span-2 text-left">
+                                            <p className="text-gray-800 truncate">{formatDate(booking.check_in_date)}</p>
+                                          </div>
+                                          <div className="col-span-2 text-left">
+                                            <p className="text-gray-800 truncate">{formatDate(booking.check_out_date)}</p>
+                                          </div>
+                                          <div className="col-span-1 text-left">
+                                            <span className="text-gray-800">₹{booking.cost.toFixed(2)}</span>
+                                          </div>
+                                          <div className="col-span-1 text-left">
+                                            <span className="inline-block px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
+                                              Completed
+                                            </span>
+                                          </div>
+                                          <div className="col-span-1 text-left"></div>
+                                        </div>
+                                      </motion.div>
+                                    ))}
+                                </div>
+                              </div>
+                            )}
                           </div>
-                        </div>
-                      )}
-                    </div>
-                    {/* Cancelled Cars */}
-                    <div className="space-y-4">
-                      <h4 className="text-lg font-medium text-gray-700">Cancelled Rentals</h4>
-                      {carRentals.filter((b) => b.status === "Cancelled").length === 0 ? (
-                        <p className="text-gray-500 text-sm bg-gray-50 p-4 rounded-lg">
-                          No cancelled car rentals.
-                        </p>
-                      ) : (
-                        <div className="relative overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 snap-x snap-mandatory shadow-sm">
-                          <div className="w-full min-w-[800px]">
-                            <div className="grid grid-cols-12 gap-x-4 text-sm font-medium text-gray-600 bg-gray-100 p-3 rounded-t-lg">
-                              <div className="col-span-1 text-left">S.No</div>
-                              <div className="col-span-2 text-left">Car</div>
-                              <div className="col-span-2 text-left">Route</div>
-                              <div className="col-span-2 text-left">Start</div>
-                              <div className="col-span-2 text-left">End</div>
-                              <div className="col-span-1 text-left">Price</div>
-                              <div className="col-span-1 text-left">Status</div>
-                              <div className="col-span-1 text-left"></div>
-                            </div>
-                            {carRentals
-                              .filter((b) => b.status === "Cancelled")
-                              .sort((a, b) => new Date(a.start_date || a.end_date) - new Date(b.start_date || b.end_date))
-                              .map((rental, index) => (
-                                <motion.div
-                                  key={rental.rental_id}
-                                  variants={itemVariants}
-                                  className={`p-3 border-b border-gray-100 last:border-b-0 ${
-                                    index % 2 === 0 ? "bg-white" : "bg-gray-50"
-                                  }`}
-                                >
-                                  <div className="grid grid-cols-12 gap-x-4 items-center text-sm">
-                                    <div className="col-span-1 text-left">
-                                      <p className="text-gray-800">{index + 1}</p>
-                                    </div>
-                                    <div className="col-span-2 text-left">
-                                      <p className="text-gray-800 truncate">{rental.car_name}</p>
-                                    </div>
-                                    <div className="col-span-2 text-left">
-                                      <p className="text-gray-800 truncate">
-                                        {rental.from_location} to {rental.to_location}
-                                      </p>
-                                    </div>
-                                    <div className="col-span-2 text-left">
-                                      <p className="text-gray-800 truncate">{formatDate(rental.start_date || rental.end_date)}</p>
-                                    </div>
-                                    <div className="col-span-2 text-left">
-                                      <p className="text-gray-800 truncate">{formatDate(rental.end_date)}</p>
-                                    </div>
-                                    <div className="col-span-1 text-left">
-                                      <span className="text-gray-800">₹{rental.cost.toFixed(2)}</span>
-                                    </div>
-                                    <div className="col-span-1 text-left">
-                                      <span className="inline-block px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">
-                                        Cancelled
-                                      </span>
-                                    </div>
+                          {/* Cancelled Hotels */}
+                          <div className="space-y-4">
+                            <h4 className="text-lg font-medium text-gray-700">Cancelled Hotels</h4>
+                            {hotelBookings.filter((b) => b.status === "Cancelled").length === 0 ? (
+                              <p className="text-gray-500 text-sm bg-gray-50 p-4 rounded-lg">
+                                No cancelled hotel bookings.
+                              </p>
+                            ) : (
+                              <div className="relative overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 snap-x snap-mandatory shadow-sm">
+                                <div className="w-full min-w-[800px]">
+                                  <div className="grid grid-cols-12 gap-x-4 text-sm font-medium text-gray-600 bg-gray-100 p-3 rounded-t-lg">
+                                    <div className="col-span-1 text-left">Serial No.</div>
+                                    <div className="col-span-2 text-left">Hotel</div>
+                                    <div className="col-span-2 text-left">City</div>
+                                    <div className="col-span-2 text-left">Check-In</div>
+                                    <div className="col-span-2 text-left">Check-Out</div>
+                                    <div className="col-span-1 text-left">Price</div>
+                                    <div className="col-span-1 text-left">Status</div>
                                     <div className="col-span-1 text-left"></div>
                                   </div>
-                                </motion.div>
-                              ))}
+                                  {hotelBookings
+                                    .filter((b) => b.status === "Cancelled")
+                                    .sort((a, b) => new Date(a.check_in_date) - new Date(b.check_in_date))
+                                    .map((booking, index) => (
+                                      <motion.div
+                                        key={booking.booking_id}
+                                        variants={itemVariants}
+                                        className={`p-3 border-b border-gray-100 last:border-b-0 ${
+                                          index % 2 === 0 ? "bg-white" : "bg-gray-50"
+                                        }`}
+                                      >
+                                        <div className="grid grid-cols-12 gap-x-4 items-center text-sm">
+                                          <div className="col-span-1 text-left">
+                                            <p className="text-gray-800">{index + 1}</p>
+                                          </div>
+                                          <div className="col-span-2 text-left">
+                                            <p className="text-gray-800 truncate">{booking.hotel_name}</p>
+                                          </div>
+                                          <div className="col-span-2 text-left">
+                                            <p className="text-gray-800 truncate">{booking.city}</p>
+                                          </div>
+                                          <div className="col-span-2 text-left">
+                                            <p className="text-gray-800 truncate">{formatDate(booking.check_in_date)}</p>
+                                          </div>
+                                          <div className="col-span-2 text-left">
+                                            <p className="text-gray-800 truncate">{formatDate(booking.check_out_date)}</p>
+                                          </div>
+                                          <div className="col-span-1 text-left">
+                                            <span className="text-gray-800">₹{booking.cost.toFixed(2)}</span>
+                                          </div>
+                                          <div className="col-span-1 text-left">
+                                            <span className="inline-block px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">
+                                              Cancelled
+                                            </span>
+                                          </div>
+                                          <div className="col-span-1 text-left"></div>
+                                        </div>
+                                      </motion.div>
+                                    ))}
+                                </div>
+                              </div>
+                            )}
                           </div>
-                        </div>
+                        </>
                       )}
-                    </div>
-                  </>
-                )}
-              </motion.div>
-            </motion.div>
+                      {historyTab === "Cars" && (
+                        <>
+                          <h3 className="text-xl font-semibold text-gray-800 flex items-center space-x-2">
+                            <FaCar className="text-blue-600" /> <span>Car Rentals</span>
+                          </h3>
+                          {/* Upcoming Cars */}
+                          <div className="space-y-4">
+                            <h4 className="text-lg font-medium text-gray-700">Upcoming Rentals</h4>
+                            {carRentals.filter((b) => b.status === "Upcoming" || b.status === "Pending").length === 0 ? (
+                              <p className="text-gray-500 text-sm bg-gray-50 p-4 rounded-lg">
+                                No upcoming or pending car rentals.
+                              </p>
+                            ) : (
+                              <div className="relative overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 snap-x snap-mandatory shadow-sm">
+                                <div className="w-full min-w-[800px]">
+                                  <div className="grid grid-cols-12 gap-x-4 text-sm font-medium text-gray-600 bg-gray-100 p-3 rounded-t-lg">
+                                    <div className="col-span-1 text-left">Serial No.</div>
+                                    <div className="col-span-2 text-left">Car</div>
+                                    <div className="col-span-2 text-left">Route</div>
+                                    <div className="col-span-2 text-left">Start</div>
+                                    <div className="col-span-2 text-left">End</div>
+                                    <div className="col-span-1 text-left">Price</div>
+                                    <div className="col-span-1 text-left">Status</div>
+                                    <div className="col-span-1 text-left"></div>
+                                  </div>
+                                  {carRentals
+                                    .filter((b) => b.status === "Upcoming" || b.status === "Pending")
+                                    .sort((a, b) => new Date(a.start_date || a.end_date) - new Date(b.start_date || b.end_date))
+                                    .map((rental, index) => (
+                                      <motion.div
+                                        key={rental.rental_id}
+                                        variants={itemVariants}
+                                        className={`p-3 border-b border-gray-100 last:border-b-0 ${
+                                          index % 2 === 0 ? "bg-white" : "bg-gray-50"
+                                        }`}
+                                      >
+                                        <div className="grid grid-cols-12 gap-x-4 items-center text-sm">
+                                          <div className="col-span-1 text-left">
+                                            <p className="text-gray-800">{index + 1}</p>
+                                          </div>
+                                          <div className="col-span-2 text-left">
+                                            <p className="text-gray-800 truncate">{rental.car_name}</p>
+                                          </div>
+                                          <div className="col-span-2 text-left">
+                                            <p className="text-gray-800 truncate">
+                                              {rental.from_location} to {rental.to_location}
+                                            </p>
+                                          </div>
+                                          <div className="col-span-2 text-left">
+                                            <p className="text-gray-800 truncate">{formatDate(rental.start_date || rental.end_date)}</p>
+                                          </div>
+                                          <div className="col-span-2 text-left">
+                                            <p className="text-gray-800 truncate">{formatDate(rental.end_date)}</p>
+                                          </div>
+                                          <div className="col-span-1 text-left">
+                                            <span className="text-gray-800">₹{rental.cost.toFixed(2)}</span>
+                                          </div>
+                                          <div className="col-span-1 text-left">
+                                            <span
+                                              className={`inline-block px-2 py-1 text-xs font-semibold rounded-full ${
+                                                rental.status === "Pending"
+                                                  ? "bg-yellow-100 text-yellow-800"
+                                                  : "bg-green-100 text-green-800"
+                                              }`}
+                                            >
+                                              {rental.status}
+                                            </span>
+                                          </div>
+                                          <div className="col-span-1 text-left relative dropdown-container">
+                                            <motion.button
+                                              variants={buttonVariants}
+                                              whileHover={{ scale: 1.1 }}
+                                              whileTap={{ scale: 0.9 }}
+                                              onClick={(event) => toggleDropdown(rental.rental_id, "car", event)}
+                                              className="text-gray-600 hover:text-gray-800"
+                                            >
+                                              <HiDotsVertical />
+                                            </motion.button>
+                                          </div>
+                                        </div>
+                                      </motion.div>
+                                    ))}
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                          {/* Past Cars */}
+                          <div className="space-y-4">
+                            <h4 className="text-lg font-medium text-gray-700">Past Rentals</h4>
+                            {carRentals.filter((b) => b.status === "Completed").length === 0 ? (
+                              <p className="text-gray-500 text-sm bg-gray-50 p-4 rounded-lg">
+                                No past car rentals.
+                              </p>
+                            ) : (
+                              <div className="relative overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 snap-x snap-mandatory shadow-sm">
+                                <div className="w-full min-w-[800px]">
+                                  <div className="grid grid-cols-12 gap-x-4 text-sm font-medium text-gray-600 bg-gray-100 p-3 rounded-t-lg">
+                                    <div className="col-span-1 text-left">Serial No.</div>
+                                    <div className="col-span-2 text-left">Car</div>
+                                    <div className="col-span-2 text-left">Route</div>
+                                    <div className="col-span-2 text-left">Start</div>
+                                    <div className="col-span-2 text-left">End</div>
+                                    <div className="col-span-1 text-left">Price</div>
+                                    <div className="col-span-1 text-left">Status</div>
+                                    <div className="col-span-1 text-left"></div>
+                                  </div>
+                                  {carRentals
+                                    .filter((b) => b.status === "Completed")
+                                    .sort((a, b) => new Date(a.start_date || a.end_date) - new Date(b.start_date || b.end_date))
+                                    .map((rental, index) => (
+                                      <motion.div
+                                        key={rental.rental_id}
+                                        variants={itemVariants}
+                                        className={`p-3 border-b border-gray-100 last:border-b-0 ${
+                                          index % 2 === 0 ? "bg-white" : "bg-gray-50"
+                                        }`}
+                                      >
+                                        <div className="grid grid-cols-12 gap-x-4 items-center text-sm">
+                                          <div className="col-span-1 text-left">
+                                            <p className="text-gray-800">{index + 1}</p>
+                                          </div>
+                                          <div className="col-span-2 text-left">
+                                            <p className="text-gray-800 truncate">{rental.car_name}</p>
+                                          </div>
+                                          <div className="col-span-2 text-left">
+                                            <p className="text-gray-800 truncate">
+                                              {rental.from_location} to {rental.to_location}
+                                            </p>
+                                          </div>
+                                          <div className="col-span-2 text-left">
+                                            <p className="text-gray-800 truncate">{formatDate(rental.start_date || rental.end_date)}</p>
+                                          </div>
+                                          <div className="col-span-2 text-left">
+                                            <p className="text-gray-800 truncate">{formatDate(rental.end_date)}</p>
+                                          </div>
+                                          <div className="col-span-1 text-left">
+                                            <span className="text-gray-800">₹{rental.cost.toFixed(2)}</span>
+                                          </div>
+                                          <div className="col-span-1 text-left">
+                                            <span className="inline-block px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
+                                              Completed
+                                            </span>
+                                          </div>
+                                          <div className="col-span-1 text-left"></div>
+                                        </div>
+                                      </motion.div>
+                                    ))}
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                          {/* Cancelled Cars */}
+                          <div className="space-y-4">
+                            <h4 className="text-lg font-medium text-gray-700">Cancelled Rentals</h4>
+                            {carRentals.filter((b) => b.status === "Cancelled").length === 0 ? (
+                              <p className="text-gray-500 text-sm bg-gray-50 p-4 rounded-lg">
+                                No cancelled car rentals.
+                              </p>
+                            ) : (
+                              <div className="relative overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 snap-x snap-mandatory shadow-sm">
+                                <div className="w-full min-w-[800px]">
+                                  <div className="grid grid-cols-12 gap-x-4 text-sm font-medium text-gray-600 bg-gray-100 p-3 rounded-t-lg">
+                                    <div className="col-span-1 text-left">Serial No.</div>
+                                    <div className="col-span-2 text-left">Car</div>
+                                    <div className="col-span-2 text-left">Route</div>
+                                    <div className="col-span-2 text-left">Start</div>
+                                    <div className="col-span-2 text-left">End</div>
+                                    <div className="col-span-1 text-left">Price</div>
+                                    <div className="col-span-1 text-left">Status</div>
+                                    <div className="col-span-1 text-left"></div>
+                                  </div>
+                                  {carRentals
+                                    .filter((b) => b.status === "Cancelled")
+                                    .sort((a, b) => new Date(a.start_date || a.end_date) - new Date(b.start_date || b.end_date))
+                                    .map((rental, index) => (
+                                      <motion.div
+                                        key={rental.rental_id}
+                                        variants={itemVariants}
+                                        className={`p-3 border-b border-gray-100 last:border-b-0 ${
+                                          index % 2 === 0 ? "bg-white" : "bg-gray-50"
+                                        }`}
+                                      >
+                                        <div className="grid grid-cols-12 gap-x-4 items-center text-sm">
+                                          <div className="col-span-1 text-left">
+                                            <p className="text-gray-800">{index + 1}</p>
+                                          </div>
+                                          <div className="col-span-2 text-left">
+                                            <p className="text-gray-800 truncate">{rental.car_name}</p>
+                                          </div>
+                                          <div className="col-span-2 text-left">
+                                            <p className="text-gray-800 truncate">
+                                              {rental.from_location} to {rental.to_location}
+                                            </p>
+                                          </div>
+                                          <div className="col-span-2 text-left">
+                                            <p className="text-gray-800 truncate">{formatDate(rental.start_date || rental.end_date)}</p>
+                                          </div>
+                                          <div className="col-span-2 text-left">
+                                            <p className="text-gray-800 truncate">{formatDate(rental.end_date)}</p>
+                                          </div>
+                                          <div className="col-span-1 text-left">
+                                            <span className="text-gray-800">₹{rental.cost.toFixed(2)}</span>
+                                          </div>
+                                          <div className="col-span-1 text-left">
+                                            <span className="inline-block px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">
+                                              Cancelled
+                                            </span>
+                                          </div>
+                                          <div className="col-span-1 text-left"></div>
+                                        </div>
+                                      </motion.div>
+                                    ))}
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        </>
+                      )}
+                    </motion.div>
+                    {/* Dropdown Overlays for Flights, Hotels, and Cars */}
+                    {dropdownOpen.flight && dropdownPosition.id && dropdownPosition.type === "flight" && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        style={{
+                          position: "fixed",
+                          top: dropdownPosition.top,
+                          left: dropdownPosition.left,
+                          zIndex: 50,
+                        }}
+                        className="w-40 bg-white border border-gray-200 rounded-lg shadow-xl overflow-hidden"
+                      >
+                        <div className="max-h-40 overflow-y-auto">
+                          {flightBookings
+                            .find((b) => b.booking_id === dropdownPosition.id)?.status === "Pending" && (
+                            <button
+                              onClick={() => {
+                                handleCompleteFlight(dropdownPosition.id);
+                                toggleDropdown(null, "flight");
+                              }}
+                              className="flex items-center w-full text-left px-4 py-3 text-sm text-green-600 hover:bg-green-50 transition"
+                            >
+                              <FaCheckCircle className="mr-2" />
+                              Complete
+                            </button>
+                          )}
+                          <button
+                            onClick={() => {
+                              handleCancelFlight(dropdownPosition.id);
+                              toggleDropdown(null, "flight");
+                            }}
+                            className="flex items-center w-full text-left px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition"
+                          >
+                            <FaTimesCircle className="mr-2" />
+                            Cancel
+                          </button>
+                        </div>
+                      </motion.div>
+                    )}
+
+                    {dropdownOpen.hotel && dropdownPosition.id && dropdownPosition.type === "hotel" && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        style={{
+                          position: "fixed",
+                          top: dropdownPosition.top,
+                          left: dropdownPosition.left,
+                          zIndex: 50,
+                        }}
+                        className="w-40 bg-white border border-gray-200 rounded-lg shadow-xl overflow-hidden"
+                      >
+                        <div className="max-h-40 overflow-y-auto">
+                          {hotelBookings
+                            .find((b) => b.booking_id === dropdownPosition.id)?.status === "Pending" && (
+                            <button
+                              onClick={() => {
+                                handleCompleteHotel(dropdownPosition.id);
+                                toggleDropdown(null, "hotel");
+                              }}
+                              className="flex items-center w-full text-left px-4 py-3 text-sm text-green-600 hover:bg-green-50 transition"
+                            >
+                              <FaCheckCircle className="mr-2" />
+                              Complete
+                            </button>
+                          )}
+                          <button
+                            onClick={() => {
+                              handleCancelHotel(dropdownPosition.id);
+                              toggleDropdown(null, "hotel");
+                            }}
+                            className="flex items-center w-full text-left px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition"
+                          >
+                            <FaTimesCircle className="mr-2" />
+                            Cancel
+                          </button>
+                        </div>
+                      </motion.div>
+                    )}
+
+                    {dropdownOpen.car && dropdownPosition.id && dropdownPosition.type === "car" && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        style={{
+                          position: "fixed",
+                          top: dropdownPosition.top,
+                          left: dropdownPosition.left,
+                          zIndex: 50,
+                        }}
+                        className="w-40 bg-white border border-gray-200 rounded-lg shadow-xl overflow-hidden"
+                      >
+                        <div className="max-h-40 overflow-y-auto">
+                          {carRentals
+                            .find((b) => b.rental_id === dropdownPosition.id)?.status === "Pending" && (
+                            <button
+                              onClick={() => {
+                                handleCompleteCar(dropdownPosition.id);
+                                toggleDropdown(null, "car");
+                              }}
+                              className="flex items-center w-full text-left px-4 py-3 text-sm text-green-600 hover:bg-green-50 transition"
+                            >
+                              <FaCheckCircle className="mr-2" />
+                              Complete
+                            </button>
+                          )}
+                          <button
+                            onClick={() => {
+                              handleCancelCar(dropdownPosition.id);
+                              toggleDropdown(null, "car");
+                            }}
+                            className="flex items-center w-full text-left px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition"
+                          >
+                            <FaTimesCircle className="mr-2" />
+                            Cancel
+                          </button>
+                        </div>
+                      </motion.div>
+                    )}
+                  </motion.div>
                 )}
       
                 {activeSection === "Login_details" && (
@@ -1841,37 +1904,27 @@ useEffect(() => {
       {/* Phone Verification Popup */}
       <AnimatePresence>
         {showVerificationPopup && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 backdrop-brightness-30 flex items-center justify-center z-50 p-4"
+          <div
+            className="fixed inset-0 backdrop-brightness-30 flex items-center justify-center z-50 p-4 transition-opacity duration-300"
           >
-            <motion.div
-              initial={{ scale: 0.8, y: 20 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.8, y: 20 }}
-              className="bg-white rounded-xl p-6 w-full max-w-md shadow-xl"
+            <div
+              className="bg-white rounded-xl p-6 w-full max-w-md shadow-xl transform transition-transform duration-300 scale-100"
             >
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-xl font-semibold text-gray-800">Verify Phone</h2>
-                <motion.button
+                <button
                   onClick={() => setShowVerificationPopup(false)}
-                  className="text-gray-600 hover:text-gray-800"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
+                  className="text-gray-600 hover:text-gray-800 transition-transform duration-200 transform hover:scale-110"
                 >
                   <IoClose size={24} />
-                </motion.button>
+                </button>
               </div>
               {verificationError && (
-                <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="bg-red-50 text-red-600 p-3 rounded-lg mb-4 text-sm border border-red-200"
+                <div
+                  className="bg-red-50 text-red-600 p-3 rounded-lg mb-4 text-sm border border-red-200 transition-opacity duration-300"
                 >
                   {verificationError}
-                </motion.div>
+                </div>
               )}
               <div className="space-y-4">
                 <div className="flex flex-col">
@@ -1887,27 +1940,21 @@ useEffect(() => {
                 </div>
               </div>
               <div className="flex justify-end gap-4 mt-6">
-                <motion.button
-                  variants={buttonVariants}
-                  whileHover="hover"
-                  whileTap="tap"
+                <button
                   onClick={() => setShowVerificationPopup(false)}
-                  className="px-4 py-2 text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition"
+                  className="px-4 py-2 text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition-transform duration-200 transform hover:scale-105"
                 >
                   Cancel
-                </motion.button>
-                <motion.button
-                  variants={buttonVariants}
-                  whileHover="hover"
-                  whileTap="tap"
+                </button>
+                <button
                   onClick={handleVerifyCode}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-transform duration-200 transform hover:scale-105"
                 >
                   Verify
-                </motion.button>
+                </button>
               </div>
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
         )}
       </AnimatePresence>
     </div>
