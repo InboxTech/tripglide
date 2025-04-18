@@ -63,11 +63,11 @@ const HotelFilter = ({ onFilterChange }) => {
   }, [filters, onFilterChange]);
 
   return (
-    <div className="bg-white p-4 rounded-lg shadow-md mb-4 md:block w-70 sm:p-6 md:sticky h-auto md:h-[70vh] overflow-y-auto scrollbar-thin">
-      <h3 className="text-lg font-semibold mb-3">Filters</h3>
+    <div className="bg-white p-4 sm:p-6 rounded-lg shadow-md w-full h-auto md:sticky md:top-20 md:max-h-[80vh] overflow-y-auto scrollbar-thin">
+      <h3 className="text-base sm:text-lg font-semibold mb-3">Filters</h3>
 
       {/* Price Filter */}
-      <div className="mb-3">
+      <div className="mb-3 sm:mb-4">
         <label className="block mb-2 text-sm font-medium">Price Range</label>
         {priceOptions.map((option) => (
           <div key={option.value} className="flex items-center mb-2">
@@ -78,7 +78,7 @@ const HotelFilter = ({ onFilterChange }) => {
               value={option.value}
               checked={filters.price.includes(option.value)}
               onChange={handleFilterChangeInternal}
-              className="mr-2 h-4 w-4 text-blue-600 border-gray-300 rounded"
+              className="mr-2 h-4 w-4 text-blue-600 border-gray-300 rounded touch-manipulation"
             />
             <label htmlFor={`price-${option.value}`} className="text-sm">
               {option.label}
@@ -88,7 +88,7 @@ const HotelFilter = ({ onFilterChange }) => {
       </div>
 
       {/* Rating Filter */}
-      <div className="mb-3">
+      <div className="mb-3 sm:mb-4">
         <label className="block mb-2 text-sm font-medium">Rating</label>
         {ratingOptions.map((option) => (
           <div key={option.value} className="flex items-center mb-2">
@@ -99,7 +99,7 @@ const HotelFilter = ({ onFilterChange }) => {
               value={option.value}
               checked={filters.rating.includes(option.value)}
               onChange={handleFilterChangeInternal}
-              className="mr-2 h-4 w-4 text-blue-600 border-gray-300 rounded"
+              className="mr-2 h-4 w-4 text-blue-600 border-gray-300 rounded touch-manipulation"
             />
             <label htmlFor={`rating-${option.value}`} className="text-sm">
               {option.label}
@@ -109,7 +109,7 @@ const HotelFilter = ({ onFilterChange }) => {
       </div>
 
       {/* Amenities Filter */}
-      <div className="mb-3">
+      <div className="mb-3 sm:mb-4">
         <label className="block mb-2 text-sm font-medium">Amenities</label>
         {amenityOptions.map((amenity) => (
           <div key={amenity} className="flex items-center mb-2">
@@ -120,7 +120,7 @@ const HotelFilter = ({ onFilterChange }) => {
               value={amenity}
               checked={filters.amenities.includes(amenity)}
               onChange={handleFilterChangeInternal}
-              className="mr-2 h-4 w-4 text-blue-600 border-gray-300 rounded"
+              className="mr-2 h-4 w-4 text-blue-600 border-gray-300 rounded touch-manipulation"
             />
             <label
               htmlFor={`amenity-${amenity.toLowerCase().replace(/\s+/g, "-")}`}

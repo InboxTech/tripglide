@@ -22,7 +22,7 @@ import HotelDetails from "./components/HotelDetails";
 import HotelBooking from "./components/HotelBooking";
 import FlightBookingHistory from "./components/FlightBookingHistory";
 import HotelBookingHistory from "./components/HotelBookingHistory";
-
+import IndividualHotelDeals from "./components/IndividualHotelDeals";
 const initialFlightData = [
   {
     id: 1,
@@ -411,7 +411,7 @@ function App() {
           <Route path="/flight-cart" element={<FlightCart />} />
           <Route path="/flight-booking-history" element={<FlightBookingHistory />} />
           <Route path="/hotel-booking-history" element={<HotelBookingHistory />} />
-
+          <Route path="/individual-hotel-deals/:hotel/:arrival" element={<IndividualHotelDeals />} />
           
         </Routes>
       

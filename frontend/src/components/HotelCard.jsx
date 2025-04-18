@@ -92,7 +92,6 @@ const HotelCard = ({
     );
   };
 
-  // List of all possible amenities excluding "Wi-Fi", "TV", "Parking", "Suite"
   const allAmenities = [
     "Free Breakfast",
     "Pool",
@@ -154,8 +153,8 @@ const HotelCard = ({
   const displayAmenities = getRandomAmenities(hotel.amenities, 0);
 
   return (
-    <div className="rounded-xl shadow-sm flex flex-col md:flex-row bg-white overflow-hidden w-full h-[300px] md:h-64">
-      <div className="w-full md:w-[30%] h-56 md:h-full">
+    <div className="rounded-xl shadow-sm flex flex-col lg:flex-row bg-white overflow-hidden w-full h-auto lg:h-64">
+      <div className="w-full lg:w-[30%] h-56 lg:h-full">
         <img
           src={
             hotel.images
@@ -170,31 +169,31 @@ const HotelCard = ({
           onError={(e) => (e.target.src = "/images/Hotel/placeholder.jpg")}
         />
       </div>
-      <div className="flex-1 p-5 flex flex-col h-full">
+      <div className="flex-1 p-4 lg:p-5 flex flex-col">
         <div>
-          <h3 className="text-lg font-semibold">{hotel.hotel}</h3>
+          <h3 className="text-base lg:text-lg font-semibold truncate">{hotel.hotel}</h3>
           <div
             className="flex items-center gap-1 mt-0.5"
             aria-label={`Rating: ${hotel.rating} out of 5`}
           >
             {renderStars(hotel.rating)}
           </div>
-          <p className="text-sm text-gray-500 mt-1">{hotel.arrival}</p>
+          <p className="text-xs lg:text-sm text-gray-500 mt-1 truncate">{hotel.arrival}</p>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm text-gray-700 mt-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs lg:text-sm text-gray-700 mt-3 lg:mt-4">
           {displayAmenities.map((amenity) => (
-            <div key={amenity} className="flex items-center gap-1">
+            <div key={amenity} className="flex items-center gap-1 truncate">
               {amenityIcons[amenity] || <span className="w-4 h-4" />}
-              {amenity}
+              <span className="truncate">{amenity}</span>
             </div>
           ))}
         </div>
       </div>
-      <div className="flex flex-col justify-between items-center p-3 md:w-56 border-t md:border-t-0 md:border-l border-gray-300 h-full">
+      <div className="flex flex-col justify-between items-center p-3 lg:w-56 border-t lg:border-t-0 lg:border-l border-gray-300">
         <div className="text-center mb-3">
-          <div className="text-2xl font-bold text-gray-800 mb-1">
+          <div className="text-xl lg:text-2xl font-bold text-gray-800 mb-1">
             ₹{parseFloat(hotel.totalpricepernight).toLocaleString()}{" "}
-            <span className="text-sm font-normal text-gray-600">/ night</span>
+            <span className="text-xs lg:text-sm font-normal text-gray-600">/ night</span>
           </div>
           <div className="text-xs text-gray-700 font-semibold">
             +₹
@@ -205,7 +204,7 @@ const HotelCard = ({
           </div>
         </div>
         <button
-          className="bg-blue-600 text-white text-sm py-2 px-4 rounded hover:bg-blue-700 w-full focus:outline-none focus:ring-2 focus:ring-red-500"
+          className="bg-blue-600 text-white text-sm py-2 px-4 rounded hover:bg-blue-700 w-full focus:outline-none focus:ring-2 focus:ring-blue-500 touch-manipulation"
           aria-label={`Choose room at ${hotel.hotel}`}
           onClick={() => handleChooseRoom(hotel.hotel, hotel.arrival)}
         >
