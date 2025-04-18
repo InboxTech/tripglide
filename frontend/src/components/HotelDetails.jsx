@@ -189,13 +189,13 @@ const HotelDetails = () => {
             <div>
               <p className="text-sm text-gray-600">Check-In</p>
               <p className="text-blue-600 font-semibold">
-                {new Date(checkInDate).toLocaleDateString('en-US', { weekday: 'short', day: '2-digit', month: 'short' })} | 02:00 PM
+                {new Date(checkInDate).toLocaleDateString('en-US', { weekday: 'short', day: '2-digit', month: 'short' })} | 11:00 PM
               </p>
             </div>
             <div>
               <p className="text-sm text-gray-600">Check-Out</p>
               <p className="text-blue-600 font-semibold">
-                {new Date(checkOutDate).toLocaleDateString('en-US', { weekday: 'short', day: '2-digit', month: 'short' })} | 11:00 AM
+                {new Date(checkOutDate).toLocaleDateString('en-US', { weekday: 'short', day: '2-digit', month: 'short' })} | 02:00 AM
               </p>
             </div>
             <div>
