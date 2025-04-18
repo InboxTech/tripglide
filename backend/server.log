@@ -3214,3 +3214,4 @@
 2025-04-18 14:03:00,008 - INFO - 200 GET /api/car_rentals?user_id=1 (127.0.0.1) 0.00ms
 2025-04-18 14:03:00,265 - INFO - Car rentals fetched for user_id=1
 2025-04-18 14:03:00,265 - INFO - 200 GET /api/car_rentals?user_id=1 (127.0.0.1) 0.00ms
+2025-04-18 14:25:44,719 - INFO - Shutting down...
