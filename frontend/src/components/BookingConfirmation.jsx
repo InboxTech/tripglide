@@ -13,26 +13,78 @@ import {
   FaClock,
   FaExclamationCircle,
 } from "react-icons/fa";
+import jsPDF from "jspdf"; // Import jsPDF
 
-// Utility function to calculate duration between two times (for fallback)
+// Utility function to calculate duration
 const calculateDuration = (depTime, arrTime) => {
   if (!depTime || !arrTime) return "N/A";
+  try {
+    const [depHours, depMinutes] = depTime.split(":").map(Number);
+    const [arrHours, arrMinutes] = arrTime.split(":").map(Number);
+    const depTotalMinutes = depHours * 60 + depMinutes;
+    let arrTotalMinutes = arrHours * 60 + arrMinutes;
+    if (arrTotalMinutes < depTotalMinutes) {
+      arrTotalMinutes += 24 * 60;
+    }
+    const diffMinutes = arrTotalMinutes - depTotalMinutes;
+    const hours = Math.floor(diffMinutes / 60);
+    const minutes = diffMinutes % 60;
+    return `${hours}h ${minutes}m`;
+  } catch (e) {
+    console.error("Duration calculation error:", e);
+    return "N/A";
+  }
+};
 
-  const [depHours, depMinutes] = depTime.split(":").map(Number);
-  const [arrHours, arrMinutes] = arrTime.split(":").map(Number);
+// Utility function to convert number to words (basic implementation)
+const numberToWords = (num) => {
+  const units = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"];
+  const teens = [
+    "Ten",
+    "Eleven",
+    "Twelve",
+    "Thirteen",
+    "Fourteen",
+    "Fifteen",
+    "Sixteen",
+    "Seventeen",
+    "Eighteen",
+    "Nineteen",
+  ];
+  const tens = ["", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"];
+  const thousands = ["", "Thousand", "Million", "Billion"];
 
-  const depTotalMinutes = depHours * 60 + depMinutes;
-  let arrTotalMinutes = arrHours * 60 + arrMinutes;
+  if (num === 0) return "Zero";
 
-  if (arrTotalMinutes < depTotalMinutes) {
-    arrTotalMinutes += 24 * 60; // Add 24 hours if crossing midnight
+  let word = "";
+  let thousandCounter = 0;
+
+  while (num > 0) {
+    let part = num % 1000;
+    if (part > 0) {
+      let partWord = "";
+      if (part >= 100) {
+        partWord += units[Math.floor(part / 100)] + " Hundred ";
+        part %= 100;
+      }
+      if (part >= 20) {
+        partWord += tens[Math.floor(part / 10)] + " ";
+        part %= 10;
+      }
+      if (part >= 10 && part < 20) {
+        partWord += teens[part - 10] + " ";
+        part = 0;
+      }
+      if (part > 0 && part < 10) {
+        partWord += units[part] + " ";
+      }
+      word = partWord + thousands[thousandCounter] + " " + word;
+    }
+    num = Math.floor(num / 1000);
+    thousandCounter++;
   }
 
-  const diffMinutes = arrTotalMinutes - depTotalMinutes;
-  const hours = Math.floor(diffMinutes / 60);
-  const minutes = diffMinutes % 60;
-
-  return `${hours}h ${minutes}m`;
+  return word.trim();
 };
 
 const BookingConfirmation = () => {
@@ -40,62 +92,363 @@ const BookingConfirmation = () => {
   const [bookingDetails, setBookingDetails] = useState(null);
   const [userDetails, setUserDetails] = useState(null);
   const [bookingNumber, setBookingNumber] = useState("");
+  const [ticketNumber, setTicketNumber] = useState("");
   const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState("");
+  const [hasFetchedProfile, setHasFetchedProfile] = useState(false);
 
-  const API_URL = "http://localhost:5001/api";
+  const API_URL = "http://localhost:5000/api";
 
-  // Generate random booking number
+  // Generate booking and ticket numbers
   useEffect(() => {
     const generateBookingNumber = () => {
       return Math.floor(10000000 + Math.random() * 90000000).toString();
     };
+    const generateTicketNumber = () => {
+      return Math.floor(100000000000 + Math.random() * 900000000000).toString();
+    };
     setBookingNumber(generateBookingNumber());
+    setTicketNumber(generateTicketNumber());
   }, []);
 
-  // Fetch user details from localStorage (set by Dashboard) or backend
+  // Save booking to backend
+  const saveBooking = async (bookingData, userDetails, bookingNumber) => {
+    try {
+      const { selectedFlight, selectedFare, searchParams } = bookingData;
+      const { tripType, from, to, departDate } = searchParams;
+      const firstLeg = tripType === "multicity" && selectedFlight?.multiCityFlights ? selectedFlight.multiCityFlights[0] : selectedFlight;
+
+      const formatDateForMySQL = (dateString) => {
+        if (!dateString) return null;
+        try {
+          const date = new Date(dateString);
+          if (isNaN(date.getTime())) throw new Error("Invalid date");
+          return date.toISOString().split('T')[0];
+        } catch (e) {
+          console.error("Date format error:", e);
+          return null;
+        }
+      };
+
+      const formatTimeForMySQL = (timeString) => {
+        if (!timeString) return null;
+        try {
+          const match = timeString.match(/(\d{1,2}):(\d{2})/);
+          if (!match) throw new Error("Invalid time format");
+          return `${match[1].padStart(2, '0')}:${match[2]}`;
+        } catch (e) {
+          console.error("Time format error:", e);
+          return null;
+        }
+      };
+
+      const payload = {
+        booking_number: bookingNumber,
+        traveler_name: userDetails.name || "Guest",
+        email: userDetails.email !== "Not provided" ? userDetails.email : null,
+        phone: userDetails.phone !== "Not provided" ? userDetails.phone : null,
+        booked_on: new Date().toISOString().slice(0, 19).replace('T', ' '),
+        airline: firstLeg?.airline || "Unknown Airline",
+        flight_number: firstLeg?.flightNumber || null,
+        departure_airport: firstLeg?.departure || from,
+        departure_time: formatTimeForMySQL(firstLeg?.departureTime),
+        departure_date: formatDateForMySQL(firstLeg?.departureDate || departDate),
+        arrival_airport: firstLeg?.arrival || to,
+        arrival_time: formatTimeForMySQL(firstLeg?.arrivalTime),
+        arrival_date: formatDateForMySQL(firstLeg?.arrivalDate || departDate),
+        duration: firstLeg?.duration || calculateDuration(firstLeg?.departureTime, firstLeg?.arrivalTime),
+        stops: firstLeg?.stops || 0,
+        fare_type: selectedFare?.type || "Standard",
+        total_price: selectedFare?.price || 0,
+        trip_type: tripType === "oneway" ? "One Way" : tripType === "return" ? "Return" : "Multi-city",
+        payment_method: "Credit Card",
+        ticket_number: ticketNumber,
+        meal_preference: "Any meal",
+        special_request: "",
+        status: "Upcoming",
+      };
+
+      console.log("Sending payload to /save_booking_confirmation:", payload);
+
+      const response = await fetch(`${API_URL}/save_booking_confirmation`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify(payload),
+        mode: "cors",
+        credentials: "same-origin"
+      });
+
+      if (!response.ok) {
+        let errorData;
+        try {
+          errorData = await response.json();
+        } catch {
+          errorData = { error: "UnknownError", message: response.statusText || "Failed to parse response" };
+        }
+        const errorName = errorData.error || `HTTPError_${response.status}`;
+        const message = errorData.message || response.statusText || "Failed to save booking";
+        throw new Error(`${errorName}: ${message}`);
+      }
+
+      const res = await response.json();
+      console.log("Booking saved:", res.message);
+      return res;
+    } catch (err) {
+      console.error(`Save booking error [${err.name}]: ${err.message}`);
+      if (err.name === "TypeError" && err.message.includes("Failed to fetch")) {
+        console.error("Possible CORS or network issue. Check server status and CORS configuration.");
+      }
+      setError(`Failed to save booking: ${err.message}`);
+      throw err; // Re-throw for caller to handle
+    }
+  };
+
+  // Download Invoice function
+  const downloadInvoice = () => {
+    if (!bookingDetails || !userDetails) return;
+
+    const { selectedFlight, selectedFare, searchParams } = bookingDetails;
+    const { tripType, from, to, departDate } = searchParams;
+    const firstLeg =
+      tripType === "multicity" && selectedFlight?.multiCityFlights
+        ? selectedFlight.multiCityFlights[0]
+        : selectedFlight;
+
+    const doc = new jsPDF();
+    let yPosition = 10;
+
+    // Colors
+    const darkBlue = [30, 58, 138]; // #1E3A8A
+    const lightGray = [243, 244, 246]; // #F3F4F6
+    const white = [255, 255, 255]; // #FFFFFF
+    const darkGray = [55, 65, 81]; // #374151
+
+    // Outer Border
+    doc.setLineWidth(0.5);
+    doc.setDrawColor(...darkBlue);
+    doc.rect(5, 5, 200, 287, "S"); // Border around the entire page
+
+    // Header: Dark Blue Background with White Text
+    doc.setFillColor(...darkBlue);
+    doc.rect(0, 0, 210, 30, "F"); // Full-width header
+    doc.setFontSize(18);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(...white);
+    doc.text("TripGlide", 15, yPosition + 10);
+    doc.setFontSize(14);
+    doc.text("INVOICE", 190, yPosition + 10, { align: "right" });
+    yPosition += 20;
+
+    // Invoice Number and Booking Date
+    doc.setFontSize(9);
+    doc.setFont("helvetica", "normal");
+    doc.text(`Invoice No: INV-2025-${bookingNumber}`, 190, yPosition, { align: "right" });
+    yPosition += 5;
+    doc.text(
+      `Booking Date: ${new Date().toLocaleDateString("en-US", {
+        weekday: "short",
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+      })}`,
+      190,
+      yPosition,
+      { align: "right" }
+    );
+    yPosition += 10;
+
+    // Customer Info Section
+    doc.setFillColor(...white);
+    doc.rect(10, yPosition - 5, 190, 40, "F"); // White background for customer info
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(...darkGray);
+    doc.text("Customer Information", 15, yPosition);
+    doc.setLineWidth(0.2);
+    doc.setDrawColor(...darkBlue);
+    doc.line(15, yPosition + 2, 85, yPosition + 2); // Underline for header
+    yPosition += 10;
+
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+    doc.text(`Traveler: ${userDetails.name || "Guest"}`, 15, yPosition);
+    yPosition += 5;
+    doc.text(`Email: ${userDetails.email || "Not provided"}`, 15, yPosition);
+    yPosition += 5;
+    doc.text(`Booking ID: TG-${bookingNumber}`, 15, yPosition);
+    yPosition += 15;
+
+    // Flight Details Section
+    doc.setFillColor(...lightGray);
+    doc.rect(10, yPosition - 5, 190, 10, "F"); // Light gray background for section header
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(...darkGray);
+    doc.text("Flight Details", 15, yPosition);
+    doc.setLineWidth(0.2);
+    doc.line(15, yPosition + 2, 65, yPosition + 2); // Underline for header
+    yPosition += 10;
+
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+    const flightTitle = `${firstLeg?.airline || "Unknown Airline"} • ${
+      firstLeg?.flightNumber || "N/A"
+    } - ${firstLeg?.departure || from} (${firstLeg?.departureAirport || ""}) to ${
+      firstLeg?.arrival || to
+    } (${firstLeg?.arrivalAirport || ""})`;
+    doc.text(flightTitle, 15, yPosition, { maxWidth: 180 });
+    yPosition += 8;
+    const travelDate = `Travel Date: ${new Date(firstLeg?.departureDate || departDate).toLocaleDateString("en-US", {
+      weekday: "short",
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    })}, ${firstLeg?.departureTime || "N/A"}`;
+    doc.text(travelDate, 15, yPosition);
+    yPosition += 5;
+    doc.text(`Traveler: ${userDetails.name || "Guest"}`, 15, yPosition);
+    yPosition += 10;
+
+    // Fare Breakdown Table
+    doc.setFillColor(...darkBlue);
+    doc.rect(15, yPosition - 5, 180, 8, "F"); // Dark blue header for table
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(...white);
+    doc.text("Description", 20, yPosition);
+    doc.text("Base Fare", 100, yPosition, { align: "right" });
+    doc.text("Service Fee & Taxes", 150, yPosition, { align: "right" });
+    doc.text("Amount", 190, yPosition, { align: "right" });
+    yPosition += 8;
+
+    doc.setLineWidth(0.1);
+    doc.setDrawColor(...darkGray);
+    doc.line(15, yPosition - 2, 195, yPosition - 2); // Divider below table header
+    yPosition += 5;
+
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(...darkGray);
+    const baseFare = Math.round(selectedFare?.price * 0.7) || 0; // Assume 70% is base fare
+    const taxes = Math.round(selectedFare?.price * 0.3) || 0; // Assume 30% is taxes
+    const total = selectedFare?.price || 0;
+
+    // Row 1: Base Fare
+    doc.setFillColor(245, 245, 245); // Very light gray for alternating row
+    doc.rect(15, yPosition - 5, 180, 8, "F");
+    doc.text("Flight Charges", 20, yPosition);
+    doc.text(`Rs. ${baseFare.toLocaleString()}`, 100, yPosition, { align: "right" });
+    doc.text(`Rs. ${taxes.toLocaleString()}`, 150, yPosition, { align: "right" });
+    doc.text(`Rs. ${total.toLocaleString()}`, 190, yPosition, { align: "right" });
+    yPosition += 10;
+
+    // Total Row
+    doc.setFillColor(...lightGray);
+    doc.rect(15, yPosition - 5, 180, 8, "F");
+    doc.setFont("helvetica", "bold");
+    doc.text("Total", 20, yPosition);
+    doc.text(`Rs. ${total.toLocaleString()}`, 190, yPosition, { align: "right" });
+    yPosition += 15;
+
+    // Total in Words
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(9);
+    const totalInWords = `${numberToWords(total).toUpperCase()} ONLY (INR)`;
+    doc.text(`Grand Total (in words): ${totalInWords}`, 15, yPosition, { maxWidth: 180 });
+    yPosition += 15;
+
+    // Footer: Dark Blue Background with White Text
+    doc.setFillColor(...darkBlue);
+    doc.rect(0, 260, 210, 37, "F"); // Footer at the bottom
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(...white);
+    doc.text("TripGlide Customer Support", 15, 270);
+    yPosition = 275;
+    doc.setFont("helvetica", "normal");
+    doc.text("TripGlide Pvt. Ltd.", 15, yPosition);
+    yPosition += 5;
+    doc.text("123 Travel Lane, Phase 1, Gujarat, India", 15, yPosition);
+    yPosition += 5;
+    doc.text("India Toll Free: 1-800-123-4567", 15, yPosition);
+
+    // Footer Note
+    doc.setFontSize(8);
+    doc.setTextColor(200, 200, 200); // Light gray for note
+    doc.text(
+      "Note: This is a computer-generated invoice and does not require a signature/stamp.",
+      15,
+      290,
+      { maxWidth: 180 }
+    );
+
+    doc.save(`invoice_${bookingNumber}.pdf`);
+  };
+
+  // Fetch user details and load booking details
   useEffect(() => {
+    console.log("useEffect ran for data loading");
     const fetchUserDetails = async () => {
+      if (hasFetchedProfile) {
+        console.log("Skipping profile fetch; already attempted");
+        return;
+      }
+
       let storedUser = localStorage.getItem("user");
       let identifier;
 
-      if (storedUser) {
-        const parsedUser = JSON.parse(storedUser);
-        setUserDetails({
-          name: parsedUser.username || "Guest",
-          email: parsedUser.email || "Not provided",
-          phone: parsedUser.phone || "Not provided",
-        });
-        identifier = parsedUser.email || parsedUser.phone;
-      } else {
-        // Fallback to stripeUserDetails if no user in localStorage
-        let storedStripeUser = localStorage.getItem("stripeUserDetails");
-        if (storedStripeUser) {
-          const parsedStripeUser = JSON.parse(storedStripeUser);
+      try {
+        if (storedUser) {
+          const parsedUser = JSON.parse(storedUser);
           setUserDetails({
-            name: parsedStripeUser.name || "Guest",
-            email: parsedStripeUser.email || "Not provided",
-            phone: parsedStripeUser.phone || "Not provided",
+            name: parsedUser.username || "Guest",
+            email: parsedUser.email || "Not provided",
+            phone: parsedUser.phone || "Not provided",
           });
-          identifier = parsedStripeUser.email || parsedStripeUser.phone;
+          identifier = parsedUser.email || parsedUser.phone;
         } else {
-          setUserDetails({
-            name: "Guest",
-            email: "Not provided",
-            phone: "Not provided",
-          });
-          setError("No user data found. Please log in.");
-          return;
+          let storedStripeUser = localStorage.getItem("stripeUserDetails");
+          if (storedStripeUser) {
+            const parsedStripeUser = JSON.parse(storedStripeUser);
+            setUserDetails({
+              name: parsedStripeUser.name || "Guest",
+              email: parsedStripeUser.email || "Not provided",
+              phone: parsedStripeUser.phone || "Not provided",
+            });
+            identifier = parsedStripeUser.email || parsedStripeUser.phone;
+          } else {
+            setUserDetails({
+              name: "Guest",
+              email: "Not provided",
+              phone: "Not provided",
+            });
+            setError("No user data found. Please log in.");
+            return;
+          }
         }
-      }
 
-      // Optionally sync with backend if identifier exists
-      if (identifier) {
-        try {
-          const response = await fetch(`${API_URL}/profile?identifier=${encodeURIComponent(identifier)}`);
+        if (identifier) {
+          console.log(`Fetching profile for identifier: ${identifier}`);
+          const response = await fetch(`${API_URL}/profile?identifier=${encodeURIComponent(identifier)}`, {
+            signal: AbortSignal.timeout(5000),
+          });
           if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error || "Failed to fetch profile");
+            let errorData;
+            try {
+              errorData = await response.json();
+            } catch {
+              errorData = {};
+            }
+            const errorName = errorData.error || `HTTPError_${response.status}`;
+            const message = errorData.message || response.statusText || "Failed to fetch profile";
+            if (response.status === 404) {
+              console.warn(`Profile not found for ${identifier}`);
+              setHasFetchedProfile(true);
+              return;
+            }
+            throw new Error(`${errorName}: ${message}`);
           }
           const res = await response.json();
           if (res.success) {
@@ -105,38 +458,59 @@ const BookingConfirmation = () => {
               phone: res.user.phone || "Not provided",
             };
             setUserDetails(updatedUser);
-            localStorage.setItem("user", JSON.stringify(res.user)); // Sync localStorage
+            localStorage.setItem("user", JSON.stringify(res.user));
           }
-        } catch (err) {
-          console.error("Fetch user error:", err);
-          setError(`Failed to sync user data: ${err.message}`);
         }
+      } catch (err) {
+        console.error(`Fetch user error [${err.name}]: ${err.message}`);
+        setError(`Failed to sync user data: ${err.message}`);
+      } finally {
+        setHasFetchedProfile(true);
       }
     };
 
-    const loadBookingDetails = () => {
-      let storedDetails = sessionStorage.getItem("bookingDetails");
-      if (!storedDetails) {
-        storedDetails = localStorage.getItem("bookingDetails");
-        if (storedDetails) sessionStorage.setItem("bookingDetails", storedDetails);
-      }
-
-      if (storedDetails) {
-        const parsedDetails = JSON.parse(storedDetails);
-        if (parsedDetails.isFlightDeal) {
-          parsedDetails.searchParams.tripType = "oneway";
-          parsedDetails.selectedFlight.returnFlight = null;
+    const loadBookingDetails = async () => {
+      try {
+        let storedDetails = sessionStorage.getItem("bookingDetails");
+        if (!storedDetails) {
+          storedDetails = localStorage.getItem("bookingDetails");
+          if (storedDetails) sessionStorage.setItem("bookingDetails", storedDetails);
         }
-        setBookingDetails(parsedDetails);
-        localStorage.setItem("bookingDetails", JSON.stringify(parsedDetails));
-        console.log("BookingConfirmation bookingDetails:", parsedDetails);
+
+        if (storedDetails) {
+          const parsedDetails = JSON.parse(storedDetails);
+          if (parsedDetails.isFlightDeal) {
+            parsedDetails.searchParams.tripType = "oneway";
+            parsedDetails.selectedFlight.returnFlight = null;
+          }
+          setBookingDetails(parsedDetails);
+          localStorage.setItem("bookingDetails", JSON.stringify(parsedDetails));
+          console.log("BookingConfirmation bookingDetails:", parsedDetails);
+
+          if (!parsedDetails.isSaved && userDetails) {
+            await saveBooking(parsedDetails, userDetails, bookingNumber);
+            parsedDetails.isSaved = true;
+            setBookingDetails({ ...parsedDetails });
+            localStorage.setItem("bookingDetails", JSON.stringify(parsedDetails));
+            sessionStorage.setItem("bookingDetails", JSON.stringify(parsedDetails));
+          }
+        } else {
+          throw new Error("NoBookingDetailsError: No booking details found");
+        }
+      } catch (err) {
+        console.error(`Load booking error [${err.name}]: ${err.message}`);
+        setError(`Failed to load booking: ${err.message}`);
       }
     };
 
-    fetchUserDetails();
-    loadBookingDetails();
-    setIsLoaded(true);
-  }, []);
+    const loadData = async () => {
+      await fetchUserDetails();
+      await loadBookingDetails();
+      setIsLoaded(true);
+    };
+
+    loadData();
+  }, [bookingNumber]);
 
   if (!isLoaded) {
     return (
@@ -181,16 +555,17 @@ const BookingConfirmation = () => {
     flightSummary = `${from} → ${to} • ${departDate}`;
   }
 
-  // Format date for non-FlightDealsCards bookings (DD Mon)
   const formatDate = (dateString) => {
     if (!dateString) return "N/A";
-    const options = { month: "short", day: "numeric" };
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", options); // e.g., "Apr 15"
-  };
-
-  const generateTicketNumber = () => {
-    return Math.floor(100000000000 + Math.random() * 900000000000).toString();
+    try {
+      const options = { month: "short", day: "numeric" };
+      const date = new Date(dateString);
+      if (isNaN(date.getTime())) throw new Error("Invalid date");
+      return date.toLocaleDateString("en-US", options);
+    } catch (e) {
+      console.error("Date format error:", e);
+      return "N/A";
+    }
   };
 
   const getAirlineLogo = (flight) => {
@@ -393,7 +768,7 @@ const BookingConfirmation = () => {
                       </span>
                     </div>
                     <div className="text-sm text-gray-500">
-                      Flight {selectedFlight.returnFlight?.flightNumber || "987"}
+                      Flight {selectedFlight.returnFlight?.flightNumber || "N/A"}
                     </div>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
@@ -527,7 +902,7 @@ const BookingConfirmation = () => {
               <tbody className="bg-white divide-y divide-gray-200">
                 <tr>
                   <td className="px-3 py-2 whitespace-nowrap text-sm">{userDetails?.name}</td>
-                  <td className="px-3 py-2 whitespace-nowrap text-sm">{generateTicketNumber()}</td>
+                  <td className="px-3 py-2 whitespace-nowrap text-sm">{ticketNumber}</td>
                   <td className="px-3 py-2 whitespace-nowrap text-sm">Any meal</td>
                   <td className="px-3 py-2 whitespace-nowrap text-sm">—</td>
                 </tr>
@@ -571,12 +946,20 @@ const BookingConfirmation = () => {
           <p className="text-gray-600 mb-4">
             Thank you for your booking! A confirmation email has been sent to your registered email address.
           </p>
-          <button
-            onClick={() => navigate("/")}
-            className="bg-blue-600 text-white px-4 py-2 cursor-pointer rounded-lg hover:bg-blue-700"
-          >
-            Back to Home
-          </button>
+          <div className="flex justify-center space-x-4">
+            <button
+              onClick={() => navigate("/")}
+              className="bg-blue-600 text-white px-4 py-2 cursor-pointer rounded-lg hover:bg-blue-700"
+            >
+              Back to Home
+            </button>
+            <button
+              onClick={downloadInvoice}
+              className="bg-green-600 text-white px-4 py-2 cursor-pointer rounded-lg hover:bg-green-700"
+            >
+              Download Invoice
+            </button>
+          </div>
         </div>
       </div>
 

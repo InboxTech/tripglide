@@ -1,6 +1,5 @@
 backend/venv/
-backend/.env
-.vscode/*backend/server.log
-backend/server.log
-backend/.env
 .env
+.vscode/*
+backend/server.log
+backend/flight_api.log
