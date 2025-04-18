@@ -1,9 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { GoogleOAuthProvider } from "@react-oauth/google";
-import Header from "./components/Header";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { GoogleOAuthProvider } from "@react-oauth/google";
 import Header from "./components/Header";
 import SearchSection from "./components/SearchSection";
 import SignUp from "./components/Signup";
@@ -29,6 +26,7 @@ import HotelDetails from "./components/HotelDetails";
 import HotelBooking from "./components/HotelBooking";
 import FlightBookingHistory from "./components/FlightBookingHistory";
 import HotelBookingHistory from "./components/HotelBookingHistory";
+import IndividualHotelDeals from "./components/IndividualHotelDeals";
 
 const initialFlightData = [
   {
@@ -356,7 +354,7 @@ function App() {
   // };
 
   return (
-    <GoogleOAuthProvider clientId="903553660853-d2uiue8osd3cjshdgidtd2hq3pge2sce.apps.googleusercontent.com">
+    
       <Router>
         <Header
           user={user}
@@ -423,11 +421,16 @@ function App() {
           <Route path="/flight-cart" element={<FlightCart />} />
           <Route path="/flight-booking-history" element={<FlightBookingHistory />} />
           <Route path="/hotel-booking-history" element={<HotelBookingHistory />} />
+          <Route path="/individual-hotel-deals/:hotel/:arrival" element={<IndividualHotelDeals />} />
+
+
+          
+         
 
           
         </Routes>
       </Router>
-    </GoogleOAuthProvider>
+    
   );
 }
 

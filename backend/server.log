@@ -3215,3 +3215,18 @@
 2025-04-18 14:03:00,265 - INFO - Car rentals fetched for user_id=1
 2025-04-18 14:03:00,265 - INFO - 200 GET /api/car_rentals?user_id=1 (127.0.0.1) 0.00ms
 2025-04-18 14:25:44,719 - INFO - Shutting down...
+2025-04-18 14:44:06,470 - INFO - Database connection established
+2025-04-18 14:44:06,471 - INFO - Database tables initialized
+2025-04-18 14:44:06,471 - INFO - Twilio client initialized successfully
+2025-04-18 14:44:06,471 - INFO - Serving on http://0.0.0.0:5001
+2025-04-18 14:44:06,471 - DEBUG - Using selector: SelectSelector
+2025-04-18 14:44:06,471 - INFO - Start watching changes
+2025-04-18 14:44:06,471 - INFO - Start detecting changes
+2025-04-18 14:57:09,357 - INFO - Profile fetched for email=mokshabhavsar2004@gmail.com
+2025-04-18 14:57:09,358 - INFO - 200 GET /api/profile?identifier=mokshabhavsar2004%40gmail.com (127.0.0.1) 6.90ms
+2025-04-18 14:57:09,358 - INFO - Profile fetched for email=mokshabhavsar2004@gmail.com
+2025-04-18 14:57:09,365 - INFO - 200 GET /api/profile?identifier=mokshabhavsar2004%40gmail.com (127.0.0.1) 7.01ms
+2025-04-18 15:14:47,194 - INFO - Profile fetched for email=mokshabhavsar2004@gmail.com
+2025-04-18 15:14:47,194 - INFO - 200 GET /api/profile?identifier=mokshabhavsar2004%40gmail.com (127.0.0.1) 6.48ms
+2025-04-18 15:14:47,201 - INFO - Profile fetched for email=mokshabhavsar2004@gmail.com
+2025-04-18 15:14:47,203 - INFO - 200 GET /api/profile?identifier=mokshabhavsar2004%40gmail.com (127.0.0.1) 9.45ms
